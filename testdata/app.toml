@@ -1,0 +1,24 @@
+name = "demo"
+description = "Some demo service at Avito"
+kind = "business"
+unit = "Highload"
+replicas = 1
+
+[engine]
+name = "golang"
+version = "1.12"
+size = "small"
+
+[envs.local.env_vars]
+SERVICE_A_URL = "http://service-a.cluster/"
+SERVICE_B_URL = "http://service-b.cluster/"
+SERVICE_C_URL = "http://service-c.cluster/"
+
+[[dependencies]]
+name = "service-a"
+
+[[dependencies]]
+name = "service-b"
+
+[[dependencies]]
+name = "service-c"
