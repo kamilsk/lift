@@ -1,18 +1,38 @@
 name = "demo"
 description = "Some demo service at Avito"
+host = "demo.cluster"
 kind = "business"
 unit = "Highload"
 replicas = 1
 
 [engine]
 name = "golang"
-version = "1.12"
 size = "small"
+version = "1.12"
 
-[envs.local.env_vars]
-SERVICE_A_URL = "http://service-a.cluster/"
-SERVICE_B_URL = "http://service-b.cluster/"
-SERVICE_C_URL = "http://service-c.cluster/"
+[mongodb]
+enabled = true
+size = "small"
+version = "3.6"
+
+[postgresql]
+enabled = true
+size = "small"
+version = "9.6"
+
+[rabbitmq]
+enabled = true
+size = "small"
+version = "3.6"
+
+[redis]
+enabled = true
+size = "small"
+type = "cache"
+version = "5.0"
+
+[sphinx]
+enabled = true
 
 [[dependencies]]
 name = "service-a"
@@ -22,3 +42,10 @@ name = "service-b"
 
 [[dependencies]]
 name = "service-c"
+
+[env_vars]
+SERVICE_A_URL = "http://service-a.cluster/"
+
+[envs.local.env_vars]
+SERVICE_B_URL = "http://service-b.cluster/"
+SERVICE_C_URL = "http://service-c.cluster/"

@@ -12,6 +12,7 @@ import (
 type App struct {
 	Name         string            `toml:"name"`
 	Desc         string            `toml:"description"`
+	Host         string            `toml:"host"`
 	Kind         string            `toml:"kind"`
 	Unit         string            `toml:"unit"`
 	Engine       Engine            `toml:"engine"`
@@ -22,13 +23,15 @@ type App struct {
 // Engine describes section related to a service engine.
 type Engine struct {
 	Name    string `toml:"name"`
-	Version string `toml:"version"`
 	Size    string `toml:"size"`
+	Version string `toml:"version"`
 }
 
 // Dependency describes section related to a service dependencies.
 type Dependency struct {
 	Name string `toml:"name"`
+
+	vars map[string]string
 }
 
 // Decode reads configuration from reader and decodes it into struct.
