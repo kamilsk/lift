@@ -14,7 +14,10 @@ func New(output io.Writer) *cobra.Command {
 		Long:  "Up service locally.",
 	}
 	cmd.AddCommand(envCmd, upCmd)
-	cmd.PersistentFlags().String("file", "app.toml", "service configuration file")
 	cmd.SetOutput(output)
+	var (
+		file string
+	)
+	cmd.PersistentFlags().StringVarP(&file, "file", "f", "app.toml", "service configuration file")
 	return &cmd
 }
