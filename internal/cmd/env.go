@@ -14,7 +14,12 @@ var envCmd = &cobra.Command{
 	Long:  "Dump environment variables from configuration file.",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		cnf, err := config.FromFile(cmd.Flag("file").Value.String())
-		unsafe.DoSilent(fmt.Fprintln(cmd.OutOrStdout(), cnf))
-		return err
+		if err != nil {
+			return err
+		}
+		for env, value := range cnf.Environment {
+			unsafe.DoSilent(fmt.Fprintf(cmd.OutOrStdout(), "%s=%s\n", env, value))
+		}
+		return nil
 	},
 }
