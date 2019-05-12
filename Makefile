@@ -28,3 +28,8 @@ refresh: generate format
 .PHONY: test
 test:
 	@go test -race -timeout 1s ./...
+
+
+.PHONY: run
+run:
+	@go run main.go up -f testdata/app.toml -- main.go -f testdata/app.toml version
