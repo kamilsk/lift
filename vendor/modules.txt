@@ -2,6 +2,8 @@
 github.com/inconshreveable/mousetrap
 # github.com/kamilsk/platform v0.14.1
 github.com/kamilsk/platform/cmd/cobra
+github.com/kamilsk/platform/pkg/unsafe
+github.com/kamilsk/platform/pkg/safe
 github.com/kamilsk/platform/pkg/fn
 github.com/kamilsk/platform/pkg/math
 # github.com/pelletier/go-toml v1.3.0
