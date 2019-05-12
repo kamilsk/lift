@@ -10,12 +10,13 @@ import (
 
 // App contains service configuration.
 type App struct {
-	Name         string       `toml:"name"`
-	Desc         string       `toml:"description"`
-	Kind         string       `toml:"kind"`
-	Unit         string       `toml:"unit"`
-	Engine       Engine       `toml:"engine"`
-	Dependencies []Dependency `toml:"dependencies"`
+	Name         string            `toml:"name"`
+	Desc         string            `toml:"description"`
+	Kind         string            `toml:"kind"`
+	Unit         string            `toml:"unit"`
+	Engine       Engine            `toml:"engine"`
+	Environment  map[string]string `toml:"envs.local.env_vars"`
+	Dependencies []Dependency      `toml:"dependencies"`
 }
 
 // Engine describes section related to a service engine.
