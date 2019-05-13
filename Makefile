@@ -30,6 +30,10 @@ test:
 	@go test -race -timeout 1s ./...
 
 
+.PHONY: build
+build:
+	@go build -o bin/lift .
+
 .PHONY: run
 run:
 	@go run main.go env -f testdata/app.toml
