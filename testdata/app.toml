@@ -44,6 +44,7 @@ name = "service-b"
 name = "service-c"
 
 [env_vars]
+CUSTOM = "variable"
 SERVICE_A_URL = "http://service-a.cluster/"
 
 [envs.local.env_vars]

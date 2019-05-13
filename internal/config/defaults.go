@@ -4,38 +4,38 @@ var defaults = []Dependency{
 	{
 		Name: "postgresql",
 		vars: map[string]string{
-			"PGHOST":     "",
-			"PGPORT":     "",
-			"PGUSER":     "",
+			"PGHOST":     "localhost",
+			"PGPORT":     "5432",
+			"PGUSER":     "postgres",
 			"PGPASSWORD": "",
-			"PGDATABASE": "",
+			"PGDATABASE": "postgres",
 		},
 	},
 	{
 		Name: "mongodb",
 		vars: map[string]string{
-			"MONGO_DSN": "",
+			"MONGO_DSN": "mongodb://localhost:27017",
 		},
 	},
 	{
 		Name: "rabbitmq",
 		vars: map[string]string{
-			"RABBITMQ_MASTER": "",
-			"RABBITMQ_BACKUP": "",
+			"RABBITMQ_MASTER": "localhost:5672",
+			"RABBITMQ_BACKUP": "localhost:5672",
 		},
 	},
 	{
 		Name: "redis",
 		vars: map[string]string{
-			"REDIS_HOST": "",
-			"REDIS_PORT": "",
+			"REDIS_HOST": "localhost",
+			"REDIS_PORT": "6379",
 		},
 	},
 	{
 		Name: "sphinx",
 		vars: map[string]string{
-			"SPHINX_HOST": "",
-			"SPHINX_PORT": "",
+			"SPHINX_HOST": "localhost",
+			"SPHINX_PORT": "9306",
 		},
 	},
 }
