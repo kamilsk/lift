@@ -67,7 +67,18 @@ type storage struct {
 // Decode reads configuration from reader and decodes it into struct.
 func Decode(r io.Reader) (Service, error) {
 	type extended struct {
-		Service
+
+		// TODO nested Service
+		//   copy-paste cause https://github.com/pelletier/go-toml/issues/279
+		Name         string       `toml:"name"`
+		Desc         string       `toml:"description"`
+		Host         string       `toml:"host"`
+		Kind         string       `toml:"kind"`
+		Unit         string       `toml:"unit"`
+		Engine       Engine       `toml:"engine"`
+		Environment  Environment  `toml:"env_vars"`
+		Dependencies Dependencies `toml:"dependencies"`
+
 		MongoDB    storage     `toml:"mongodb"`
 		PostgreSQL storage     `toml:"postgresql"`
 		RabbitMQ   storage     `toml:"rabbitmq"`
@@ -89,7 +100,7 @@ func Decode(r io.Reader) (Service, error) {
 		sphinxStorage: &cnf.Sphinx,
 	} {
 		if storage.Enabled {
-			cnf.Service.Dependencies = append(cnf.Service.Dependencies, Dependency{
+			cnf.Dependencies = append(cnf.Dependencies, Dependency{
 				Name: name,
 				vars: defaults.FindByName(name).vars,
 			})
@@ -99,10 +110,18 @@ func Decode(r io.Reader) (Service, error) {
 	for _, dep := range cnf.Dependencies {
 		env.Merge(dep.vars)
 	}
-	env.Merge(cnf.Service.Environment)
+	env.Merge(cnf.Environment)
 	env.Merge(cnf.Local)
-	cnf.Service.Environment = env
-	return cnf.Service, nil
+	return Service{
+		Name:         cnf.Name,
+		Desc:         cnf.Desc,
+		Host:         cnf.Host,
+		Kind:         cnf.Kind,
+		Unit:         cnf.Unit,
+		Engine:       cnf.Engine,
+		Environment:  env,
+		Dependencies: cnf.Dependencies,
+	}, nil
 }
 
 // FromFile reads configuration from file and decodes it into struct.
