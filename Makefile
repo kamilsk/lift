@@ -38,6 +38,10 @@ test-with-coverage-profile:
 build:
 	@go build -o bin/lift .
 
+.PHONY: install
+install:
+	@go build -o $(GOPATH)/bin/lift .
+
 .PHONY: run
 run:
 	@go run main.go env -f testdata/app.toml

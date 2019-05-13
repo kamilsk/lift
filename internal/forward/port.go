@@ -1,4 +1,4 @@
-package config
+package forward
 
 import (
 	"net/url"

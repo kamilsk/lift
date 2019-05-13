@@ -40,7 +40,8 @@ func (env Environment) Merge(extra Environment) {
 
 // Dependency describes section related to a service dependencies.
 type Dependency struct {
-	Name string `toml:"name"`
+	Name    string   `toml:"name"`
+	Forward []string `toml:"-"`
 
 	vars map[string]string
 }
@@ -100,10 +101,7 @@ func Decode(r io.Reader) (Service, error) {
 		sphinxStorage: &cnf.Sphinx,
 	} {
 		if storage.Enabled {
-			cnf.Dependencies = append(cnf.Dependencies, Dependency{
-				Name: name,
-				vars: defaults.FindByName(name).vars,
-			})
+			cnf.Dependencies = append(cnf.Dependencies, defaults.FindByName(name))
 		}
 	}
 	env := make(Environment)

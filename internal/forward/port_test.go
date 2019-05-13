@@ -1,9 +1,9 @@
-package config_test
+package forward_test
 
 import (
 	"testing"
 
-	. "github.com/kamilsk/lift/internal/config"
+	. "github.com/kamilsk/lift/internal/forward"
 	"github.com/stretchr/testify/assert"
 )
 
