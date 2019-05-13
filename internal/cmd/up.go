@@ -19,7 +19,7 @@ var upCmd = &cobra.Command{
 			return err
 		}
 		for env, value := range cnf.Environment {
-			unsafe.DoSilent(fmt.Fprintf(cmd.OutOrStdout(), "export %s=%s;\n", env, value))
+			unsafe.DoSilent(fmt.Fprintf(cmd.OutOrStdout(), "export %s=%q;\n", env, value))
 		}
 		if len(args) == 0 {
 			args = []string{"main.go"}

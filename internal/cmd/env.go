@@ -18,7 +18,7 @@ var envCmd = &cobra.Command{
 			return err
 		}
 		for env, value := range cnf.Environment {
-			unsafe.DoSilent(fmt.Fprintf(cmd.OutOrStdout(), "%s=%s\n", env, value))
+			unsafe.DoSilent(fmt.Fprintf(cmd.OutOrStdout(), "%s=%q\n", env, value))
 		}
 		return nil
 	},
