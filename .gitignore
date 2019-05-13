@@ -1,4 +1,5 @@
 # code coverage and quality reports
+cc-test-reporter
 *.out
 
 # binary
