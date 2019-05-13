@@ -29,6 +29,10 @@ refresh: generate format
 test:
 	@go test -race -timeout 1s ./...
 
+.PHONY: test-with-coverage-profile
+test-with-coverage-profile:
+	@go test -covermode count -coverprofile c.out -timeout 1s ./...
+
 
 .PHONY: build
 build:

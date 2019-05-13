@@ -10,7 +10,7 @@
 ```bash
 $ lift env > .env
 
-$ eval $(lift up)
+$ eval $(lift up) | tee lift.log
 ```
 
 ---
