@@ -24,7 +24,7 @@ $ brew install kamilsk/tap/lift
 ### Binary
 
 ```bash
-$ REQ_VER=0.0.1  # all available versions are on https://github.com/kamilsk/lift/releases/
+$ REQ_VER=0.0.2  # all available versions are on https://github.com/kamilsk/lift/releases/
 $ REQ_OS=Linux   # macOS is also available
 $ REQ_ARCH=64bit # 32bit is also available
 # wget -q -O lift.tar.gz

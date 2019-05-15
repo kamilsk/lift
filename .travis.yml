@@ -23,10 +23,9 @@ before_script:
 script:
 - if [[ $TRAVIS_GO_VERSION == 1.12* ]]; then make test-with-coverage-profile; else make test; fi
 
-after_script:
-- if [[ $TRAVIS_GO_VERSION == 1.12* ]]; then ./cc-test-reporter after-build -t gocov --exit-code $TRAVIS_TEST_RESULT; fi
-
 after_success:
+- if [[ $TRAVIS_GO_VERSION == 1.12* ]]; then ./cc-test-reporter after-build -t gocov --exit-code $TRAVIS_TEST_RESULT; fi
+- if [[ $TRAVIS_GO_VERSION == 1.12* ]]; then rm ./cc-test-reporter; fi
 - if [[ $TRAVIS_GO_VERSION == 1.12* ]] && [ -n "$TRAVIS_TAG" ]; then curl -sL https://git.io/goreleaser | bash; fi
 
 notifications:
