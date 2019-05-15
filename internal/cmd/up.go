@@ -3,7 +3,6 @@ package cmd
 import (
 	"fmt"
 	"os"
-	"strconv"
 	"strings"
 
 	"github.com/kamilsk/lift/internal/config"
@@ -26,25 +25,12 @@ var upCmd = &cobra.Command{
 		for variable, value := range cnf.Environment {
 			commands = append(commands, sh.Assign(variable, value))
 		}
-		{
-			args := make([]string, 0, 8)
-			for _, dep := range cnf.Dependencies {
-				if len(dep.Forward) == 0 {
-					continue
-				}
-				args = append(args, forward.PodName(cnf.Name, dep.Name, true))
-				for _, env := range dep.Forward {
-					port, err := forward.ExtractPort(cnf.Environment[env])
-					if err != nil {
-						return err
-					}
-					args = append(args, strconv.Itoa(int(port)))
-				}
-			}
-			if len(args) > 0 {
-				// TODO:upstream use demonized version with signal support
-				commands = append(commands, shell.Command(fmt.Sprintf("forward -- %s &", strings.Join(args, " "))))
-			}
+		command, err := forward.Command(cnf, true)
+		if err != nil {
+			return err
+		}
+		if command != "" {
+			commands = append(commands, command)
 		}
 		if len(args) == 0 {
 			args = []string{"cmd/service/main.go"} // TODO:check use os.Stat to filter valid entry

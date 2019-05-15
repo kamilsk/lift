@@ -72,7 +72,7 @@ type win struct{}
 
 // Assign returns a command to set the variable value.
 func (win) Assign(variable, value string) Command {
-	return Command(fmt.Sprintf("SET %s=%q", variable, value))
+	return Command(fmt.Sprintf("set %s=%q", variable, value))
 }
 
 func (win) Print(output io.Writer, commands []Command) error {
