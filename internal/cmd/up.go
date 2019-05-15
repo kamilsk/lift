@@ -2,26 +2,29 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 	"strconv"
 	"strings"
 
 	"github.com/kamilsk/lift/internal/config"
 	"github.com/kamilsk/lift/internal/forward"
-	"github.com/kamilsk/platform/pkg/unsafe"
+	"github.com/kamilsk/lift/internal/shell"
 	"github.com/spf13/cobra"
 )
 
 var upCmd = &cobra.Command{
 	Use:   "up",
-	Short: "Dump execution instructions based on configuration file for eval",
-	Long:  "Dump execution instructions based on configuration file for eval.",
+	Short: "Dump instruction for eval to run service locally",
+	Long:  "Dump instruction for eval to run service locally.",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		cnf, err := config.FromFile(cmd.Flag("file").Value.String())
 		if err != nil {
 			return err
 		}
-		for env, value := range cnf.Environment {
-			unsafe.DoSilent(fmt.Fprintf(cmd.OutOrStdout(), "export %s=%q;\n", env, value)) // TODO:batch flush together
+		sh := shell.New(os.Getenv("SHELL"))
+		commands := make([]shell.Command, 0, 8)
+		for variable, value := range cnf.Environment {
+			commands = append(commands, sh.Assign(variable, value))
 		}
 		{
 			args := make([]string, 0, 8)
@@ -40,14 +43,14 @@ var upCmd = &cobra.Command{
 			}
 			if len(args) > 0 {
 				// TODO:upstream use demonized version with signal support
-				unsafe.DoSilent(fmt.Fprintf(cmd.OutOrStdout(), "forward -- %s &;\n", strings.Join(args, " ")))
+				commands = append(commands, shell.Command(fmt.Sprintf("forward -- %s &", strings.Join(args, " "))))
 			}
 		}
 		if len(args) == 0 {
 			args = []string{"cmd/service/main.go"} // TODO:check use os.Stat to filter valid entry
 		}
-		unsafe.DoSilent(fmt.Fprintf(cmd.OutOrStdout(), "go run %s;\n", strings.Join(args, " ")))
-		unsafe.DoSilent(fmt.Fprintf(cmd.OutOrStdout(), "ps | grep '[f]orward --' | awk '{print $1}' | xargs kill -SIGKILL;\n"))
-		return nil
+		commands = append(commands, shell.Command(fmt.Sprintf("go run %s", strings.Join(args, " "))))
+		commands = append(commands, shell.Command("ps | grep '[f]orward --' | awk '{print $1}' | xargs kill -SIGKILL"))
+		return sh.Print(cmd.OutOrStdout(), commands)
 	},
 }

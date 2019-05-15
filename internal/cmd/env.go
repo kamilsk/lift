@@ -2,9 +2,9 @@ package cmd
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/kamilsk/lift/internal/config"
-	"github.com/kamilsk/platform/pkg/unsafe"
 	"github.com/spf13/cobra"
 )
 
@@ -17,9 +17,11 @@ var envCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
-		for env, value := range cnf.Environment {
-			unsafe.DoSilent(fmt.Fprintf(cmd.OutOrStdout(), "%s=%q\n", env, value))
+		vars := make([]string, 0, len(cnf.Environment))
+		for variable, value := range cnf.Environment {
+			vars = append(vars, fmt.Sprintf("%s=%q", variable, value))
 		}
-		return nil
+		_, err = fmt.Fprintln(cmd.OutOrStdout(), strings.Join(vars, "\n"))
+		return err
 	},
 }
