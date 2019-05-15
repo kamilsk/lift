@@ -46,4 +46,6 @@ install:
 run:
 	@go run main.go env -f testdata/app.toml
 	@echo ---
+	@go run main.go forward -f testdata/app.toml
+	@echo ---
 	@go run main.go up -f testdata/app.toml -- main.go -f testdata/app.toml version

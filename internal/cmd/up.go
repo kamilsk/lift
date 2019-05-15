@@ -37,6 +37,6 @@ var upCmd = &cobra.Command{
 		}
 		commands = append(commands, shell.Command(fmt.Sprintf("go run %s", strings.Join(args, " "))))
 		commands = append(commands, shell.Command("ps | grep '[f]orward --' | awk '{print $1}' | xargs kill -SIGKILL"))
-		return sh.Print(cmd.OutOrStdout(), commands)
+		return sh.Print(cmd.OutOrStdout(), commands...)
 	},
 }

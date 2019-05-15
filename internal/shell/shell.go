@@ -14,7 +14,7 @@ type Shell interface {
 	// Assign returns a command to set the variable value.
 	Assign(variable, value string) Command
 	// Print dumps command list into the writer.
-	Print(io.Writer, []Command) error
+	Print(io.Writer, ...Command) error
 }
 
 // Command represents a valid shell command.
@@ -42,8 +42,8 @@ func (sh) Assign(variable, value string) Command {
 	return Command(fmt.Sprintf("%s=%q; export %[1]s", variable, value))
 }
 
-func (sh) Print(output io.Writer, commands []Command) error {
-	return dump(output, commands)
+func (sh) Print(output io.Writer, commands ...Command) error {
+	return dump(output, commands...)
 }
 
 type bash struct{}
@@ -53,8 +53,8 @@ func (bash) Assign(variable, value string) Command {
 	return Command(fmt.Sprintf("export %s=%q", variable, value))
 }
 
-func (bash) Print(output io.Writer, commands []Command) error {
-	return dump(output, commands)
+func (bash) Print(output io.Writer, commands ...Command) error {
+	return dump(output, commands...)
 }
 
 type csh struct{}
@@ -64,8 +64,8 @@ func (csh) Assign(variable, value string) Command {
 	return Command(fmt.Sprintf("setenv %s %q", variable, value))
 }
 
-func (csh) Print(output io.Writer, commands []Command) error {
-	return dump(output, commands)
+func (csh) Print(output io.Writer, commands ...Command) error {
+	return dump(output, commands...)
 }
 
 type win struct{}
@@ -75,11 +75,11 @@ func (win) Assign(variable, value string) Command {
 	return Command(fmt.Sprintf("set %s=%q", variable, value))
 }
 
-func (win) Print(output io.Writer, commands []Command) error {
-	return dump(output, commands)
+func (win) Print(output io.Writer, commands ...Command) error {
+	return dump(output, commands...)
 }
 
-func dump(output io.Writer, commands []Command) error {
+func dump(output io.Writer, commands ...Command) error {
 	head := *(*reflect.SliceHeader)(unsafe.Pointer(&commands))
 	data := *(*[]string)(unsafe.Pointer(&head))
 	_, err := fmt.Fprintln(output, strings.Join(data, ";\n"))
