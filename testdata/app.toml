@@ -2,7 +2,7 @@ name = "demo"
 description = "Some demo service at Avito"
 host = "demo.cluster"
 kind = "business"
-unit = "Highload"
+unit = "SWAT"
 replicas = 1
 
 [engine]
