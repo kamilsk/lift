@@ -67,6 +67,22 @@ ps | grep '[f]orward --' | awk '{print $1}' | xargs kill -SIGKILL
 $ eval $(lift up)
 ```
 
+### Good to have
+
+```makefile
+.PHONY: lift
+lift:
+	@lift env > bin/.env
+
+.PHONY: up
+up:
+	@avito service dev --no-watch
+
+.PHONY: down
+down:
+	@avito service deletelocal
+```
+
 ## Installation
 
 ### Homebrew
