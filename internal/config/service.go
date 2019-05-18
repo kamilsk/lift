@@ -15,7 +15,6 @@ type Service struct {
 	Desc         string       `toml:"description"`
 	Host         string       `toml:"host"`
 	Kind         string       `toml:"kind"`
-	Unit         string       `toml:"unit"`
 	Engine       Engine       `toml:"engine"`
 	Environment  Environment  `toml:"env_vars"`
 	Dependencies Dependencies `toml:"dependencies"`
@@ -65,7 +64,7 @@ type storage struct {
 	Version string `toml:"version"`
 }
 
-// Decode reads configuration from reader and decodes it into struct.
+// Decode reads configuration from reader and decodes it into the struct.
 func Decode(r io.Reader) (Service, error) {
 	type extended struct {
 
@@ -75,7 +74,6 @@ func Decode(r io.Reader) (Service, error) {
 		Desc         string       `toml:"description"`
 		Host         string       `toml:"host"`
 		Kind         string       `toml:"kind"`
-		Unit         string       `toml:"unit"`
 		Engine       Engine       `toml:"engine"`
 		Environment  Environment  `toml:"env_vars"`
 		Dependencies Dependencies `toml:"dependencies"`
@@ -104,7 +102,7 @@ func Decode(r io.Reader) (Service, error) {
 			cnf.Dependencies = append(cnf.Dependencies, defaults.FindByName(name))
 		}
 	}
-	env := make(Environment)
+	env := Environment{}
 	for _, dep := range cnf.Dependencies {
 		env.Merge(dep.vars)
 	}
@@ -115,14 +113,13 @@ func Decode(r io.Reader) (Service, error) {
 		Desc:         cnf.Desc,
 		Host:         cnf.Host,
 		Kind:         cnf.Kind,
-		Unit:         cnf.Unit,
 		Engine:       cnf.Engine,
 		Environment:  env,
 		Dependencies: cnf.Dependencies,
 	}, nil
 }
 
-// FromFile reads configuration from file and decodes it into struct.
+// FromFile reads configuration from file and decodes it into the struct.
 func FromFile(file string) (Service, error) {
 	f, err := os.Open(file)
 	if err != nil {
