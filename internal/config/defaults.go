@@ -17,7 +17,7 @@ var defaults = Dependencies{
 			"PGPORT":     "5432",
 			"PGUSER":     "postgres",
 			"PGPASSWORD": "",
-			"PGDATABASE": "postgres",
+			"PGDATABASE": "master",
 		},
 	},
 	{
