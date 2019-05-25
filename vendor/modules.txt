@@ -7,7 +7,7 @@ github.com/kamilsk/platform/cmd/cobra
 github.com/kamilsk/platform/pkg/safe
 github.com/kamilsk/platform/pkg/fn
 github.com/kamilsk/platform/pkg/math
-# github.com/pelletier/go-toml v1.3.0
+# github.com/pelletier/go-toml v1.4.0 => github.com/kamilsk/go-toml v1.4.0-asd-patch
 github.com/pelletier/go-toml
 # github.com/pkg/errors v0.8.1
 github.com/pkg/errors

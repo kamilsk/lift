@@ -64,13 +64,7 @@ type storage struct {
 // Decode reads configuration from reader and decodes it into the struct.
 func Decode(r io.Reader) (Service, error) {
 	type extended struct {
-
-		// TODO nested Service
-		//   copy-paste cause https://github.com/pelletier/go-toml/issues/279
-		Name         string       `toml:"name"`
-		Engine       Engine       `toml:"engine"`
-		Environment  Environment  `toml:"env_vars"`
-		Dependencies Dependencies `toml:"dependencies"`
+		Service
 
 		Desc string `toml:"description"`
 		Host string `toml:"host"`
