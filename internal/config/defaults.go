@@ -1,16 +1,16 @@
 package config
 
 const (
-	pgStorage     = "postgresql"
-	mongoStorage  = "mongodb"
-	rabbitStorage = "rabbitmq"
-	redisStorage  = "redis"
-	sphinxStorage = "sphinx"
+	postgresStorage = "postgresql"
+	mongoStorage    = "mongodb"
+	rabbitStorage   = "rabbitmq"
+	redisStorage    = "redis"
+	sphinxStorage   = "sphinx"
 )
 
 var defaults = Dependencies{
 	{
-		Name:    pgStorage,
+		Name:    postgresStorage,
 		Forward: []string{"PGPORT"},
 		vars: map[string]string{
 			"PGHOST":     "localhost",
