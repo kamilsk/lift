@@ -4,13 +4,16 @@
 
 [![Build Status][icon_build]][page_build]
 
-## The concept
+## 💡 Idea
 
 ```bash
 $ eval $(lift up)
 ```
 
-## Motivation
+Full description of the idea is available
+[here](https://www.notion.so/octolab/lift-9078cdbe27c842498f0561b6acd88a4d?r=0b753cbf767346f5a6fd51194829a2f3).
+
+## 🏆 Motivation
 
 In [Avito](https://tech.avito.ru) we have an excellent [PaaS](https://en.wikipedia.org/wiki/Platform_as_a_service)
 which helps us to run our services in [Kubernetes](https://kubernetes.io) clusters with just a few commands.
@@ -19,7 +22,7 @@ For that reason, I need a possibility to up services written on [Go](https://gol
 [GoLand](https://www.jetbrains.com/go/) without losing the benefits that
 [minikube](https://github.com/kubernetes/minikube) provides.
 
-## How to
+## 🤼‍♂️ How to
 
 0. Describe your dependencies and storage in `app.toml`.
 
@@ -34,6 +37,8 @@ $ lift env > bin/.env
 3. Use it in your IDE with [EnvFile](https://plugins.jetbrains.com/plugin/7861-envfile) plugin
 
 ![GoLand integration](.github/goland_integration.png)
+
+  - 🔦 tip: use `shift + cmd + .` to see hidden dot files
 
 4. Forward required ports using `kubectl port-forward`, or use my other tool named
 [forward](https://github.com/kamilsk/forward) for that
@@ -83,7 +88,7 @@ down:
 	@avito service deletelocal
 ```
 
-## Installation
+## 🧩 Installation
 
 ### Homebrew
 
@@ -103,6 +108,28 @@ $ curl -sL -o lift.tar.gz \
 $ tar xf lift.tar.gz -C "${GOPATH}"/bin/ && rm lift.tar.gz
 ```
 
+### From source code
+
+```bash
+# using standard go tools
+$ go get -u github.com/kamilsk/lift
+# or using egg tool
+$ egg github.com/kamilsk/lift -- go install .
+# with mirror
+$ egg bitbucket.org/kamilsk/lift -- go install .
+```
+
+> [egg][page_egg]<sup id="anchor-egg">[1](#egg)</sup> is an `extended go get`.
+
+### Bash and Zsh completions
+
+```bash
+$ lift completion -f bash > /path/to/bash_completion.d/lift.sh
+$ lift completion -f zsh  > /path/to/zsh-completions/_lift.zsh
+```
+
+<sup id="egg">1</sup> The project is still in prototyping.[↩](#anchor-egg)
+
 ---
 
 made with ❤️ for everyone
@@ -111,3 +138,4 @@ made with ❤️ for everyone
 
 [page_build]:      https://travis-ci.org/kamilsk/lift
 [page_promo]:      https://github.com/kamilsk/lift
+[page_egg]:        https://github.com/kamilsk/egg
