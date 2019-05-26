@@ -2,6 +2,8 @@
 >
 > Up your service locally.
 
+[![Build Status][icon_build]][page_build]
+
 ## The concept
 
 ```bash
@@ -104,3 +106,8 @@ $ tar xf lift.tar.gz -C "${GOPATH}"/bin/ && rm lift.tar.gz
 ---
 
 made with ❤️ for everyone
+
+[icon_build]:      https://travis-ci.org/kamilsk/lift.svg?branch=master
+
+[page_build]:      https://travis-ci.org/kamilsk/lift
+[page_promo]:      https://github.com/kamilsk/lift
