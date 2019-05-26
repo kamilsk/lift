@@ -2,9 +2,6 @@
 >
 > Up your service locally.
 
-[![Patreon][icon_patreon]](https://www.patreon.com/octolab)
-[![License][icon_license]](LICENSE)
-
 ## Motivation
 
 In [Avito](https://tech.avito.ru) we have an excellent PaaS which helps us to run our services in Kubernetes clusters
@@ -106,6 +103,3 @@ $ tar xf lift.tar.gz -C "${GOPATH}"/bin/ && rm lift.tar.gz
 ---
 
 made with ❤️ for everyone
-
-[icon_license]: https://img.shields.io/badge/license-MIT-blue.svg
-[icon_patreon]: https://img.shields.io/badge/patreon-donate-orange.svg
