@@ -2,25 +2,26 @@
 >
 > Up your service locally.
 
-## Motivation
-
-In [Avito](https://tech.avito.ru) we have an excellent PaaS which helps us to run our services in Kubernetes clusters
-with just a few commands. But I want to run it so quickly and frequently as possible to debug during development.
-For that reason, I need a possibility to up services written on Go locally from IDE like
-[GoLand](https://www.jetbrains.com/go/) without losing the benefits that
-[minikube](https://github.com/kubernetes/minikube) provides.
-
 ## The concept
 
 ```bash
 $ eval $(lift up)
 ```
 
+## Motivation
+
+In [Avito](https://tech.avito.ru) we have an excellent [PaaS](https://en.wikipedia.org/wiki/Platform_as_a_service)
+which helps us to run our services in [Kubernetes](https://kubernetes.io) clusters with just a few commands.
+But I want to run it so quickly and frequently as possible to debug during development.
+For that reason, I need a possibility to up services written on [Go](https://golang.org) locally from IDE like
+[GoLand](https://www.jetbrains.com/go/) without losing the benefits that
+[minikube](https://github.com/kubernetes/minikube) provides.
+
 ## How to
 
 0. Describe your dependencies and storage in `app.toml`.
 
-1. Define everything you need in `env_vars` and `envs.local.env_vars`. See [example](testdata/app.toml).
+1. Define everything you need in `env_vars` and `envs.local.env_vars`. See an [example](testdata/app.toml).
 
 2. Dump environment variables into `.env` file
 
@@ -32,9 +33,8 @@ $ lift env > bin/.env
 
 ![GoLand integration](.github/goland_integration.png)
 
-4. Forward required ports using `kubectl port-forward`
-
-  - or use my other tool named [forward](https://github.com/kamilsk/forward) for that
+4. Forward required ports using `kubectl port-forward`, or use my other tool named
+[forward](https://github.com/kamilsk/forward) for that
 
 ```bash
 $ lift forward
@@ -52,7 +52,7 @@ export SERVICE_C_URL="http://service-c.cluster/";
 export SERVICE_B_URL="http://service-b.cluster/";
 export PGHOST="localhost";
 export PGPORT="5432";
-export PGDATABASE="postgres";
+export PGDATABASE="master";
 export PGUSER="postgres";
 export PGPASSWORD="";
 export REDIS_PORT="6379";
@@ -73,6 +73,7 @@ lift:
 
 .PHONY: up
 up:
+	@avito start
 	@avito service dev --no-watch
 
 .PHONY: down
