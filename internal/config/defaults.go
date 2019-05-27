@@ -1,16 +1,16 @@
 package config
 
 const (
-	postgresStorage = "postgresql"
-	mongoStorage    = "mongodb"
-	rabbitStorage   = "rabbitmq"
-	redisStorage    = "redis"
-	sphinxStorage   = "sphinx"
+	storagePostgres = "postgresql"
+	storageMongo    = "mongodb"
+	storageRabbit   = "rabbitmq"
+	storageRedis    = "redis"
+	storageSphinx   = "sphinx"
 )
 
 var defaults = Dependencies{
 	{
-		Name:    postgresStorage,
+		Name:    storagePostgres,
 		Forward: []string{envPgPort},
 		vars: map[string]string{
 			envPgHost:     "localhost",
@@ -21,14 +21,14 @@ var defaults = Dependencies{
 		},
 	},
 	{
-		Name:    mongoStorage,
+		Name:    storageMongo,
 		Forward: []string{envMongoDSN},
 		vars: map[string]string{
 			envMongoDSN: "mongodb://localhost:27017",
 		},
 	},
 	{
-		Name:    rabbitStorage,
+		Name:    storageRabbit,
 		Forward: []string{envRabbitMQMaster, envRabbitMQBackup},
 		vars: map[string]string{
 			envRabbitMQMaster: "localhost:5672",
@@ -36,7 +36,7 @@ var defaults = Dependencies{
 		},
 	},
 	{
-		Name:    redisStorage,
+		Name:    storageRedis,
 		Forward: []string{envRedisPort},
 		vars: map[string]string{
 			envRedisHost: "localhost",
@@ -44,10 +44,10 @@ var defaults = Dependencies{
 		},
 	},
 	{
-		Name:    sphinxStorage,
+		Name:    storageSphinx,
 		Forward: []string{envSphinxPort},
 		vars: map[string]string{
-			encSphinxHost: "localhost",
+			envSphinxHost: "localhost",
 			envSphinxPort: "9306",
 		},
 	},

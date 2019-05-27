@@ -85,11 +85,11 @@ func Decode(r io.Reader) (Service, error) {
 		return Service{}, err
 	}
 	for name, storage := range map[string]*storage{
-		mongoStorage:    &cnf.MongoDB,
-		postgresStorage: &cnf.PostgreSQL,
-		rabbitStorage:   &cnf.RabbitMQ,
-		redisStorage:    &cnf.Redis,
-		sphinxStorage:   &cnf.Sphinx,
+		storageMongo:    &cnf.MongoDB,
+		storagePostgres: &cnf.PostgreSQL,
+		storageRabbit:   &cnf.RabbitMQ,
+		storageRedis:    &cnf.Redis,
+		storageSphinx:   &cnf.Sphinx,
 	} {
 		if storage.Enabled {
 			cnf.Dependencies = append(cnf.Dependencies, defaults.FindByName(name))
