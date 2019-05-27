@@ -99,6 +99,7 @@ func Decode(r io.Reader) (Service, error) {
 	for _, dep := range cnf.Dependencies {
 		env.Merge(dep.vars)
 	}
+	env.Merge(EngineSpecific(cnf.Engine))
 	env.Merge(cnf.Environment)
 	env.Merge(cnf.Local)
 	return Service{

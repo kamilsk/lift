@@ -11,44 +11,44 @@ const (
 var defaults = Dependencies{
 	{
 		Name:    postgresStorage,
-		Forward: []string{"PGPORT"},
+		Forward: []string{envPgPort},
 		vars: map[string]string{
-			"PGHOST":     "localhost",
-			"PGPORT":     "5432",
-			"PGUSER":     "postgres",
-			"PGPASSWORD": "",
-			"PGDATABASE": "master",
+			envPgHost:     "localhost",
+			envPgPort:     "5432",
+			envPgUser:     "postgres",
+			envPgPassword: "",
+			envPgDatabase: "master",
 		},
 	},
 	{
 		Name:    mongoStorage,
-		Forward: []string{"MONGO_DSN"},
+		Forward: []string{envMongoDSN},
 		vars: map[string]string{
-			"MONGO_DSN": "mongodb://localhost:27017",
+			envMongoDSN: "mongodb://localhost:27017",
 		},
 	},
 	{
 		Name:    rabbitStorage,
-		Forward: []string{"RABBITMQ_MASTER", "RABBITMQ_BACKUP"},
+		Forward: []string{envRabbitMQMaster, envRabbitMQBackup},
 		vars: map[string]string{
-			"RABBITMQ_MASTER": "localhost:5672",
-			"RABBITMQ_BACKUP": "localhost:5672",
+			envRabbitMQMaster: "localhost:5672",
+			envRabbitMQBackup: "localhost:5672",
 		},
 	},
 	{
 		Name:    redisStorage,
-		Forward: []string{"REDIS_PORT"},
+		Forward: []string{envRedisPort},
 		vars: map[string]string{
-			"REDIS_HOST": "localhost",
-			"REDIS_PORT": "6379",
+			envRedisHost: "localhost",
+			envRedisPort: "6379",
 		},
 	},
 	{
 		Name:    sphinxStorage,
-		Forward: []string{"SPHINX_PORT"},
+		Forward: []string{envSphinxPort},
 		vars: map[string]string{
-			"SPHINX_HOST": "localhost",
-			"SPHINX_PORT": "9306",
+			encSphinxHost: "localhost",
+			envSphinxPort: "9306",
 		},
 	},
 }
