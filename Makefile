@@ -38,6 +38,10 @@ test-with-coverage-profile:
 build:
 	@go build -o bin/lift .
 
+.PHONY: dist
+dist:
+	@godownloader .goreleaser.yml > .github/install.sh
+
 .PHONY: install
 install:
 	@go build -o $(GOPATH)/bin/lift .

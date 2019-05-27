@@ -99,16 +99,10 @@ $ brew install kamilsk/tap/lift
 ### Binary
 
 ```bash
-$ REQ_VER=0.0.3  # all available versions are on https://github.com/kamilsk/lift/releases/
-$ REQ_OS=Linux   # macOS is also available
-$ REQ_ARCH=64bit # 32bit is also available
-# wget -q -O lift.tar.gz
-$ curl -sL -o lift.tar.gz \
-       https://github.com/kamilsk/lift/releases/download/"${REQ_VER}/lift_${REQ_VER}_${REQ_OS}-${REQ_ARCH}".tar.gz
-$ tar xf lift.tar.gz -C "${GOPATH}"/bin/ && rm lift.tar.gz
+$ curl -sfL http://bit.ly/install-lift | bash
 ```
 
-### From source code
+### Source
 
 ```bash
 # using standard go tools
