@@ -117,8 +117,8 @@ $ egg bitbucket.org/kamilsk/lift -- go install .
 ### Bash and Zsh completions
 
 ```bash
-$ lift completion -f bash > /path/to/bash_completion.d/lift.sh
-$ lift completion -f zsh  > /path/to/zsh-completions/_lift.zsh
+$ lift completion bash > /path/to/bash_completion.d/lift.sh
+$ lift completion zsh  > /path/to/zsh-completions/_lift.zsh
 ```
 
 <sup id="egg">1</sup> The project is still in prototyping.[↩](#anchor-egg)
