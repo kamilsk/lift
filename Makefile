@@ -1,4 +1,5 @@
 SHELL       = /bin/bash -euo pipefail
+BIN         = $(shell basename $(shell pwd))
 PKGS        = go list ./... | grep -v vendor | grep -v ^_
 GO111MODULE = on
 GOFLAGS     = -mod=vendor
@@ -36,7 +37,7 @@ test-with-coverage-profile:
 
 .PHONY: build
 build:
-	@go build -o bin/lift .
+	@go build -o bin/$(BIN) .
 
 .PHONY: dist
 dist:
@@ -44,7 +45,7 @@ dist:
 
 .PHONY: install
 install:
-	@go build -o $(GOPATH)/bin/lift .
+	@go build -o $(GOPATH)/bin/$(BIN) .
 
 .PHONY: run
 run:

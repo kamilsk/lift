@@ -99,17 +99,16 @@ $ brew install kamilsk/tap/lift
 ### Binary
 
 ```bash
-$ curl -sfL http://bit.ly/install-lift | bash
+$ curl -sfL https://bit.ly/install-lift | bash
 ```
 
 ### Source
 
 ```bash
-# using standard go tools
+# use standard go tools
 $ go get -u github.com/kamilsk/lift
-# or using egg tool
+# or use egg tool
 $ egg github.com/kamilsk/lift -- go install .
-# with mirror
 $ egg bitbucket.org/kamilsk/lift -- go install .
 ```
 
