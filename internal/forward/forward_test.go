@@ -3,8 +3,9 @@ package forward_test
 import (
 	"testing"
 
-	. "github.com/kamilsk/lift/internal/forward"
 	"github.com/stretchr/testify/assert"
+
+	. "github.com/kamilsk/lift/internal/forward"
 )
 
 func TestExtractPort(t *testing.T) {

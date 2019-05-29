@@ -5,8 +5,9 @@ import (
 	"os"
 	"strings"
 
-	"github.com/kamilsk/lift/internal/config"
 	"github.com/spf13/cobra"
+
+	"github.com/kamilsk/lift/internal/config"
 )
 
 var envCmd = &cobra.Command{

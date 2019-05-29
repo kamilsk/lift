@@ -4,15 +4,16 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/spf13/cobra"
+
 	"github.com/kamilsk/lift/internal/config"
 	"github.com/kamilsk/lift/internal/shell"
-	"github.com/spf13/cobra"
 )
 
 var callCmd = &cobra.Command{
 	Use:   "call",
-	Short: "Call another command with injecting environment variables",
-	Long:  "Call another command with injecting environment variables.",
+	Short: "Execute another command with injecting environment variables into it",
+	Long:  "Execute another command with injecting environment variables into it.",
 	Args:  cobra.MinimumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		wd, err := os.Getwd()

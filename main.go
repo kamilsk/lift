@@ -4,8 +4,9 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/kamilsk/lift/internal/cmd"
 	"github.com/kamilsk/platform/cmd/cobra"
+
+	"github.com/kamilsk/lift/internal/cmd"
 )
 
 var (

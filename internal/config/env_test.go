@@ -3,8 +3,9 @@ package config_test
 import (
 	"testing"
 
-	. "github.com/kamilsk/lift/internal/config"
 	"github.com/stretchr/testify/assert"
+
+	. "github.com/kamilsk/lift/internal/config"
 )
 
 func TestGoModule(t *testing.T) {

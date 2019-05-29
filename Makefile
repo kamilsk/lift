@@ -16,7 +16,7 @@ update:
 
 .PHONY: format
 format:
-	@goimports -ungroup -w .
+	@lift -f testdata/app.toml call -- goimports -local '$$GOMODULE' -ungroup -w .
 
 .PHONY: generate
 generate:

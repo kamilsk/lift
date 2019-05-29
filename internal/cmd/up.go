@@ -5,10 +5,11 @@ import (
 	"os"
 	"strings"
 
+	"github.com/spf13/cobra"
+
 	"github.com/kamilsk/lift/internal/config"
 	"github.com/kamilsk/lift/internal/forward"
 	"github.com/kamilsk/lift/internal/shell"
-	"github.com/spf13/cobra"
 )
 
 var upCmd = &cobra.Command{

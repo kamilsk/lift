@@ -88,6 +88,8 @@ down:
 	@avito service deletelocal
 ```
 
+![goimports integration](.github/goimports_integration.png)
+
 ## 🧩 Installation
 
 ### Homebrew
