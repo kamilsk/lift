@@ -47,8 +47,10 @@ func (sh) Assign(variable, value string) Command {
 }
 
 // Exec executes the command with the specified arguments and environment variables.
-func (sh) Exec(command Command, args, vars []string, stdout, stderr io.Writer) error {
-	return nil
+func (sh sh) Exec(command Command, args, vars []string, stdout, stderr io.Writer) error {
+	args = append([]string{"-c", string(command)}, args...)
+	args = append(args[:1], strings.Join(args[1:], " "))
+	return execute(sh.bin, args, vars, stdout, stderr)
 }
 
 func (sh) Print(output io.Writer, commands ...Command) error {
@@ -81,8 +83,10 @@ func (csh) Assign(variable, value string) Command {
 }
 
 // Exec executes the command with the specified arguments and environment variables.
-func (csh) Exec(command Command, args, vars []string, stdout, stderr io.Writer) error {
-	return nil
+func (csh csh) Exec(command Command, args, vars []string, stdout, stderr io.Writer) error {
+	args = append([]string{"-c", string(command)}, args...)
+	args = append(args[:1], strings.Join(args[1:], " "))
+	return execute(csh.bin, args, vars, stdout, stderr)
 }
 
 func (csh) Print(output io.Writer, commands ...Command) error {
@@ -97,8 +101,10 @@ func (win) Assign(variable, value string) Command {
 }
 
 // Exec executes the command with the specified arguments and environment variables.
-func (win) Exec(command Command, args, vars []string, stdout, stderr io.Writer) error {
-	return nil
+func (win win) Exec(command Command, args, vars []string, stdout, stderr io.Writer) error {
+	args = append([]string{"-c", string(command)}, args...)
+	args = append(args[:1], strings.Join(args[1:], " "))
+	return execute(win.bin, args, vars, stdout, stderr)
 }
 
 func (win) Print(output io.Writer, commands ...Command) error {
