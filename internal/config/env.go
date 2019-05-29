@@ -47,6 +47,19 @@ func EngineSpecific(engine Engine) Environment {
 	switch engine.Name {
 	case engineGo:
 		env := Environment{}
+
+		pkg, is := GoPackage(engine.WorkDir)
+		if is {
+			env[envGoPackage] = pkg
+			env[envGoImport] = pkg
+		}
+
+		mod, is := GoModule(engine.WorkDir)
+		if is {
+			env[envGoModule] = mod
+			env[envGoImport] = mod
+		}
+
 		return env
 	case engineStatic, enginePHP, enginePython:
 	}

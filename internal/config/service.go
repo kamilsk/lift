@@ -22,6 +22,7 @@ type Engine struct {
 	Name    string `toml:"name"`
 	Size    string `toml:"size"`
 	Version string `toml:"version"`
+	WorkDir string `toml:"-"`
 }
 
 // Environment holds available environment variables.
@@ -62,7 +63,7 @@ type storage struct {
 }
 
 // Decode reads configuration from reader and decodes it into the struct.
-func Decode(r io.Reader) (Service, error) {
+func Decode(wd string, r io.Reader) (Service, error) {
 	type extended struct {
 		Service
 
@@ -84,6 +85,7 @@ func Decode(r io.Reader) (Service, error) {
 	if err != nil {
 		return Service{}, err
 	}
+	cnf.Engine.WorkDir = wd
 	for name, storage := range map[string]*storage{
 		storageMongo:    &cnf.MongoDB,
 		storagePostgres: &cnf.PostgreSQL,
@@ -117,5 +119,5 @@ func FromFile(wd, file string) (Service, error) {
 		return Service{}, err
 	}
 	defer safe.Close(f)
-	return Decode(f)
+	return Decode(wd, f)
 }
