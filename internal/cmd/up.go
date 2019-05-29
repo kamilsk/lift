@@ -16,7 +16,11 @@ var upCmd = &cobra.Command{
 	Short: "Dump instruction for eval to run service locally",
 	Long:  "Dump instruction for eval to run service locally.",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		cnf, err := config.FromFile(cmd.Flag("file").Value.String())
+		wd, err := os.Getwd()
+		if err != nil {
+			return err
+		}
+		cnf, err := config.FromFile(wd, cmd.Flag("file").Value.String())
 		if err != nil {
 			return err
 		}

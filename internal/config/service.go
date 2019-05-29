@@ -111,7 +111,7 @@ func Decode(r io.Reader) (Service, error) {
 }
 
 // FromFile reads configuration from file and decodes it into the struct.
-func FromFile(file string) (Service, error) {
+func FromFile(wd, file string) (Service, error) {
 	f, err := os.Open(file)
 	if err != nil {
 		return Service{}, err
