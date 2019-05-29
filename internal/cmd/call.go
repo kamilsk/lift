@@ -11,10 +11,11 @@ import (
 )
 
 var callCmd = &cobra.Command{
-	Use:   "call",
-	Short: "Execute another command with injecting environment variables into it",
-	Long:  "Execute another command with injecting environment variables into it.",
-	Args:  cobra.MinimumNArgs(1),
+	Use:     "call",
+	Short:   "Execute another command with injecting environment variables into it",
+	Long:    "Execute another command with injecting environment variables into it.",
+	Example: "lift call -- echo $GOMODULE",
+	Args:    cobra.MinimumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		wd, err := os.Getwd()
 		if err != nil {
