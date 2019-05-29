@@ -3,16 +3,17 @@ package cmd
 import (
 	"fmt"
 	"os"
-	"strings"
 
 	"github.com/kamilsk/lift/internal/config"
+	"github.com/kamilsk/lift/internal/shell"
 	"github.com/spf13/cobra"
 )
 
-var envCmd = &cobra.Command{
-	Use:   "env",
-	Short: "Dump environment variables from configuration file",
-	Long:  "Dump environment variables from configuration file.",
+var callCmd = &cobra.Command{
+	Use:   "call",
+	Short: "Call another command with injecting environment variables",
+	Long:  "Call another command with injecting environment variables.",
+	Args:  cobra.MinimumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		wd, err := os.Getwd()
 		if err != nil {
@@ -26,7 +27,7 @@ var envCmd = &cobra.Command{
 		for variable, value := range cnf.Environment {
 			vars = append(vars, fmt.Sprintf("%s=%s", variable, value))
 		}
-		_, err = fmt.Fprintln(cmd.OutOrStdout(), strings.Join(vars, "\n"))
-		return err
+		var command = shell.Command(args[0])
+		return shell.New(os.Getenv("SHELL")).Exec(command, args[1:], vars, cmd.OutOrStdout(), cmd.OutOrStderr())
 	},
 }
