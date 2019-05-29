@@ -74,6 +74,10 @@ $ eval $(lift up)
 ### Good to have
 
 ```makefile
+.PHONY: format
+format:
+	@lift call -- goimports -local '$$GOMODULE' -ungroup -w .
+
 .PHONY: lift
 lift:
 	@lift env > bin/.env
