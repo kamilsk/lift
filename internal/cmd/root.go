@@ -16,8 +16,10 @@ func New(output io.Writer) *cobra.Command {
 	cmd.AddCommand(upCmd, downCmd, envCmd, forwardCmd, callCmd)
 	cmd.SetOutput(output)
 	var (
-		file string
+		file    string
+		mapping = make([]string, 0, 4)
 	)
 	cmd.PersistentFlags().StringVarP(&file, "file", "f", "app.toml", "service configuration file")
+	cmd.PersistentFlags().StringArrayVarP(&mapping, "map", "m", nil, "port mapping (e.g. -m REMOTE:LOCAL)")
 	return &cmd
 }

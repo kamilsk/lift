@@ -21,6 +21,11 @@ var callCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
+		mapping, err := cmd.Flags().GetStringArray("map")
+		if err != nil {
+			return err
+		}
+		_ = mapping
 		cnf, err := config.FromFile(wd, cmd.Flag("file").Value.String())
 		if err != nil {
 			return err
