@@ -15,11 +15,11 @@ var upCmd = &cobra.Command{
 	Short: "Dump instruction for eval to up environment locally",
 	Long:  "Dump instruction for eval to up environment locally.",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		wd, err := os.Getwd()
+		ctx, err := scope(cmd)
 		if err != nil {
 			return err
 		}
-		cnf, err := config.FromFile(wd, cmd.Flag("file").Value.String())
+		cnf, err := config.FromScope(ctx)
 		if err != nil {
 			return err
 		}

@@ -17,16 +17,11 @@ var callCmd = &cobra.Command{
 	Example: "lift call -- echo $GOMODULE",
 	Args:    cobra.MinimumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		wd, err := os.Getwd()
+		ctx, err := scope(cmd)
 		if err != nil {
 			return err
 		}
-		mapping, err := cmd.Flags().GetStringArray("map")
-		if err != nil {
-			return err
-		}
-		_ = mapping
-		cnf, err := config.FromFile(wd, cmd.Flag("file").Value.String())
+		cnf, err := config.FromScope(ctx)
 		if err != nil {
 			return err
 		}

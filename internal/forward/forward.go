@@ -27,15 +27,19 @@ func Command(cnf config.Service, detach bool) (shell.Command, error) {
 		args = append(args, PodName(cnf.Name, dep.Name, true))
 		ports := make(map[uint16]struct{})
 		for _, env := range dep.Forward {
-			port, err := ExtractPort(cnf.Environment[env])
+			remote, err := ExtractPort(cnf.Environment[env])
 			if err != nil {
 				return command, err
 			}
-			if _, present := ports[port]; present {
+			if _, present := ports[remote]; present {
 				continue
 			}
-			ports[port] = struct{}{}
-			args = append(args, strconv.Itoa(int(port)))
+			ports[remote] = struct{}{}
+			forward := strconv.Itoa(int(remote))
+			if local, present := cnf.PortMapping[remote]; present {
+				forward = fmt.Sprintf("%d:%d", local, remote)
+			}
+			args = append(args, forward)
 		}
 	}
 	if len(args) > 0 {

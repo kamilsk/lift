@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"os"
 	"strings"
 
 	"github.com/spf13/cobra"
@@ -15,11 +14,11 @@ var envCmd = &cobra.Command{
 	Short: "Dump environment variables from configuration file",
 	Long:  "Dump environment variables from configuration file.",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		wd, err := os.Getwd()
+		ctx, err := scope(cmd)
 		if err != nil {
 			return err
 		}
-		cnf, err := config.FromFile(wd, cmd.Flag("file").Value.String())
+		cnf, err := config.FromScope(ctx)
 		if err != nil {
 			return err
 		}

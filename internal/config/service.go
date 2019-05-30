@@ -7,14 +7,17 @@ import (
 
 	"github.com/kamilsk/platform/pkg/safe"
 	"github.com/pelletier/go-toml"
+
+	"github.com/kamilsk/lift/internal"
 )
 
 // Service contains service configuration.
 type Service struct {
-	Name         string       `toml:"name"`
-	Engine       Engine       `toml:"engine"`
-	Environment  Environment  `toml:"env_vars"`
-	Dependencies Dependencies `toml:"dependencies"`
+	Name         string            `toml:"name"`
+	Engine       Engine            `toml:"engine"`
+	Environment  Environment       `toml:"env_vars"`
+	Dependencies Dependencies      `toml:"dependencies"`
+	PortMapping  map[uint16]uint16 `toml:"-"`
 }
 
 // Engine describes section related to a service engine.
@@ -63,7 +66,7 @@ type storage struct {
 }
 
 // Decode reads configuration from reader and decodes it into the struct.
-func Decode(wd string, r io.Reader) (Service, error) {
+func Decode(scope internal.Scope, r io.Reader) (Service, error) {
 	type extended struct {
 		Service
 
@@ -85,7 +88,7 @@ func Decode(wd string, r io.Reader) (Service, error) {
 	if err != nil {
 		return Service{}, err
 	}
-	cnf.Engine.WorkDir = wd
+	cnf.Engine.WorkDir = scope.WorkingDir
 	for name, storage := range map[string]*storage{
 		storageMongo:    &cnf.MongoDB,
 		storagePostgres: &cnf.PostgreSQL,
@@ -109,15 +112,16 @@ func Decode(wd string, r io.Reader) (Service, error) {
 		Engine:       cnf.Engine,
 		Environment:  env,
 		Dependencies: cnf.Dependencies,
+		PortMapping:  scope.PortMapping,
 	}, nil
 }
 
-// FromFile reads configuration from file and decodes it into the struct.
-func FromFile(wd, file string) (Service, error) {
-	f, err := os.Open(file)
+// FromScope reads configuration from file and decodes it into the struct.
+func FromScope(scope internal.Scope) (Service, error) {
+	f, err := os.Open(scope.ConfigPath)
 	if err != nil {
 		return Service{}, err
 	}
 	defer safe.Close(f)
-	return Decode(wd, f)
+	return Decode(scope, f)
 }
