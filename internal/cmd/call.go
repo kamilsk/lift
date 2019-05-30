@@ -7,6 +7,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/kamilsk/lift/internal/config"
+	"github.com/kamilsk/lift/internal/forward"
 	"github.com/kamilsk/lift/internal/shell"
 )
 
@@ -17,16 +18,12 @@ var callCmd = &cobra.Command{
 	Example: "lift call -- echo $GOMODULE",
 	Args:    cobra.MinimumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		ctx, err := scope(cmd)
-		if err != nil {
-			return err
-		}
-		cnf, err := config.FromScope(ctx)
+		cnf, err := config.FromScope(scope(cmd))
 		if err != nil {
 			return err
 		}
 		vars := make([]string, 0, len(cnf.Environment))
-		for variable, value := range cnf.Environment {
+		for variable, value := range forward.TransformEnvironment(cnf) {
 			vars = append(vars, fmt.Sprintf("%s=%s", variable, value))
 		}
 		var command = shell.Command(args[0])

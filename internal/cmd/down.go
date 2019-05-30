@@ -15,11 +15,7 @@ var downCmd = &cobra.Command{
 	Short: "Dump instruction for eval to down environment locally",
 	Long:  "Dump instruction for eval to down environment locally.",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		ctx, err := scope(cmd)
-		if err != nil {
-			return err
-		}
-		cnf, err := config.FromScope(ctx)
+		cnf, err := config.FromScope(scope(cmd))
 		if err != nil {
 			return err
 		}

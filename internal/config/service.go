@@ -117,10 +117,14 @@ func Decode(scope internal.Scope, r io.Reader) (Service, error) {
 }
 
 // FromScope reads configuration from file and decodes it into the struct.
-func FromScope(scope internal.Scope) (Service, error) {
+func FromScope(scope internal.Scope, err error) (Service, error) {
+	var service Service
+	if err != nil {
+		return service, err
+	}
 	f, err := os.Open(scope.ConfigPath)
 	if err != nil {
-		return Service{}, err
+		return service, err
 	}
 	defer safe.Close(f)
 	return Decode(scope, f)

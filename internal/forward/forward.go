@@ -31,12 +31,12 @@ func Command(cnf config.Service, detach bool) (shell.Command, error) {
 			if err != nil {
 				return command, err
 			}
-			if _, present := ports[remote]; present {
+			if _, found := ports[remote]; found {
 				continue
 			}
 			ports[remote] = struct{}{}
 			forward := strconv.Itoa(int(remote))
-			if local, present := cnf.PortMapping[remote]; present {
+			if local, found := cnf.PortMapping[remote]; found {
 				forward = fmt.Sprintf("%d:%d", local, remote)
 			}
 			args = append(args, forward)
@@ -71,6 +71,11 @@ func ExtractPort(connection string) (uint16, error) {
 	}
 }
 
+// ReplacePort replaces a port number in a connection definition.
+func ReplacePort(connection string, from, to uint16) string {
+	return strings.Replace(connection, strconv.FormatUint(uint64(from), 10), strconv.FormatUint(uint64(to), 10), 1)
+}
+
 // PodName builds pod name.
 func PodName(service, entity string, isLocal bool) string {
 	parts := append(make([]string, 0, 4), service)
@@ -79,6 +84,35 @@ func PodName(service, entity string, isLocal bool) string {
 	}
 	parts = append(parts, entity, "")
 	return strings.ToLower(strings.Join(parts, "-"))
+}
+
+// TransformEnvironment applies a port mapping to a copy of environment variables.
+func TransformEnvironment(cnf config.Service) config.Environment {
+	if len(cnf.PortMapping) == 0 {
+		return cnf.Environment
+	}
+
+	copied := config.Environment{}
+	for k, v := range cnf.Environment {
+		copied[k] = v
+	}
+
+	for _, dep := range cnf.Dependencies {
+		if len(dep.Forward) == 0 {
+			continue
+		}
+		for _, env := range dep.Forward {
+			remote, err := ExtractPort(copied[env])
+			if err != nil {
+				continue
+			}
+			if local, found := cnf.PortMapping[remote]; found {
+				copied[env] = ReplacePort(copied[env], remote, local)
+			}
+		}
+	}
+
+	return copied
 }
 
 // Shutdown returns commands to shutdown the forward tool.

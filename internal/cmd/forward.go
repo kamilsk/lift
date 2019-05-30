@@ -15,11 +15,7 @@ var forwardCmd = &cobra.Command{
 	Short: "Dump instruction for port forwarding",
 	Long:  "Dump instruction for port forwarding.",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		ctx, err := scope(cmd)
-		if err != nil {
-			return err
-		}
-		cnf, err := config.FromScope(ctx)
+		cnf, err := config.FromScope(scope(cmd))
 		if err != nil {
 			return err
 		}

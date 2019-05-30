@@ -49,12 +49,12 @@ install:
 
 .PHONY: run
 run:
-	@go run main.go up -f testdata/app.toml -m 6379:16379 -m 5432:15432
+	@go run main.go up -f testdata/app.toml -m 6379:16379 -m 5672:15672 -m 5432:15432
 	@echo ---
-	@go run main.go down -f testdata/app.toml -m 6379:16379 -m 5432:15432
+	@go run main.go down -f testdata/app.toml -m 6379:16379 -m 5672:15672 -m 5432:15432
 	@echo ---
-	@go run main.go env -f testdata/app.toml -m 6379:16379 -m 5432:15432
+	@go run main.go env -f testdata/app.toml -m 6379:16379 -m 5672:15672 -m 5432:15432
 	@echo ---
-	@go run main.go forward -f testdata/app.toml -m 6379:16379 -m 5432:15432
+	@go run main.go forward -f testdata/app.toml -m 6379:16379 -m 5672:15672 -m 5432:15432
 	@echo ---
-	@go run main.go call -f testdata/app.toml -m 6379:16379 -m 5432:15432 -- echo '$$REDIS_PORT $$PGPORT'
+	@go run main.go call -f testdata/app.toml -m 6379:16379 -m 5672:15672 -m 5432:15432 -- echo '$$REDIS_PORT $$PGPORT'
