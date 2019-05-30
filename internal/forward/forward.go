@@ -76,3 +76,16 @@ func PodName(service, entity string, isLocal bool) string {
 	parts = append(parts, entity, "")
 	return strings.ToLower(strings.Join(parts, "-"))
 }
+
+// Shutdown returns commands to shutdown the forward tool.
+func Shutdown(cnf config.Service) []shell.Command {
+	return []shell.Command{
+		"ps | grep '[f]orward --' | awk '{print $1}' | xargs kill -SIGKILL || true",
+		shell.Command(
+			fmt.Sprintf(
+				"ps | grep '[f]orward %s' | awk '{print $1}' | xargs kill -SIGKILL || true",
+				strings.TrimRight(PodName(cnf.Name, "", true), "-"),
+			),
+		),
+	}
+}

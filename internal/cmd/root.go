@@ -13,7 +13,7 @@ func New(output io.Writer) *cobra.Command {
 		Short: "Up service locally",
 		Long:  "Up service locally.",
 	}
-	cmd.AddCommand(envCmd, forwardCmd, upCmd, callCmd)
+	cmd.AddCommand(upCmd, downCmd, envCmd, forwardCmd, callCmd)
 	cmd.SetOutput(output)
 	var (
 		file string

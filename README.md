@@ -44,31 +44,13 @@ $ lift env > bin/.env
 [forward](https://github.com/kamilsk/forward) for that
 
 ```bash
-$ lift forward
-forward -- demo-local-postgresql- 5432 demo-local-redis- 6379
-
 $ eval $(lift forward)
 ```
 
 5. or run all together
 
 ```bash
-$ lift up
-export SERVICE_A_URL="http://service-a.cluster/";
-export SERVICE_C_URL="http://service-c.cluster/";
-export SERVICE_B_URL="http://service-b.cluster/";
-export PGHOST="localhost";
-export PGPORT="5432";
-export PGDATABASE="master";
-export PGUSER="postgres";
-export PGPASSWORD="";
-export REDIS_PORT="6379";
-export CUSTOM="variable";
-forward -- demo-local-postgresql- 5432 demo-local-redis- 6379 &;
-go run cmd/service/main.go;
-ps | grep '[f]orward --' | awk '{print $1}' | xargs kill -SIGKILL
-
-$ eval $(lift up)
+$ eval $(lift up) && go run cmd/service/main.go; eval $(lift down)
 ```
 
 ### Good to have
@@ -86,10 +68,21 @@ lift:
 up:
 	@avito start
 	@avito service dev --no-watch
+	@nohup $$(lift forward) &
+
+.PHONY: status
+status:
+	@minikube status
+	@kubectl get pod
+
+.PHONY: forward
+forward:
+	@eval $$(lift forward)
 
 .PHONY: down
 down:
-	@avito service deletelocal
+	@-avito service deletelocal
+	@-eval $$(lift down)
 ```
 
 ![goimports integration](.github/goimports_integration.png)
