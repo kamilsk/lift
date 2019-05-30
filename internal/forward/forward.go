@@ -71,11 +71,6 @@ func ExtractPort(connection string) (uint16, error) {
 	}
 }
 
-// ReplacePort replaces a port number in a connection definition.
-func ReplacePort(connection string, from, to uint16) string {
-	return strings.Replace(connection, strconv.FormatUint(uint64(from), 10), strconv.FormatUint(uint64(to), 10), 1)
-}
-
 // PodName builds pod name.
 func PodName(service, entity string, isLocal bool) string {
 	parts := append(make([]string, 0, 4), service)
@@ -84,6 +79,24 @@ func PodName(service, entity string, isLocal bool) string {
 	}
 	parts = append(parts, entity, "")
 	return strings.ToLower(strings.Join(parts, "-"))
+}
+
+// ReplacePort replaces a port number in a connection definition.
+func ReplacePort(connection string, from, to uint16) string {
+	return strings.Replace(connection, strconv.FormatUint(uint64(from), 10), strconv.FormatUint(uint64(to), 10), 1)
+}
+
+// Shutdown returns commands to shutdown the forward tool.
+func Shutdown(cnf config.Service) []shell.Command {
+	return []shell.Command{
+		"ps | grep '[f]orward --' | awk '{print $1}' | xargs kill -SIGKILL || true",
+		shell.Command(
+			fmt.Sprintf(
+				"ps | grep '[f]orward %s' | awk '{print $1}' | xargs kill -SIGKILL || true",
+				strings.TrimRight(PodName(cnf.Name, "", true), "-"),
+			),
+		),
+	}
 }
 
 // TransformEnvironment applies a port mapping to a copy of environment variables.
@@ -113,17 +126,4 @@ func TransformEnvironment(cnf config.Service) config.Environment {
 	}
 
 	return copied
-}
-
-// Shutdown returns commands to shutdown the forward tool.
-func Shutdown(cnf config.Service) []shell.Command {
-	return []shell.Command{
-		"ps | grep '[f]orward --' | awk '{print $1}' | xargs kill -SIGKILL || true",
-		shell.Command(
-			fmt.Sprintf(
-				"ps | grep '[f]orward %s' | awk '{print $1}' | xargs kill -SIGKILL || true",
-				strings.TrimRight(PodName(cnf.Name, "", true), "-"),
-			),
-		),
-	}
 }
