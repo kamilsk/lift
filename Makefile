@@ -1,8 +1,12 @@
 SHELL       = /bin/bash -euo pipefail
-BIN         = $(shell basename $(shell pwd))
-PKGS        = go list ./... | grep -v vendor | grep -v ^_
+PKGS        = go list ./... | grep -v vendor
 GO111MODULE = on
 GOFLAGS     = -mod=vendor
+TIMEOUT     = 1s
+BIN         = $(shell basename $(shell pwd))
+
+
+.DEFAULT_GOAL = test-with-coverage
 
 
 .PHONY: deps
@@ -16,7 +20,7 @@ update:
 
 .PHONY: format
 format:
-	@lift -f testdata/app.toml call -- goimports -local '$$GOMODULE' -ungroup -w .
+	@goimports -local $(dirname $(go list -m)) -ungroup -w .
 
 .PHONY: generate
 generate:
@@ -28,11 +32,23 @@ refresh: generate format
 
 .PHONY: test
 test:
-	@go test -race -timeout 1s ./...
+	@go test -race -timeout $(TIMEOUT) ./...
+
+.PHONY: test-with-coverage
+test-with-coverage:
+	@go test -cover -timeout $(TIMEOUT) ./... | column -t | sort -r
 
 .PHONY: test-with-coverage-profile
 test-with-coverage-profile:
-	@go test -covermode count -coverprofile c.out -timeout 1s ./...
+	@go test -cover -covermode count -coverprofile c.out -timeout $(TIMEOUT) ./...
+
+
+.PHONY: sync
+sync:
+	@git stash && git pull --rebase && git stash pop || true
+
+.PHONY: upgrade
+upgrade: sync update deps refresh test-with-coverage
 
 
 .PHONY: build
@@ -49,12 +65,12 @@ install:
 
 .PHONY: run
 run:
-	@go run main.go up -f testdata/app.toml -m 6379:16379 -m 5672:15672 -m 5432:15432
+	@go run main.go -f testdata/app.toml up -m 6379:16379 -m 5672:15672 -m 5432:15432
 	@echo ---
-	@go run main.go down -f testdata/app.toml -m 6379:16379 -m 5672:15672 -m 5432:15432
+	@go run main.go -f testdata/app.toml down -m 6379:16379 -m 5672:15672 -m 5432:15432
 	@echo ---
-	@go run main.go env -f testdata/app.toml -m 6379:16379 -m 5672:15672 -m 5432:15432
+	@go run main.go -f testdata/app.toml env -m 6379:16379 -m 5672:15672 -m 5432:15432
 	@echo ---
-	@go run main.go forward -f testdata/app.toml -m 6379:16379 -m 5672:15672 -m 5432:15432
+	@go run main.go -f testdata/app.toml forward -m 6379:16379 -m 5672:15672 -m 5432:15432
 	@echo ---
-	@go run main.go call -f testdata/app.toml -m 6379:16379 -m 5672:15672 -m 5432:15432 -- echo '$$REDIS_PORT $$PGPORT'
+	@go run main.go -f testdata/app.toml call -m 6379:16379 -m 5672:15672 -m 5432:15432 -- echo '$$REDIS_PORT $$PGPORT'
