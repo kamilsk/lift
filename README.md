@@ -126,9 +126,8 @@ $ lift completion zsh  > /path/to/zsh-completions/_lift.zsh
 
 ## 🤲 Outcomes
 
-- [github.com/pelletier/go-toml][https://github.com/pelletier/go-toml] was patched
-  - [pull request](https://github.com/pelletier/go-toml/pull/281)
-  - [fork](https://github.com/kamilsk/go-toml)
+- [github.com/pelletier/go-toml](https://github.com/pelletier/go-toml) was patched
+  - [fork](https://github.com/kamilsk/go-toml), [pull request](https://github.com/pelletier/go-toml/pull/281)
   - `replace github.com/pelletier/go-toml => github.com/kamilsk/go-toml v1.4.0-asd-patch`
 
 <sup id="egg">1</sup> The project is still in prototyping.[↩](#anchor-egg)
