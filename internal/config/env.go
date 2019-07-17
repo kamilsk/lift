@@ -2,10 +2,11 @@ package config
 
 import (
 	"bufio"
-	"os"
 	"path"
 	"path/filepath"
 	"regexp"
+
+	"github.com/spf13/afero"
 
 	"github.com/kamilsk/platform/pkg/safe"
 )
@@ -40,21 +41,21 @@ const (
 	fileGoMod = "go.mod"
 )
 
-var goModRegexp = regexp.MustCompile(`(?is)^\s*module\s+([\w./]+)\s*$`)
+var goModRegexp = regexp.MustCompile(`(?is)^\s*module\s+([\w\-.]+(?:/[\w\-_]+)*)\s*$`)
 
 // EngineSpecific returns the engine specific environment.
 func EngineSpecific(engine Engine) Environment {
-	switch engine.Name {
+	switch fs := afero.NewOsFs(); engine.Name {
 	case engineGo:
 		env := Environment{}
 
-		pkg, is := GoPackage(engine.WorkDir)
+		pkg, is := GoPackage(WorkDir{fs, engine.WorkDir})
 		if is {
 			env[envGoPackage] = pkg
 			env[envGoImport] = pkg
 		}
 
-		mod, is := GoModule(engine.WorkDir)
+		mod, is := GoModule(WorkDir{fs, engine.WorkDir})
 		if is {
 			env[envGoModule] = mod
 			env[envGoImport] = mod
@@ -67,12 +68,12 @@ func EngineSpecific(engine Engine) Environment {
 }
 
 // GoModule returns go module name based on go.mod file.
-func GoModule(location string) (string, bool) {
-	name := filepath.Join(location, fileGoMod)
-	if _, err := os.Stat(name); err != nil {
+func GoModule(wd WorkDir) (string, bool) {
+	name := filepath.Join(wd.Path, fileGoMod)
+	if _, err := wd.FS.Stat(name); err != nil {
 		return "", false
 	}
-	file, err := os.Open(name)
+	file, err := wd.FS.Open(name)
 	if err != nil {
 		return "", false
 	}
@@ -89,9 +90,9 @@ func GoModule(location string) (string, bool) {
 }
 
 // GoPackage returns go package name based on its path.
-func GoPackage(location string) (string, bool) {
-	if _, err := os.Stat(filepath.Join(location, fileGoDep)); err == nil {
-		pkg := make([]string, 0, 4)
+func GoPackage(wd WorkDir) (string, bool) {
+	if _, err := wd.FS.Stat(filepath.Join(wd.Path, fileGoDep)); err == nil {
+		location, pkg := wd.Path, make([]string, 0, 4)
 		for {
 			dir, file := filepath.Split(location)
 			if dir == "" || file == "src" || len(pkg) == cap(pkg) {
@@ -106,4 +107,10 @@ func GoPackage(location string) (string, bool) {
 		return path.Join(pkg...), true
 	}
 	return "", false
+}
+
+// WorkDir holds a filesystem interface with a path of a current working directory.
+type WorkDir struct {
+	FS   afero.Fs
+	Path string
 }
