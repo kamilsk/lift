@@ -2,7 +2,7 @@
 >
 > Up your service locally.
 
-[![Build Status][icon_build]][page_build]
+[![Build][icon_build]][page_build]
 
 ## 💡 Idea
 
@@ -50,7 +50,11 @@ $ eval $(lift forward)
 5. or run all together
 
 ```bash
-$ eval $(lift up) && go run cmd/service/main.go; eval $(lift down)
+$ eval $(lift up -- go run cmd/service/main.go); eval $(lift down)
+
+$ eval $(lift forward -d)
+$ lift call -- go run cmd/service/main.go
+$ eval $(lift down)
 ```
 
 ### Good to have
@@ -119,6 +123,13 @@ $ egg bitbucket.org/kamilsk/lift -- go install .
 $ lift completion bash > /path/to/bash_completion.d/lift.sh
 $ lift completion zsh  > /path/to/zsh-completions/_lift.zsh
 ```
+
+## 🤲 Outcomes
+
+- [github.com/pelletier/go-toml][https://github.com/pelletier/go-toml] was patched
+  - [pull request](https://github.com/pelletier/go-toml/pull/281)
+  - [fork](https://github.com/kamilsk/go-toml)
+  - `replace github.com/pelletier/go-toml => github.com/kamilsk/go-toml v1.4.0-asd-patch`
 
 <sup id="egg">1</sup> The project is still in prototyping.[↩](#anchor-egg)
 
