@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/kamilsk/platform/cmd/cobra"
+	"go.octolab.org/toolkit/cli/cobra"
 
 	"github.com/kamilsk/lift/internal/cmd"
 )
@@ -17,7 +17,7 @@ var (
 
 func main() {
 	root := cmd.New(nil)
-	root.AddCommand(cobra.NewCompletionCommand(), cobra.NewVersionCommand(commit, date, version))
+	root.AddCommand(cobra.NewCompletionCommand(), cobra.NewVersionCommand(version, date, commit))
 	if err := root.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)

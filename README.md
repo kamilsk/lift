@@ -10,8 +10,7 @@
 $ eval $(lift up)
 ```
 
-Full description of the idea is available
-[here](https://www.notion.so/octolab/lift-9078cdbe27c842498f0561b6acd88a4d?r=0b753cbf767346f5a6fd51194829a2f3).
+Full description of the idea is available [here][design].
 
 ## 🏆 Motivation
 
@@ -115,7 +114,7 @@ $ egg github.com/kamilsk/lift -- go install .
 $ egg bitbucket.org/kamilsk/lift -- go install .
 ```
 
-> [egg][page_egg]<sup id="anchor-egg">[1](#egg)</sup> is an `extended go get`.
+> [egg][]<sup id="anchor-egg">[1](#egg)</sup> is an `extended go get`.
 
 ### Bash and Zsh completions
 
@@ -126,8 +125,11 @@ $ lift completion zsh  > /path/to/zsh-completions/_lift.zsh
 
 ## 🤲 Outcomes
 
-- [github.com/pelletier/go-toml](https://github.com/pelletier/go-toml) was patched
+### Patches
+
+- [github.com/pelletier/go-toml](https://github.com/pelletier/go-toml)
   - [fork](https://github.com/kamilsk/go-toml), [pull request](https://github.com/pelletier/go-toml/pull/281)
+  - `go get github.com/pelletier/go-toml@latest` or
   - `replace github.com/pelletier/go-toml => github.com/kamilsk/go-toml v1.4.0-asd-patch`
 
 <sup id="egg">1</sup> The project is still in prototyping.[↩](#anchor-egg)
@@ -136,8 +138,10 @@ $ lift completion zsh  > /path/to/zsh-completions/_lift.zsh
 
 made with ❤️ for everyone
 
-[icon_build]:      https://travis-ci.org/kamilsk/lift.svg?branch=master
+[icon_build]:       https://travis-ci.org/kamilsk/lift.svg?branch=master
 
-[page_build]:      https://travis-ci.org/kamilsk/lift
-[page_promo]:      https://github.com/kamilsk/lift
-[page_egg]:        https://github.com/kamilsk/egg
+[page_build]:       https://travis-ci.org/kamilsk/lift
+[page_promo]:       https://github.com/kamilsk/lift
+
+[egg]:              https://github.com/kamilsk/egg
+[design]:           https://www.notion.so/octolab/lift-9078cdbe27c842498f0561b6acd88a4d?r=0b753cbf767346f5a6fd51194829a2f3

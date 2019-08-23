@@ -1,5 +1,5 @@
 SHELL       = /bin/bash -euo pipefail
-PKGS        = go list ./... | grep -v vendor
+PKGS        = $(shell go list ./... | grep -v vendor)
 GO111MODULE = on
 GOFLAGS     = -mod=vendor
 TIMEOUT     = 1s
@@ -24,7 +24,7 @@ format:
 
 .PHONY: generate
 generate:
-	@go generate ./...
+	@go generate $(PKGS)
 
 .PHONY: refresh
 refresh: generate format
@@ -32,23 +32,27 @@ refresh: generate format
 
 .PHONY: test
 test:
-	@go test -race -timeout $(TIMEOUT) ./...
+	@go test -race -timeout $(TIMEOUT) $(PKGS)
 
 .PHONY: test-with-coverage
 test-with-coverage:
-	@go test -cover -timeout $(TIMEOUT) ./... | column -t | sort -r
+	@go test -cover -timeout $(TIMEOUT) $(PKGS) | column -t | sort -r
 
 .PHONY: test-with-coverage-profile
 test-with-coverage-profile:
-	@go test -cover -covermode count -coverprofile c.out -timeout $(TIMEOUT) ./...
+	@go test -cover -covermode count -coverprofile c.out -timeout $(TIMEOUT) $(PKGS)
 
-
-.PHONY: sync
-sync:
-	@git stash && git pull --rebase && git stash pop || true
-
-.PHONY: upgrade
-upgrade: sync update deps refresh test-with-coverage
+.PHONY: test-smoke
+test-smoke:
+	@go run main.go -f testdata/app.toml up -m 6379:16379 -m 5672:15672 -m 5432:15432
+	@echo ---
+	@go run main.go -f testdata/app.toml down -m 6379:16379 -m 5672:15672 -m 5432:15432
+	@echo ---
+	@go run main.go -f testdata/app.toml env -m 6379:16379 -m 5672:15672 -m 5432:15432
+	@echo ---
+	@go run main.go -f testdata/app.toml forward -m 6379:16379 -m 5672:15672 -m 5432:15432
+	@echo ---
+	@go run main.go -f testdata/app.toml call -m 6379:16379 -m 5672:15672 -m 5432:15432 -- echo '$$REDIS_PORT $$PGPORT'
 
 
 .PHONY: build
@@ -62,15 +66,3 @@ dist:
 .PHONY: install
 install:
 	@go build -o $(GOPATH)/bin/$(BIN) .
-
-.PHONY: run
-run:
-	@go run main.go -f testdata/app.toml up -m 6379:16379 -m 5672:15672 -m 5432:15432
-	@echo ---
-	@go run main.go -f testdata/app.toml down -m 6379:16379 -m 5672:15672 -m 5432:15432
-	@echo ---
-	@go run main.go -f testdata/app.toml env -m 6379:16379 -m 5672:15672 -m 5432:15432
-	@echo ---
-	@go run main.go -f testdata/app.toml forward -m 6379:16379 -m 5672:15672 -m 5432:15432
-	@echo ---
-	@go run main.go -f testdata/app.toml call -m 6379:16379 -m 5672:15672 -m 5432:15432 -- echo '$$REDIS_PORT $$PGPORT'
