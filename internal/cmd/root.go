@@ -20,7 +20,7 @@ func New(output io.Writer) *cobra.Command {
 		Long:  "Up service locally.",
 	}
 	cmd.AddCommand(upCmd, downCmd, envCmd, forwardCmd, callCmd)
-	cmd.SetOutput(output)
+	cmd.SetOut(output)
 	var (
 		file    string
 		mapping = make([]string, 0, 4)

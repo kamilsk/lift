@@ -7,7 +7,7 @@ require (
 	github.com/spf13/afero v1.2.2
 	github.com/spf13/cobra v0.0.5
 	github.com/stretchr/testify v1.4.0
-	go.octolab.org/toolkit/cli v0.0.2
+	go.octolab.org/toolkit/cli v0.0.3
 )
 
 replace github.com/pelletier/go-toml => github.com/kamilsk/go-toml v1.4.0-asd-patch
