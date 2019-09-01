@@ -10,8 +10,8 @@ archives:
     darwin: macOS
     linux:  Linux
 
-brew:
-  name: lift
+brews:
+- name: lift
   caveats: Use `eval $(lift up)`
   description: Up your service locally.
   homepage: https://github.com/kamilsk/lift
@@ -23,8 +23,8 @@ brew:
     name:  homebrew-tap
     owner: kamilsk
 
-build:
-  binary: lift
+builds:
+- binary: lift
   env:
   - CGO_ENABLED=0
   goarch:
