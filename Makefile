@@ -70,3 +70,6 @@ build:
 dist:
 	@godownloader .goreleaser.yml > .github/install.sh
 
+
+.PHONY: refresh
+refresh: update deps generate format test build

@@ -13,6 +13,7 @@ import "github.com/pkg/errors"
 //  	close(serve)
 //  })
 //
+// Deprecated: use go.octolab.org/safe.Do instead.
 func Do(action func() error, handler func(error)) {
 	var err error
 	defer func() {

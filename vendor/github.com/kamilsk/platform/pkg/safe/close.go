@@ -17,6 +17,7 @@ import "io"
 //  	...
 //  }
 //
+// Deprecated: use go.octolab.org/safe.Close instead.
 func Close(closer io.Closer, cleaners ...func(error)) {
 	if err := closer.Close(); err != nil {
 		for _, clean := range cleaners {
@@ -33,8 +34,9 @@ func Close(closer io.Closer, cleaners ...func(error)) {
 //  if err != nil {
 //  	log.Fatal(err)
 //  }
-//  defer Close(Closer(ticket), func(err error) { log.Println(err) })
+//  defer safe.Close(safe.Closer(ticket), func(err error) { log.Println(err) })
 //
+// Deprecated: use go.octolab.org/safe.Closer instead.
 type Closer func() error
 
 // Close releases resources associated with the Closer.
