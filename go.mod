@@ -1,5 +1,7 @@
 module github.com/kamilsk/lift
 
+go 1.11
+
 require (
 	github.com/kamilsk/platform v0.18.0
 	github.com/pelletier/go-toml v1.4.0
