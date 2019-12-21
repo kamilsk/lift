@@ -128,9 +128,8 @@ $ lift completion zsh  > /path/to/zsh-completions/_lift.zsh
 ### Patches
 
 - [github.com/pelletier/go-toml](https://github.com/pelletier/go-toml)
-  - [fork](https://github.com/kamilsk/go-toml), [pull request](https://github.com/pelletier/go-toml/pull/281)
-  - `go get github.com/pelletier/go-toml@latest` or
-  - `replace github.com/pelletier/go-toml => github.com/kamilsk/go-toml v1.4.0-asd-patch`
+  - [pull request](https://github.com/pelletier/go-toml/pull/281)
+  - [release](https://github.com/pelletier/go-toml/releases/tag/v1.5.0)
 
 <sup id="egg">1</sup> The project is still in prototyping.[↩](#anchor-egg)
 

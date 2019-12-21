@@ -13,5 +13,3 @@ require (
 	go.octolab.org/toolkit/cli v0.0.6
 	golang.org/x/text v0.3.2 // indirect
 )
-
-replace github.com/pelletier/go-toml => github.com/kamilsk/go-toml v1.4.0-asd-patch
