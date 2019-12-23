@@ -7,7 +7,6 @@ require (
 	github.com/golangci/golangci-lint v1.21.0
 	github.com/goreleaser/godownloader v0.1.0
 	github.com/goreleaser/goreleaser v0.118.2
-	github.com/spf13/afero v1.2.2 // indirect
 	golang.org/x/tools v0.2.2
 )
 
