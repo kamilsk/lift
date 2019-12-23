@@ -12,7 +12,6 @@ archives:
 
 brews:
 - name: lift
-  caveats: Use `eval $(lift up)`
   description: Up your service locally.
   homepage: https://github.com/kamilsk/lift
   commit_author:
