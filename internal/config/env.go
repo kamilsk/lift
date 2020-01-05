@@ -6,9 +6,8 @@ import (
 	"path/filepath"
 	"regexp"
 
-	"github.com/spf13/afero"
-
 	"github.com/kamilsk/platform/pkg/safe"
+	"github.com/spf13/afero"
 )
 
 const (

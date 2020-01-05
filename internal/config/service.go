@@ -5,10 +5,10 @@ import (
 	"os"
 	"strings"
 
+	"github.com/kamilsk/platform/pkg/safe"
 	"github.com/pelletier/go-toml"
 
 	"github.com/kamilsk/lift/internal"
-	"github.com/kamilsk/platform/pkg/safe"
 )
 
 // Service contains service configuration.

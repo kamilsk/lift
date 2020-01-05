@@ -2,7 +2,7 @@
 github.com/davecgh/go-spew/spew
 # github.com/inconshreveable/mousetrap v1.0.0
 github.com/inconshreveable/mousetrap
-# github.com/kamilsk/platform v0.20.3
+# github.com/kamilsk/platform v0.21.0
 github.com/kamilsk/platform/pkg/safe
 # github.com/pelletier/go-toml v1.6.0
 github.com/pelletier/go-toml
@@ -20,11 +20,11 @@ github.com/spf13/pflag
 # github.com/stretchr/testify v1.4.0
 github.com/stretchr/testify/assert
 github.com/stretchr/testify/require
-# go.octolab.org v0.0.7
+# go.octolab.org v0.0.5
 go.octolab.org/os/shell
 # go.octolab.org/toolkit/cli v0.0.6
 go.octolab.org/toolkit/cli/cobra
-# golang.org/x/text v0.3.2
+# golang.org/x/text v0.3.0
 golang.org/x/text/transform
 golang.org/x/text/unicode/norm
 # gopkg.in/yaml.v2 v2.2.5

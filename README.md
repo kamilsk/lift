@@ -2,7 +2,8 @@
 >
 > Up your service locally.
 
-[![Build][icon_build]][page_build]
+[![Build][build.icon]][build.page]
+[![Template][template.icon]][template.page]
 
 ## 💡 Idea
 
@@ -10,7 +11,7 @@
 $ eval $(lift up)
 ```
 
-Full description of the idea is available [here][design].
+Full description of the idea is available [here][design.page].
 
 ## 🏆 Motivation
 
@@ -101,7 +102,9 @@ $ brew install kamilsk/tap/lift
 ### Binary
 
 ```bash
-$ curl -sfL https://bit.ly/install-lift | bash
+$ curl -sSL https://bit.ly/install-lift | sh
+# or
+$ wget -qO- https://bit.ly/install-lift | sh
 ```
 
 ### Source
@@ -110,11 +113,10 @@ $ curl -sfL https://bit.ly/install-lift | bash
 # use standard go tools
 $ go get -u github.com/kamilsk/lift
 # or use egg tool
-$ egg github.com/kamilsk/lift -- go install .
-$ egg bitbucket.org/kamilsk/lift -- go install .
+$ egg tools add github.com/kamilsk/lift
 ```
 
-> [egg][]<sup id="anchor-egg">[1](#egg)</sup> is an `extended go get`.
+> [egg][egg.page]<sup id="anchor-egg">[1](#egg)</sup> is an `extended go get`.
 
 ### Bash and Zsh completions
 
@@ -137,10 +139,14 @@ $ lift completion zsh  > /path/to/zsh-completions/_lift.zsh
 
 made with ❤️ for everyone
 
-[icon_build]:       https://travis-ci.org/kamilsk/lift.svg?branch=master
+[build.icon]:       https://travis-ci.org/kamilsk/lift.svg?branch=master
+[build.page]:       https://travis-ci.org/kamilsk/lift
 
-[page_build]:       https://travis-ci.org/kamilsk/lift
-[page_promo]:       https://github.com/kamilsk/lift
+[design.page]:      https://www.notion.so/octolab/lift-9078cdbe27c842498f0561b6acd88a4d?r=0b753cbf767346f5a6fd51194829a2f3
 
-[egg]:              https://github.com/kamilsk/egg
-[design]:           https://www.notion.so/octolab/lift-9078cdbe27c842498f0561b6acd88a4d?r=0b753cbf767346f5a6fd51194829a2f3
+[promo.page]:       https://github.com/kamilsk/lift
+
+[template.page]:    https://github.com/octomation/go-tool
+[template.icon]:    https://img.shields.io/badge/template-go--tool-blue
+
+[egg.page]:         https://github.com/kamilsk/egg
