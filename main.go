@@ -9,9 +9,11 @@ import (
 	"github.com/kamilsk/lift/internal/cmd"
 )
 
+const unknown = "unknown"
+
 var (
-	commit  = "none"
-	date    = "unknown"
+	commit  = unknown
+	date    = unknown
 	version = "dev"
 )
 

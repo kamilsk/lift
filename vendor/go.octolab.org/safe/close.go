@@ -2,9 +2,9 @@ package safe
 
 import "io"
 
-// Close gracefully closes the io.Closer and calls the cleaners if an error occurred.
+// Close gracefully closes the io.Closer and calls the handler if an error occurred.
 //
-//  func handler(rw http.ResponseWriter, req *http.Request) {
+//  func Handler(rw http.ResponseWriter, req *http.Request) {
 //
 //  	defer safe.Close(req.Body, func(err error) { log.Println(err) })
 //
@@ -13,17 +13,11 @@ import "io"
 //  		rw.WriteHeader(http.StatusBadRequest)
 //  		return
 //  	}
-//
 //  	...
 //  }
 //
-// Deprecated: use go.octolab.org/safe.Close instead.
-func Close(closer io.Closer, cleaners ...func(error)) {
-	if err := closer.Close(); err != nil {
-		for _, clean := range cleaners {
-			clean(err)
-		}
-	}
+func Close(closer io.Closer, handler func(error)) {
+	Do(closer.Close, handler)
 }
 
 // The Closer type is an adapter to allow the use of ordinary functions
@@ -36,7 +30,6 @@ func Close(closer io.Closer, cleaners ...func(error)) {
 //  }
 //  defer safe.Close(safe.Closer(ticket), func(err error) { log.Println(err) })
 //
-// Deprecated: use go.octolab.org/safe.Closer instead.
 type Closer func() error
 
 // Close releases resources associated with the Closer.

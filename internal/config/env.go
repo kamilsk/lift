@@ -6,8 +6,9 @@ import (
 	"path/filepath"
 	"regexp"
 
-	"github.com/kamilsk/platform/pkg/safe"
 	"github.com/spf13/afero"
+	"go.octolab.org/safe"
+	"go.octolab.org/unsafe"
 )
 
 const (
@@ -76,7 +77,7 @@ func GoModule(wd WorkDir) (string, bool) {
 	if err != nil {
 		return "", false
 	}
-	defer safe.Close(file)
+	defer safe.Close(file, unsafe.Ignore)
 	scanner := bufio.NewScanner(file)
 	scanner.Split(bufio.ScanLines)
 	for scanner.Scan() {

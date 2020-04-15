@@ -5,8 +5,9 @@ import (
 	"os"
 	"strings"
 
-	"github.com/kamilsk/platform/pkg/safe"
 	"github.com/pelletier/go-toml"
+	"go.octolab.org/safe"
+	"go.octolab.org/unsafe"
 
 	"github.com/kamilsk/lift/internal"
 )
@@ -126,6 +127,6 @@ func FromScope(scope internal.Scope, err error) (Service, error) {
 	if err != nil {
 		return service, err
 	}
-	defer safe.Close(f)
+	defer safe.Close(f, unsafe.Ignore)
 	return Decode(scope, f)
 }

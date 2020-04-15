@@ -1,5 +1,8 @@
+---
+project_name: lift
+
 archives:
-- id: binary
+- id: lift
   files:
   - LICENSE
   format: tar.gz
@@ -12,15 +15,24 @@ archives:
 
 brews:
 - name: lift
-  description: Up your service locally.
-  homepage: https://github.com/kamilsk/lift
   commit_author:
     name:  Kamil Samigullin
     email: kamil@samigullin.info
+  description: Up your service locally.
   folder: Formula
+  homepage: https://github.com/kamilsk/lift
   github:
-    name:  homebrew-tap
     owner: kamilsk
+    name:  homebrew-tap
+  install: |
+    bin.install "lift"
+    output = Utils.popen_read("#{bin}/lift completion bash")
+    (bash_completion/"lift").write output
+    output = Utils.popen_read("#{bin}/lift completion zsh")
+    (zsh_completion/"_lift").write output
+    prefix.install_metafiles
+  test: |
+    system "#{bin}/lift --version"
 
 builds:
 - binary: lift
@@ -38,7 +50,6 @@ builds:
 checksum: { name_template: checksums.txt }
 
 release:
-  draft: false
   github:
-    name:  lift
     owner: kamilsk
+    name:  lift
