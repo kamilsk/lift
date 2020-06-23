@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -o pipefail
+
 deactivate () {
     unset _ARCH
     unset _BINPATH
@@ -54,9 +56,11 @@ deactivate () {
 
     if [[ ! "${1:-}" = "nondestructive" ]]; then
         unset -f deactivate
+        unset -f deps
         unset -f get
-        unset -f realpath
         unset -f up
+        unset -f release
+        unset -f _realpath
     fi
 }
 
@@ -70,7 +74,23 @@ get () {
     deps
 }
 
-realpath () {
+up () {
+    get -u $@
+}
+
+release () {
+    latest=$(git describe --tags 2>/dev/null)
+    if [[ $? > 0 ]]; then
+        (>&2 echo no have any release)
+        exit 1
+    fi
+    if [[ "${latest}" =~ -[0-9]+-g[a-z0-9]+$ ]]; then
+        latest=$(echo ${latest} | rev | cut -d - -f3- | rev)
+    fi
+    gorelease -base=${latest} -version=${1:-}
+}
+
+_realpath () {
     if [[ -z "${1:-}" ]]; then
         echo 'Please provide a file/dir name'
         return
@@ -78,25 +98,23 @@ realpath () {
     echo "$(cd `dirname ${1}` && pwd)/${1}"
 }
 
-up () { get -u $@ }
-
 deactivate nondestructive
 
 _OS=$(uname -s | tr '[:upper:]' '[:lower:]')
 _ARCH=$(uname -m | tr '[:upper:]' '[:lower:]')
-_BINPATH=$(realpath $(dirname "${BASH_SOURCE[0]:-$0}"))/"${_OS}/${_ARCH}"
+_BINPATH=$(_realpath $(dirname "${BASH_SOURCE[0]:-$0}"))/"${_OS}/${_ARCH}"
 
-_OLD_GO111MODULE="${GO111MODULE}"
-_OLD_GOBIN="${GOBIN}"
-_OLD_GOFLAGS="${GOFLAGS}"
-_OLD_GOPRIVATE="${GOPRIVATE}"
-_OLD_GOPROXY="${GOPROXY}"
-_OLD_PATH="${PATH}"
+_OLD_GO111MODULE="${GO111MODULE:-}"
+_OLD_GOBIN="${GOBIN:-}"
+_OLD_GOFLAGS="${GOFLAGS:-}"
+_OLD_GOPRIVATE="${GOPRIVATE:-}"
+_OLD_GOPROXY="${GOPROXY:-}"
+_OLD_PATH="${PATH:-}"
 _OLD_PS1="${PS1:-}"
 
 export GO111MODULE=on
 export GOBIN="${_BINPATH}"
-export GOFLAGS=-mod=vendor
+export GOFLAGS=-mod=
 export GOPRIVATE=go.octolab.net
 export GOPROXY=direct
 export PATH="${_BINPATH}:${PATH}"

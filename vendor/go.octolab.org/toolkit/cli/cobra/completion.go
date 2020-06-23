@@ -31,9 +31,9 @@ const (
 func NewCompletionCommand() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "completion",
-		Short: "Print Bash, Zsh or PowerShell completion",
+		Short: "print Bash, Zsh or PowerShell completion",
 		Long:  "Print Bash, Zsh or PoserShell completion.",
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(cmd *cobra.Command, _ []string) error {
 			sh, err := shell.Classify(os.Getenv("SHELL"), shell.Completion)
 			if err != nil {
 				return err
@@ -48,7 +48,7 @@ func NewCompletionCommand() *cobra.Command {
 	cmd.AddCommand(
 		&cobra.Command{
 			Use:   bashFormat,
-			Short: "Print Bash completion",
+			Short: "print Bash completion",
 			Long:  "Print Bash completion.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				return root(cmd).GenBashCompletion(cmd.OutOrStdout())
@@ -56,7 +56,7 @@ func NewCompletionCommand() *cobra.Command {
 		},
 		&cobra.Command{
 			Use:   powershellFormat,
-			Short: "Print PowerShell completion",
+			Short: "print PowerShell completion",
 			Long:  "Print PowerShell completion.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				return root(cmd).GenPowerShellCompletion(cmd.OutOrStdout())
@@ -64,7 +64,7 @@ func NewCompletionCommand() *cobra.Command {
 		},
 		&cobra.Command{
 			Use:   zshFormat,
-			Short: "Print Zsh completion",
+			Short: "print Zsh completion",
 			Long:  "Print Zsh completion.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				return root(cmd).GenZshCompletion(cmd.OutOrStdout())

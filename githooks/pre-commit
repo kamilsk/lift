@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+git stash save --keep-index
+function restore() {
+    git stash pop
+}
+trap restore EXIT
+
+make deps-tidy deps-fetch lint format
+git diff --quiet --exit-code

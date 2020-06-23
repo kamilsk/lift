@@ -7,7 +7,12 @@ import "github.com/pkg/errors"
 //
 //  go safe.Do(
 //  	func() error { ... },
-//  	func(err error) { log.Println(err) },
+//  	func(err error) {
+//  		if recovered, is := errors.Unwrap(err).(errors.Recovered); is {
+//  			log.Println(recovered.Cause())
+//  		}
+//  		log.Println(err)
+//  	},
 //  )
 //
 func Do(action func() error, handler func(error)) {
@@ -19,8 +24,22 @@ func Do(action func() error, handler func(error)) {
 	}()
 	defer func() {
 		if r := recover(); r != nil {
-			err = errors.Errorf("safe panic: %#+v", r)
+			err = errors.WithStack(&recovered{r})
 		}
 	}()
 	err = action()
+}
+
+type recovered struct {
+	cause interface{}
+}
+
+// Error returns a string representation of the error.
+func (r *recovered) Error() string {
+	return "unexpected panic occurred"
+}
+
+// Cause returns the original cause of panic.
+func (r *recovered) Cause() interface{} {
+	return r.cause
 }

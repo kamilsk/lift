@@ -5,7 +5,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/kamilsk/lift/internal/config"
+	"github.com/kamilsk/lift/internal/cnf"
 	"github.com/kamilsk/lift/internal/forward"
 	"github.com/kamilsk/lift/internal/shell"
 )
@@ -15,18 +15,18 @@ var downCmd = &cobra.Command{
 	Short: "Dump instruction for eval to down environment locally",
 	Long:  "Dump instruction for eval to down environment locally.",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		cnf, err := config.FromScope(scope(cmd))
+		config, err := cnf.FromScope(scope(cmd))
 		if err != nil {
 			return err
 		}
 		sh := shell.New(os.Getenv("SHELL"))
 		commands := make([]shell.Command, 0, 2)
-		command, err := forward.Command(cnf, true)
+		command, err := forward.Command(config, true)
 		if err != nil {
 			return err
 		}
 		if command != "" {
-			commands = append(commands, forward.Shutdown(cnf)...)
+			commands = append(commands, forward.Shutdown(config)...)
 		}
 		return sh.Print(cmd.OutOrStdout(), commands...)
 	},

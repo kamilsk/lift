@@ -5,7 +5,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/kamilsk/lift/internal/config"
+	"github.com/kamilsk/lift/internal/cnf"
 	"github.com/kamilsk/lift/internal/forward"
 	"github.com/kamilsk/lift/internal/shell"
 )
@@ -15,11 +15,11 @@ var forwardCmd = &cobra.Command{
 	Short: "Dump instruction for port forwarding",
 	Long:  "Dump instruction for port forwarding.",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		cnf, err := config.FromScope(scope(cmd))
+		config, err := cnf.FromScope(scope(cmd))
 		if err != nil {
 			return err
 		}
-		command, err := forward.Command(cnf, false)
+		command, err := forward.Command(config, false)
 		if err != nil {
 			return err
 		}

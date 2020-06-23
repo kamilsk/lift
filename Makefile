@@ -1,7 +1,8 @@
 # sourced by https://github.com/octomation/makefiles
 
 .DEFAULT_GOAL = test-with-coverage
-GO_VERSIONS   = 1.11 1.12 1.13 1.14
+GIT_HOOKS     = post-merge pre-commit pre-push
+GO_VERSIONS   = 1.13 1.14
 
 SHELL := /bin/bash -euo pipefail # `explain set -euo pipefail`
 
@@ -55,19 +56,19 @@ deps-check:
 deps-clean:
 	@go clean -modcache
 
-.PHONY: deps-shake
-deps-shake:
-	@go mod tidy
-	@if [[ "`go env GOFLAGS`" =~ -mod=vendor ]]; then go mod vendor; fi
-
-.PHONY: module-deps
-module-deps:
+.PHONY: deps-fetch
+deps-fetch:
 	@go mod download
 	@if [[ "`go env GOFLAGS`" =~ -mod=vendor ]]; then go mod vendor; fi
 
-.PHONY: update
-update: selector = '{{if not (or .Main .Indirect)}}{{.Path}}{{end}}'
-update:
+.PHONY: deps-tidy
+deps-tidy:
+	@go mod tidy
+	@if [[ "`go env GOFLAGS`" =~ -mod=vendor ]]; then go mod vendor; fi
+
+.PHONY: deps-update
+deps-update: selector = '{{if not (or .Main .Indirect)}}{{.Path}}{{end}}'
+deps-update:
 	@if command -v egg > /dev/null; then \
 		packages="`egg deps list`"; \
 	else \
@@ -80,8 +81,8 @@ update:
 	fi; \
 	if [[ "`go env GOFLAGS`" =~ -mod=vendor ]]; then go mod vendor; fi
 
-.PHONY: update-all
-update-all:
+.PHONY: deps-update-all
+deps-update-all:
 	@if [[ "`go version`" == *1.1[1-3]* ]]; then \
 		go get -d -mod= -u ./...; \
 	else \
@@ -89,8 +90,8 @@ update-all:
 	fi; \
 	if [[ "`go env GOFLAGS`" =~ -mod=vendor ]]; then go mod vendor; fi
 
-.PHONY: format
-format:
+.PHONY: go-fmt
+go-fmt:
 	@if command -v goimports > /dev/null; then \
 		goimports -local $(LOCAL) -ungroup -w $(PATHS); \
 	else \
@@ -104,7 +105,7 @@ go-generate:
 .PHONY: lint
 lint:
 	@if command -v golangci-lint > /dev/null; then \
-		golangci-lint run ./...; \
+		`which time` -- golangci-lint run ./...; \
 	else \
 		go vet $(PACKAGES); \
 	fi
@@ -182,10 +183,29 @@ toolset:
 	@( \
 		GOFLAGS=$(TOOLFLAGS); \
 		cd tools; \
+		go mod tidy; \
 		go mod download; \
 		if [[ "`go env GOFLAGS`" =~ -mod=vendor ]]; then go mod vendor; fi; \
 		go generate tools.go; \
 	)
+
+ifdef GIT_HOOKS
+
+.PHONY: hooks
+hooks:
+	@ls .git/hooks | grep -v .sample | sed 's|.*|.git/hooks/&|' | xargs rm -f || true
+	@for hook in $(GIT_HOOKS); do cp githooks/$$hook .git/hooks/; done
+
+define hook_tpl
+.PHONY: $(1)
+$(1):
+	@githooks/$(1)
+endef
+
+render_hook_tpl = $(eval $(call hook_tpl,$(hook)))
+$(foreach hook,$(GIT_HOOKS),$(render_hook_tpl))
+
+endif
 
 ifdef GO_VERSIONS
 
@@ -205,17 +225,26 @@ $(foreach version,$(GO_VERSIONS),$(render_go_tpl))
 endif
 
 
+.PHONY: init
+init: deps test lint hooks
+
 .PHONY: clean
 clean: build-clean deps-clean install-clean test-clean
 
 .PHONY: deps
-deps: module-deps toolset
+deps: deps-fetch toolset
 
 .PHONY: env
 env: go-env build-env tools-env
+
+.PHONY: format
+format: go-fmt
 
 .PHONY: generate
 generate: go-generate format
 
 .PHONY: refresh
-refresh: deps-shake update deps generate format test build
+refresh: deps-tidy update deps generate format test build
+
+.PHONY: update
+update: deps-update

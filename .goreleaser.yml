@@ -2,50 +2,55 @@
 project_name: lift
 
 archives:
-- id: lift
-  files:
-  - LICENSE
-  format: tar.gz
-  name_template: "{{.Binary}}_{{.Version}}_{{.Os}}-{{.Arch}}"
-  replacements:
-    386:    32bit
-    amd64:  64bit
-    darwin: macOS
-    linux:  Linux
+  - id: lift
+    files:
+      - LICENSE
+    format: tar.gz
+    name_template: "{{.Binary}}_{{.Version}}_{{.Os}}-{{.Arch}}"
+    replacements:
+      386:    32bit
+      amd64:  64bit
+      darwin: macOS
+      linux:  Linux
 
 brews:
-- name: lift
-  commit_author:
-    name:  Kamil Samigullin
-    email: kamil@samigullin.info
-  description: Up your service locally.
-  folder: Formula
-  homepage: https://github.com/kamilsk/lift
-  github:
-    owner: kamilsk
-    name:  homebrew-tap
-  install: |
-    bin.install "lift"
-    output = Utils.popen_read("#{bin}/lift completion bash")
-    (bash_completion/"lift").write output
-    output = Utils.popen_read("#{bin}/lift completion zsh")
-    (zsh_completion/"_lift").write output
-    prefix.install_metafiles
-  test: |
-    system "#{bin}/lift --version"
+  - name: lift
+    caveats:
+    commit_author:
+      name:  Kamil Samigullin
+      email: kamil@samigullin.info
+    description: Up your service locally.
+    folder: Formula
+    homepage: https://github.com/kamilsk/lift
+    github:
+      owner: kamilsk
+      name:  homebrew-tap
+    install: |
+      bin.install "lift"
+      output = Utils.popen_read("#{bin}/lift completion bash")
+      (bash_completion/"lift").write output
+      output = Utils.popen_read("#{bin}/lift completion zsh")
+      (zsh_completion/"_lift").write output
+      prefix.install_metafiles
+    test: |
+      system "#{bin}/lift version"
 
 builds:
-- binary: lift
-  env:
-  - CGO_ENABLED=0
-  goarch:
-  - 386
-  - amd64
-  goos:
-  - darwin
-  - linux
-  ldflags: -s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}}
-  main: .
+  - id: lift
+    binary: lift
+    env:
+      - CGO_ENABLED=0
+    flags:
+      - -trimpath
+    goarch:
+      - 386
+      - amd64
+    goos:
+      - darwin
+      - linux
+    ldflags:
+      - -s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}}
+    main: .
 
 checksum: { name_template: checksums.txt }
 

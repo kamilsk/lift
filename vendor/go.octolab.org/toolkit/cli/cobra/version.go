@@ -3,21 +3,11 @@ package cobra
 import (
 	"fmt"
 	"runtime"
-	"strings"
 	"text/template"
 
 	"github.com/spf13/cobra"
+	"go.octolab.org/toolkit/config"
 )
-
-var version = template.Must(template.New("version").Parse(`{{.Name}}:
-  version     : {{.Version}}
-  build date  : {{.BuildDate}}
-  git hash    : {{.GitHash}}
-  go version  : {{.GoVersion}}
-  go compiler : {{.GoCompiler}}
-  platform    : {{.Platform}}
-  features    : {{.Features}}
-`))
 
 // NewVersionCommand returns a command that helps to build version info.
 //
@@ -31,10 +21,10 @@ var version = template.Must(template.New("version").Parse(`{{.Name}}:
 //    platform    : darwin/amd64
 //    features    : featureA=true, featureB=false
 //
-func NewVersionCommand(release, date, hash string, features ...string) *cobra.Command {
+func NewVersionCommand(release, date, hash string, features ...config.Feature) *cobra.Command {
 	return &cobra.Command{
 		Use:   "version",
-		Short: "Show application version",
+		Short: "show application version",
 		Long:  "Show application version.",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return version.Execute(cmd.OutOrStdout(), struct {
@@ -45,7 +35,7 @@ func NewVersionCommand(release, date, hash string, features ...string) *cobra.Co
 				GoVersion  string
 				GoCompiler string
 				Platform   string
-				Features   string
+				Features   fmt.Stringer
 			}{
 				Name:       root(cmd).Name(),
 				Version:    release,
@@ -54,8 +44,18 @@ func NewVersionCommand(release, date, hash string, features ...string) *cobra.Co
 				GoVersion:  runtime.Version(),
 				GoCompiler: runtime.Compiler,
 				Platform:   fmt.Sprintf("%s/%s", runtime.GOOS, runtime.GOARCH),
-				Features:   strings.Join(features, ", "),
+				Features:   config.Features(features),
 			})
 		},
 	}
 }
+
+var version = template.Must(template.New("version").Parse(`{{.Name}}:
+  version     : {{.Version}}
+  build date  : {{.BuildDate}}
+  git hash    : {{.GitHash}}
+  go version  : {{.GoVersion}}
+  go compiler : {{.GoCompiler}}
+  platform    : {{.Platform}}
+  features    : {{.Features}}
+`))

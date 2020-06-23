@@ -2,30 +2,33 @@
 github.com/davecgh/go-spew/spew
 # github.com/inconshreveable/mousetrap v1.0.0
 github.com/inconshreveable/mousetrap
-# github.com/pelletier/go-toml v1.7.0
+# github.com/pelletier/go-toml v1.8.0
 github.com/pelletier/go-toml
 # github.com/pkg/errors v0.9.1
 github.com/pkg/errors
 # github.com/pmezard/go-difflib v1.0.0
 github.com/pmezard/go-difflib/difflib
-# github.com/spf13/afero v1.2.2
+# github.com/spf13/afero v1.3.0
 github.com/spf13/afero
 github.com/spf13/afero/mem
 # github.com/spf13/cobra v1.0.0
 github.com/spf13/cobra
 # github.com/spf13/pflag v1.0.3
 github.com/spf13/pflag
-# github.com/stretchr/testify v1.5.1
+# github.com/stretchr/testify v1.6.1
 github.com/stretchr/testify/assert
 github.com/stretchr/testify/require
-# go.octolab.org v0.0.22
+# go.octolab.org v0.0.29
+go.octolab.org/errors
 go.octolab.org/safe
 go.octolab.org/unsafe
-# go.octolab.org/toolkit/cli v0.0.9
+# go.octolab.org/toolkit/cli v0.1.1
 go.octolab.org/toolkit/cli/cobra
 go.octolab.org/toolkit/cli/internal/os/shell
+# go.octolab.org/toolkit/config v0.0.3
+go.octolab.org/toolkit/config
 # golang.org/x/text v0.3.0
 golang.org/x/text/transform
 golang.org/x/text/unicode/norm
-# gopkg.in/yaml.v2 v2.2.8
-gopkg.in/yaml.v2
+# gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c
+gopkg.in/yaml.v3

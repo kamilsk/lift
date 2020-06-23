@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/kamilsk/lift/internal/config"
+	"github.com/kamilsk/lift/internal/cnf"
 	"github.com/kamilsk/lift/internal/shell"
 )
 
@@ -17,17 +17,17 @@ var (
 )
 
 // Command returns a command to run the forward tool for a service.
-func Command(cnf config.Service, detach bool) (shell.Command, error) {
+func Command(config cnf.Service, detach bool) (shell.Command, error) {
 	var command shell.Command
 	args := make([]string, 0, 8)
-	for _, dep := range cnf.Dependencies {
+	for _, dep := range config.Dependencies {
 		if len(dep.Forward) == 0 {
 			continue
 		}
-		args = append(args, PodName(cnf.Name, dep.Name, true))
+		args = append(args, PodName(config.Name, dep.Name, true))
 		ports := make(map[uint16]struct{})
 		for _, env := range dep.Forward {
-			remote, err := ExtractPort(cnf.Environment[env])
+			remote, err := ExtractPort(config.Environment[env])
 			if err != nil {
 				return command, err
 			}
@@ -36,7 +36,7 @@ func Command(cnf config.Service, detach bool) (shell.Command, error) {
 			}
 			ports[remote] = struct{}{}
 			forward := strconv.Itoa(int(remote))
-			if local, found := cnf.PortMapping[remote]; found {
+			if local, found := config.PortMapping[remote]; found {
 				forward = fmt.Sprintf("%d:%d", local, remote)
 			}
 			args = append(args, forward)
@@ -67,7 +67,7 @@ func ExtractPort(connection string) (uint16, error) {
 			return 0, err
 		}
 		p, err := strconv.ParseUint(u.Port(), 10, 16)
-		return uint16(p), nil
+		return uint16(p), err
 	}
 }
 
@@ -87,30 +87,30 @@ func ReplacePort(connection string, from, to uint16) string {
 }
 
 // Shutdown returns commands to shutdown the forward tool.
-func Shutdown(cnf config.Service) []shell.Command {
+func Shutdown(config cnf.Service) []shell.Command {
 	return []shell.Command{
 		"ps | grep '[f]orward --' | awk '{print $1}' | xargs kill -SIGKILL || true",
 		shell.Command(
 			fmt.Sprintf(
 				"ps | grep '[f]orward %s' | awk '{print $1}' | xargs kill -SIGKILL || true",
-				strings.TrimRight(PodName(cnf.Name, "", true), "-"),
+				strings.TrimRight(PodName(config.Name, "", true), "-"),
 			),
 		),
 	}
 }
 
 // TransformEnvironment applies a port mapping to a copy of environment variables.
-func TransformEnvironment(cnf config.Service) config.Environment {
-	if len(cnf.PortMapping) == 0 {
-		return cnf.Environment
+func TransformEnvironment(config cnf.Service) cnf.Environment {
+	if len(config.PortMapping) == 0 {
+		return config.Environment
 	}
 
-	copied := config.Environment{}
-	for k, v := range cnf.Environment {
+	copied := make(cnf.Environment)
+	for k, v := range config.Environment {
 		copied[k] = v
 	}
 
-	for _, dep := range cnf.Dependencies {
+	for _, dep := range config.Dependencies {
 		if len(dep.Forward) == 0 {
 			continue
 		}
@@ -119,7 +119,7 @@ func TransformEnvironment(cnf config.Service) config.Environment {
 			if err != nil {
 				continue
 			}
-			if local, found := cnf.PortMapping[remote]; found {
+			if local, found := config.PortMapping[remote]; found {
 				copied[env] = ReplacePort(copied[env], remote, local)
 			}
 		}
