@@ -2,7 +2,7 @@ package cmd
 
 import "github.com/spf13/cobra"
 
-// New returns new root command.
+// New returns the new root command.
 func New() *cobra.Command {
 	command := cobra.Command{
 		Use:   "lift",
@@ -12,9 +12,9 @@ func New() *cobra.Command {
 		SilenceErrors: false,
 		SilenceUsage:  true,
 	}
-	command.AddCommand(upCmd, downCmd, envCmd, forwardCmd, callCmd)
 	flags := command.PersistentFlags()
 	flags.StringP("file", "f", "app.toml", "service configuration file")
 	flags.StringArrayP("map", "m", nil, "port mapping (e.g. -m REMOTE:LOCAL)")
+	command.AddCommand(upCmd, downCmd, envCmd, forwardCmd, callCmd)
 	return &command
 }

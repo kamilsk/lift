@@ -44,7 +44,7 @@ after_script:
 
 deploy:
   - provider: script
-    skip_cleanup: true
+    cleanup: false
     script: curl -sL https://git.io/goreleaser | bash
     on:
       tags: true
