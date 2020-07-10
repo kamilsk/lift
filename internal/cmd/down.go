@@ -19,15 +19,6 @@ var downCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
-		sh := shell.New(os.Getenv("SHELL"))
-		commands := make([]shell.Command, 0, 2)
-		command, err := forward.Command(config, true)
-		if err != nil {
-			return err
-		}
-		if command != "" {
-			commands = append(commands, forward.Shutdown(config)...)
-		}
-		return sh.Print(cmd.OutOrStdout(), commands...)
+		return shell.New(os.Getenv("SHELL")).Print(cmd.OutOrStdout(), forward.Shutdown(config)...)
 	},
 }

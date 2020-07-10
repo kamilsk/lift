@@ -41,57 +41,6 @@ $ lift env > bin/.env
 
   - 🔦 tip: use `shift + cmd + .` to see hidden dot files
 
-4. Forward required ports using `kubectl port-forward`, or use my other tool named
-[forward](https://github.com/kamilsk/forward) for that
-
-```bash
-$ eval $(lift forward)
-```
-
-5. or run all together
-
-```bash
-$ eval $(lift up -- go run cmd/service/main.go); eval $(lift down)
-
-$ eval $(lift forward -d)
-$ lift call -- go run cmd/service/main.go
-$ eval $(lift down)
-```
-
-### Good to have
-
-```makefile
-.PHONY: format
-format:
-	@lift call -- goimports -local '$$GOMODULE' -ungroup -w .
-
-.PHONY: lift
-lift:
-	@lift env > bin/.env
-
-.PHONY: up
-up:
-	@avito start
-	@avito service dev --no-watch
-	@nohup $$(lift forward) &
-
-.PHONY: status
-status:
-	@minikube status
-	@kubectl get pod
-
-.PHONY: forward
-forward:
-	@eval $$(lift forward)
-
-.PHONY: down
-down:
-	@-avito service deletelocal
-	@-eval $$(lift down)
-```
-
-![goimports integration](.github/goimports_integration.png)
-
 ## 🧩 Installation
 
 ### Homebrew

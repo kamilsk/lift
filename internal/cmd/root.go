@@ -15,6 +15,6 @@ func New() *cobra.Command {
 	flags := command.PersistentFlags()
 	flags.StringP("file", "f", "app.toml", "service configuration file")
 	flags.StringArrayP("map", "m", nil, "port mapping (e.g. -m REMOTE:LOCAL)")
-	command.AddCommand(upCmd, downCmd, envCmd, forwardCmd, callCmd)
+	command.AddCommand(upCmd, downCmd, envCmd, callCmd)
 	return &command
 }

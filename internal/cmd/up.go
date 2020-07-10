@@ -24,13 +24,6 @@ var upCmd = &cobra.Command{
 		for variable, value := range forward.TransformEnvironment(config) {
 			commands = append(commands, sh.Assign(variable, value))
 		}
-		command, err := forward.Command(config, true)
-		if err != nil {
-			return err
-		}
-		if command != "" {
-			commands = append(commands, command)
-		}
 		return sh.Print(cmd.OutOrStdout(), commands...)
 	},
 }

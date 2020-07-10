@@ -16,41 +16,6 @@ var (
 	host = regexp.MustCompile(`^(?:\w+.?)+:(\d+)$`)
 )
 
-// Command returns a command to run the forward tool for a service.
-func Command(config cnf.Service, detach bool) (shell.Command, error) {
-	var command shell.Command
-	args := make([]string, 0, 8)
-	for _, dep := range config.Dependencies {
-		if len(dep.Forward) == 0 {
-			continue
-		}
-		args = append(args, PodName(config.Name, dep.Name, true))
-		ports := make(map[uint16]struct{})
-		for _, env := range dep.Forward {
-			remote, err := ExtractPort(config.Environment[env])
-			if err != nil {
-				return command, err
-			}
-			if _, found := ports[remote]; found {
-				continue
-			}
-			ports[remote] = struct{}{}
-			forward := strconv.Itoa(int(remote))
-			if local, found := config.PortMapping[remote]; found {
-				forward = fmt.Sprintf("%d:%d", local, remote)
-			}
-			args = append(args, forward)
-		}
-	}
-	if len(args) > 0 {
-		if detach {
-			return shell.Command(fmt.Sprintf("forward -- %s &", strings.Join(args, " "))), nil
-		}
-		return shell.Command(fmt.Sprintf("forward -- %s", strings.Join(args, " "))), nil
-	}
-	return command, nil
-}
-
 // ExtractPort tries to extract a port number from a connection definition.
 func ExtractPort(connection string) (uint16, error) {
 	switch {
