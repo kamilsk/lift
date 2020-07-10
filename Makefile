@@ -109,6 +109,7 @@ lint:
 	else \
 		go vet $(PACKAGES); \
 	fi
+	@if command -v looppointer > /dev/null; then looppointer ./...; fi
 
 .PHONY: test
 test:
@@ -125,6 +126,10 @@ test-with-coverage:
 .PHONY: test-with-coverage-profile
 test-with-coverage-profile:
 	@go test -cover -covermode count -coverprofile c.out -timeout $(TIMEOUT) $(PACKAGES)
+
+.PHONY: test-with-coverage-report
+test-with-coverage-report: test-with-coverage-profile
+	@go tool cover -html c.out
 
 BINARY  = $(BINPATH)/$(shell basename $(MAIN))
 BINPATH = $(PWD)/bin/$(OS)/$(ARCH)
