@@ -39,30 +39,30 @@ func TestEnvironmentVariables_Sorting(t *testing.T) {
 	}{
 		"sorted": {
 			input: EnvironmentVariables{
-				{Name: "a", Value: "b"},
-				{Name: "c", Value: "d"},
-				{Name: "e", Value: "f"},
-				{Name: "g", Value: "h"},
+				{Name: "a"},
+				{Name: "b"},
+				{Name: "c"},
+				{Name: "d"},
 			},
 			expected: EnvironmentVariables{
-				{Name: "a", Value: "b"},
-				{Name: "c", Value: "d"},
-				{Name: "e", Value: "f"},
-				{Name: "g", Value: "h"},
+				{Name: "a"},
+				{Name: "b"},
+				{Name: "c"},
+				{Name: "d"},
 			},
 		},
 		"unsorted": {
 			input: EnvironmentVariables{
-				{Name: "g", Value: "h"},
-				{Name: "e", Value: "f"},
-				{Name: "c", Value: "d"},
-				{Name: "a", Value: "b"},
+				{Name: "d"},
+				{Name: "c"},
+				{Name: "b"},
+				{Name: "a"},
 			},
 			expected: EnvironmentVariables{
-				{Name: "a", Value: "b"},
-				{Name: "c", Value: "d"},
-				{Name: "e", Value: "f"},
-				{Name: "g", Value: "h"},
+				{Name: "a"},
+				{Name: "b"},
+				{Name: "c"},
+				{Name: "d"},
 			},
 		},
 	}
@@ -103,6 +103,7 @@ func TestEnvironmentWithVariables_Serialization(t *testing.T) {
 	decoder, err := mapstructure.NewDecoder(&mapstructure.DecoderConfig{
 		DecodeHook: Environment(),
 		Result:     &specification,
+		TagName:    "toml",
 	})
 	require.NoError(t, err)
 	require.NoError(t, decoder.Decode(tree.ToMap()))

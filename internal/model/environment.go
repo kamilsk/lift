@@ -17,11 +17,11 @@ func (vars EnvironmentVariables) ToMap() map[string]interface{} {
 	if len(vars) == 0 {
 		return nil
 	}
-	if !sort.IsSorted(vars) {
-		sort.Sort(vars)
-	}
-	out := make(map[string]interface{}, len(vars))
-	for _, variable := range vars {
+	sorted := make(EnvironmentVariables, len(vars))
+	copy(sorted, vars)
+	sort.Sort(sorted)
+	out := make(map[string]interface{}, len(sorted))
+	for _, variable := range sorted {
 		out[variable.Name] = variable.Value
 	}
 	return out

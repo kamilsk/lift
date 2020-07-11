@@ -1,7 +1,7 @@
 [[dependencies]]
 name = "service-x"
 
-[["envs.perf.dependencies"]]
+[[envs.perf.dependencies]]
 name = "service-x"
 mock = true
 mock-replicas = 1
@@ -9,7 +9,7 @@ mock-replicas = 1
 [[dependencies]]
 name = "service-y"
 
-[["envs.perf.dependencies"]]
+[[envs.perf.dependencies]]
 name = "service-y"
 mock = true
 mock-replicas = 1
