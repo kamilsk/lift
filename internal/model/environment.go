@@ -1,5 +1,7 @@
 package model
 
+import "sort"
+
 type EnvironmentVariable struct {
 	Name  string
 	Value string
@@ -11,14 +13,33 @@ func (env EnvironmentVariable) ToMap() map[string]interface{} {
 
 type EnvironmentVariables []EnvironmentVariable
 
-func (env EnvironmentVariables) ToMap() map[string]interface{} {
-	out := make(map[string]interface{}, len(env))
-	for _, variable := range env {
+func (vars EnvironmentVariables) ToMap() map[string]interface{} {
+	if len(vars) == 0 {
+		return nil
+	}
+	if !sort.IsSorted(vars) {
+		sort.Sort(vars)
+	}
+	out := make(map[string]interface{}, len(vars))
+	for _, variable := range vars {
 		out[variable.Name] = variable.Value
 	}
 	return out
 }
 
-func (env EnvironmentVariables) Len() int           { return len(env) }
-func (env EnvironmentVariables) Less(i, j int) bool { return env[i].Name < env[j].Name }
-func (env EnvironmentVariables) Swap(i, j int)      { env[i], env[j] = env[j], env[i] }
+func (vars EnvironmentVariables) Len() int           { return len(vars) }
+func (vars EnvironmentVariables) Less(i, j int) bool { return vars[i].Name < vars[j].Name }
+func (vars EnvironmentVariables) Swap(i, j int)      { vars[i], vars[j] = vars[j], vars[i] }
+
+type EnvironmentWithVariables map[string]EnvironmentVariables
+
+func (sections EnvironmentWithVariables) ToMap() map[string]interface{} {
+	if len(sections) == 0 {
+		return nil
+	}
+	out := make(map[string]interface{}, len(sections))
+	for env, vars := range sections {
+		out[env] = vars.ToMap()
+	}
+	return out
+}

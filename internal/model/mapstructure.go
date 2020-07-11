@@ -7,9 +7,10 @@ import (
 	"github.com/pkg/errors"
 )
 
-// Environment returns a DecodeHookFunc that converts map[string]interface{} into EnvironmentVariables.
+// Environment returns a DecodeHookFunc that converts map[string]interface{}
+// into EnvironmentVariables.
 func Environment() mapstructure.DecodeHookFunc {
-	return func(f reflect.Type, t reflect.Type, data interface{}) (interface{}, error) {
+	return mapstructure.DecodeHookFuncType(func(f reflect.Type, t reflect.Type, data interface{}) (interface{}, error) {
 		var out EnvironmentVariables
 		if f.Kind() != reflect.Map || !t.AssignableTo(reflect.TypeOf(out)) {
 			return data, nil
@@ -24,5 +25,5 @@ func Environment() mapstructure.DecodeHookFunc {
 			out = append(out, EnvironmentVariable{Name: name, Value: value})
 		}
 		return out, nil
-	}
+	})
 }
