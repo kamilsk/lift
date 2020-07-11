@@ -3,12 +3,12 @@
   SERVICE_X_MAX_IDLE_CONNS = "10"
   SERVICE_X_TIMEOUT = "1s"
 
-["envs.perf.env_vars"]
+[envs.perf.env_vars]
   SERVICE_X_CONNECTION_TIMEOUT = "100ms"
   SERVICE_X_MAX_IDLE_CONNS = "10"
   SERVICE_X_TIMEOUT = "300ms"
 
-["envs.prod.env_vars"]
+[envs.prod.env_vars]
   SERVICE_X_CONNECTION_TIMEOUT = "100ms"
   SERVICE_X_MAX_IDLE_CONNS = "100"
   SERVICE_X_TIMEOUT = "300ms"
