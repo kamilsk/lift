@@ -1,0 +1,15 @@
+[[dependencies]]
+name = "service-x"
+
+[["envs.perf.dependencies"]]
+name = "service-x"
+mock = true
+mock-replicas = 1
+
+[[dependencies]]
+name = "service-y"
+
+[["envs.perf.dependencies"]]
+name = "service-y"
+mock = true
+mock-replicas = 1

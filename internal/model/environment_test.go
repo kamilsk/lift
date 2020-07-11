@@ -2,6 +2,7 @@ package model_test
 
 import (
 	"bytes"
+	"sort"
 	"testing"
 
 	"github.com/mitchellh/mapstructure"
@@ -27,6 +28,49 @@ func TestEnvironmentVariable_ToMap(t *testing.T) {
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
 			assert.Equal(t, test.expected, test.env.ToMap())
+		})
+	}
+}
+
+func TestEnvironmentVariables_Sorting(t *testing.T) {
+	tests := map[string]struct {
+		input    EnvironmentVariables
+		expected EnvironmentVariables
+	}{
+		"sorted": {
+			input: EnvironmentVariables{
+				{Name: "a", Value: "b"},
+				{Name: "c", Value: "d"},
+				{Name: "e", Value: "f"},
+				{Name: "g", Value: "h"},
+			},
+			expected: EnvironmentVariables{
+				{Name: "a", Value: "b"},
+				{Name: "c", Value: "d"},
+				{Name: "e", Value: "f"},
+				{Name: "g", Value: "h"},
+			},
+		},
+		"unsorted": {
+			input: EnvironmentVariables{
+				{Name: "g", Value: "h"},
+				{Name: "e", Value: "f"},
+				{Name: "c", Value: "d"},
+				{Name: "a", Value: "b"},
+			},
+			expected: EnvironmentVariables{
+				{Name: "a", Value: "b"},
+				{Name: "c", Value: "d"},
+				{Name: "e", Value: "f"},
+				{Name: "g", Value: "h"},
+			},
+		},
+	}
+
+	for name, test := range tests {
+		t.Run(name, func(t *testing.T) {
+			sort.Sort(test.input)
+			assert.Equal(t, test.expected, test.input)
 		})
 	}
 }
