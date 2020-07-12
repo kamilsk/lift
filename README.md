@@ -9,7 +9,7 @@
 ## 💡 Idea
 
 ```bash
-$ eval $(lift up)
+$ lift call && lift up
 ```
 
 A full description of the idea is available [here][design.page].
@@ -25,21 +25,7 @@ For that reason, I need a possibility to up services written on [Go](https://gol
 
 ## 🤼‍♂️ How to
 
-0. Describe your dependencies and storage in `app.toml`.
-
-1. Define everything you need in `env_vars` and `envs.local.env_vars`. See an [example](testdata/app.toml).
-
-2. Dump environment variables into `.env` file
-
-```bash
-$ lift env > bin/.env
-```
-
-3. Use it in your IDE with [EnvFile](https://plugins.jetbrains.com/plugin/7861-envfile) plugin
-
-![GoLand integration](.github/goland_integration.png)
-
-  - 🔦 tip: use `shift + cmd + .` to see hidden dot files
+...rethinking
 
 ## 🧩 Installation
 

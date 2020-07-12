@@ -8,4 +8,8 @@ var Features = config.Features{
 		Name:    "paas",
 		Enabled: true,
 	},
+	{
+		Name:    "process-manager",
+		Enabled: false,
+	},
 }
