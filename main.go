@@ -7,6 +7,8 @@ import (
 	"os"
 	"runtime/debug"
 
+	_ "github.com/pkg/errors"
+	_ "github.com/spf13/afero"
 	"go.octolab.org/errors"
 	"go.octolab.org/safe"
 	"go.octolab.org/toolkit/cli/cobra"

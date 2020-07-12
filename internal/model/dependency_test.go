@@ -14,11 +14,13 @@ import (
 )
 
 func TestDependencies_Serialization(t *testing.T) {
-	var specification struct {
+	type environment struct {
 		Deps Dependencies `toml:"dependencies,omitempty"`
-		Envs map[string]struct {
-			Deps Dependencies `toml:"dependencies,omitempty"`
-		} `toml:"envs,omitempty"`
+	}
+
+	var specification struct {
+		Deps Dependencies           `toml:"dependencies,omitempty"`
+		Envs map[string]environment `toml:"envs,omitempty"`
 	}
 
 	tree, err := toml.LoadFile("./testdata/dependencies.toml")

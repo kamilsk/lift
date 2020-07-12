@@ -1,3 +1,3 @@
 package model
 
-type EnvironmentVariable map[string]string
+type EnvironmentVariables map[string]string
