@@ -2,7 +2,7 @@ package model
 
 type Application struct {
 	Specification `toml:",omitempty,squash"`
-	Envs          map[string]Specification `toml:"envs,omitempty"`
+	Envs          map[string]*Specification `toml:"envs,omitempty"`
 }
 
 type Balancing struct {
@@ -11,7 +11,7 @@ type Balancing struct {
 
 type Cron struct {
 	Name     string `toml:"name,omitempty"`
-	Enabled  bool   `toml:"enabled,omitempty"`
+	Enabled  *bool  `toml:"enabled,omitempty"`
 	Schedule string `toml:"schedule,omitempty"`
 	Command  string `toml:"command,omitempty"`
 }
@@ -35,10 +35,10 @@ func (deps Dependencies) Less(i, j int) bool { return deps[i].Name < deps[j].Nam
 func (deps Dependencies) Swap(i, j int)      { deps[i], deps[j] = deps[j], deps[i] }
 
 type Engine struct {
-	Name      string   `toml:"name,omitempty"`
-	Version   string   `toml:"version,omitempty"`
-	Size      string   `toml:"size,omitempty"`
-	Resources Resource `toml:"resources,omitempty"`
+	Name      string     `toml:"name,omitempty"`
+	Version   string     `toml:"version,omitempty"`
+	Size      string     `toml:"size,omitempty"`
+	Resources *Resources `toml:"resources,omitempty"`
 }
 
 type EnvironmentVariables map[string]string
@@ -78,7 +78,7 @@ type Logger struct {
 
 type Proxy struct {
 	Name    string `toml:"name,omitempty"`
-	Enabled bool   `toml:"enabled,omitempty"`
+	Enabled *bool  `toml:"enabled,omitempty"`
 	Hosts   Hosts  `toml:"hosts,omitempty"`
 }
 
@@ -106,8 +106,8 @@ type Resource struct {
 }
 
 type Resources struct {
-	Requests Resource `toml:"requests,omitempty"`
-	Limits   Resource `toml:"limits,omitempty"`
+	Requests *Resource `toml:"requests,omitempty"`
+	Limits   *Resource `toml:"limits,omitempty"`
 }
 
 type Specification struct {
@@ -116,10 +116,10 @@ type Specification struct {
 	Kind         string               `toml:"description,omitempty"`
 	Host         string               `toml:"host,omitempty"`
 	Replicas     uint                 `toml:"replicas,omitempty"`
-	Engine       Engine               `toml:"engine,omitempty"`
-	Logger       Logger               `toml:"logger,omitempty"`
-	Balancing    Balancing            `toml:"balancing,omitempty"`
-	SFTP         SFTP                 `toml:"sftp,omitempty"`
+	Engine       *Engine              `toml:"engine,omitempty"`
+	Logger       *Logger              `toml:"logger,omitempty"`
+	Balancing    *Balancing           `toml:"balancing,omitempty"`
+	SFTP         *SFTP                `toml:"sftp,omitempty"`
 	Crons        Crons                `toml:"crons,omitepmty"`
 	Dependencies Dependencies         `toml:"dependencies,omitempty"`
 	Executable   Executable           `toml:"executable,omitempty"`
@@ -131,16 +131,16 @@ type Specification struct {
 
 type SFTP struct {
 	Size    string `toml:"size,omitempty"`
-	Enabled bool   `toml:"enabled,omitempty"`
+	Enabled *bool  `toml:"enabled,omitempty"`
 }
 
 type Worker struct {
 	Name          string    `toml:"name,omitempty"`
+	Enabled       *bool     `toml:"enabled,omitempty"`
 	Replicas      uint      `toml:"replicas,omitempty"`
 	Command       string    `toml:"command,omitempty"`
 	Commands      []string  `toml:"commands,omitempty"`
 	Size          string    `toml:"size,omitempty"`
-	Enabled       bool      `toml:"enabled,omitempty"`
 	LivenessProbe string    `toml:"liveness-probe-command,omitempty"`
 	Resources     Resources `toml:"resources,omitempty"`
 }
