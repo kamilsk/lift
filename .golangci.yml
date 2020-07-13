@@ -13,14 +13,15 @@ linters:
     - varcheck      # https://github.com/opennota/check
 
     - bodyclose     # https://github.com/timakin/bodyclose
+    - exhaustive    # https://github.com/nishanths/exhaustive
     - exportloopref # https://github.com/kyoh86/exportloopref
     - gocritic      # https://github.com/go-critic/go-critic
+    - noctx         # https://github.com/sonatard/noctx
 
 #    - asciicheck         # https://github.com/tdakkota/asciicheck
 #    - depguard           # https://github.com/OpenPeeDeeP/depguard
 #    - dogsled            # https://github.com/alexkohler/dogsled
 #    - dupl               # https://github.com/mibk/dupl
-#    - exhaustive         # https://github.com/nishanths/exhaustive
 #    - funlen             # https://github.com/ultraware/funlen
 #    - gochecknoglobals   # https://github.com/leighmcculloch/gochecknoglobals
 #    - gochecknoinits     # https://github.com/leighmcculloch/gochecknoinits
@@ -45,7 +46,6 @@ linters:
 #    - misspell           # https://github.com/client9/misspell
 #    - nakedret           # https://github.com/alexkohler/nakedret
 #    - nestif             # https://github.com/nakabonne/nestif
-#    - noctx              # https://github.com/sonatard/noctx
 #    - nolintlint         # https://github.com/golangci/golangci-lint/tree/master/pkg/golinters/nolintlint
 #    - prealloc           # https://github.com/alexkohler/prealloc
 #    - rowserrcheck       # https://github.com/jingyugao/rowserrcheck
