@@ -89,7 +89,7 @@ func (proxies Proxies) Less(i, j int) bool { return proxies[i].Name < proxies[j]
 func (proxies Proxies) Swap(i, j int)      { proxies[i], proxies[j] = proxies[j], proxies[i] }
 
 type Queue struct {
-	Schema  string   `toml:"schema,omitempty"`
+	Name    string   `toml:"schema,omitempty"`
 	DLQ     []string `toml:"dlq,omitempty"`
 	Aliases []string `toml:"aliases,omitempty"`
 }
@@ -97,7 +97,7 @@ type Queue struct {
 type Queues []Queue
 
 func (queues Queues) Len() int           { return len(queues) }
-func (queues Queues) Less(i, j int) bool { return queues[i].Schema < queues[j].Schema }
+func (queues Queues) Less(i, j int) bool { return queues[i].Name < queues[j].Name }
 func (queues Queues) Swap(i, j int)      { queues[i], queues[j] = queues[j], queues[i] }
 
 type Resource struct {

@@ -247,26 +247,26 @@ func TestSorting(t *testing.T) {
 		}{
 			"sorted": {
 				input: Queues{
-					{Schema: "a"},
-					{Schema: "b"},
-					{Schema: "c"},
+					{Name: "a"},
+					{Name: "b"},
+					{Name: "c"},
 				},
 				expected: Queues{
-					{Schema: "a"},
-					{Schema: "b"},
-					{Schema: "c"},
+					{Name: "a"},
+					{Name: "b"},
+					{Name: "c"},
 				},
 			},
 			"unsorted": {
 				input: Queues{
-					{Schema: "b"},
-					{Schema: "c"},
-					{Schema: "a"},
+					{Name: "b"},
+					{Name: "c"},
+					{Name: "a"},
 				},
 				expected: Queues{
-					{Schema: "a"},
-					{Schema: "b"},
-					{Schema: "c"},
+					{Name: "a"},
+					{Name: "b"},
+					{Name: "c"},
 				},
 			},
 		}

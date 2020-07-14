@@ -1,9 +1,24 @@
 package model
 
+import "sort"
+
 func (app *Application) Merge(apps ...Application) {
+	if app == nil {
+		return
+	}
+	if app.Envs == nil {
+		app.Envs = make(map[string]*Specification)
+	}
+
 	for _, src := range apps {
 		app.Specification.Merge(&src.Specification)
 		for env, spec := range src.Envs {
+			if spec == nil {
+				continue
+			}
+			if app.Envs[env] == nil {
+				app.Envs[env] = new(Specification)
+			}
 			app.Envs[env].Merge(spec)
 		}
 	}
@@ -13,6 +28,7 @@ func (spec *Specification) Merge(src *Specification) {
 	if spec == nil || src == nil {
 		return
 	}
+
 	if src.Name != "" {
 		spec.Name = src.Name
 	}
@@ -28,16 +44,25 @@ func (spec *Specification) Merge(src *Specification) {
 	if src.Replicas > 0 {
 		spec.Replicas = src.Replicas
 	}
+
 	spec.Engine.Merge(src.Engine)
 	spec.Logger.Merge(src.Logger)
 	spec.Balancing.Merge(src.Balancing)
 	spec.SFTP.Merge(src.SFTP)
+	spec.Crons.Merge(src.Crons)
+	spec.Dependencies.Merge(src.Dependencies)
+	spec.Executable.Merge(src.Executable)
+	spec.Proxies.Merge(src.Proxies)
+	spec.Queues.Merge(src.Queues)
+	spec.Workers.Merge(src.Workers)
+	spec.EnvVars.Merge(src.EnvVars)
 }
 
 func (engine *Engine) Merge(src *Engine) {
 	if engine == nil || src == nil {
 		return
 	}
+
 	if src.Name != "" {
 		engine.Name = src.Name
 	}
@@ -47,6 +72,7 @@ func (engine *Engine) Merge(src *Engine) {
 	if src.Size != "" {
 		engine.Size = src.Size
 	}
+
 	engine.Resources.Merge(src.Resources)
 }
 
@@ -54,6 +80,7 @@ func (logger *Logger) Merge(src *Logger) {
 	if logger == nil || src == nil {
 		return
 	}
+
 	if src.Level != "" {
 		logger.Level = src.Level
 	}
@@ -63,6 +90,7 @@ func (balancing *Balancing) Merge(src *Balancing) {
 	if balancing == nil || src == nil {
 		return
 	}
+
 	if src.CookieAffinity != "" {
 		balancing.CookieAffinity = src.CookieAffinity
 	}
@@ -72,6 +100,7 @@ func (sftp *SFTP) Merge(src *SFTP) {
 	if sftp == nil || src == nil {
 		return
 	}
+
 	if src.Size != "" {
 		sftp.Size = src.Size
 	}
@@ -84,6 +113,7 @@ func (resource *Resource) Merge(src *Resource) {
 	if resource == nil || src == nil {
 		return
 	}
+
 	if src.CPU > 0 {
 		resource.CPU = src.CPU
 	}
@@ -96,12 +126,134 @@ func (resources *Resources) Merge(src *Resources) {
 	if resources == nil || src == nil {
 		return
 	}
+
 	resources.Requests.Merge(src.Requests)
 	resources.Limits.Merge(src.Limits)
 }
 
-func (crons Crons) Merge(src Crons) {
+func (crons *Crons) Merge(src Crons) {
+	if crons == nil || len(src) == 0 {
+		return
+	}
+
+	copied := *crons
+	copied = append(copied, src...)
+	sort.Sort(copied)
+	j := 0
+	for i := 1; i < len(copied); i++ {
+		if copied[j].Name == copied[i].Name {
+			continue
+		}
+		j++
+		copied[j] = copied[i]
+	}
+	*crons = copied[:j+1]
+}
+
+func (deps *Dependencies) Merge(src Dependencies) {
+	if deps == nil || len(src) == 0 {
+		return
+	}
+
+	copied := *deps
+	copied = append(copied, src...)
+	sort.Sort(copied)
+	j := 0
+	for i := 1; i < len(copied); i++ {
+		if copied[j].Name == copied[i].Name {
+			continue
+		}
+		j++
+		copied[j] = copied[i]
+	}
+	*deps = copied[:j+1]
+}
+
+func (exec *Executable) Merge(src Executable) {
+	if exec == nil || len(src) == 0 {
+		return
+	}
+
+	copied := *exec
+	copied = append(copied, src...)
+	sort.Sort(copied)
+	j := 0
+	for i := 1; i < len(copied); i++ {
+		if copied[j].Name == copied[i].Name {
+			continue
+		}
+		j++
+		copied[j] = copied[i]
+	}
+	*exec = copied[:j+1]
+}
+
+func (proxies *Proxies) Merge(src Proxies) {
+	if proxies == nil || len(src) == 0 {
+		return
+	}
+
+	copied := *proxies
+	copied = append(copied, src...)
+	sort.Sort(copied)
+	j := 0
+	for i := 1; i < len(copied); i++ {
+		if copied[j].Name == copied[i].Name {
+			continue
+		}
+		j++
+		copied[j] = copied[i]
+	}
+	*proxies = copied[:j+1]
+}
+
+func (queues *Queues) Merge(src Queues) {
+	if queues == nil || len(src) == 0 {
+		return
+	}
+
+	copied := *queues
+	copied = append(copied, src...)
+	sort.Sort(copied)
+	j := 0
+	for i := 1; i < len(copied); i++ {
+		if copied[j].Name == copied[i].Name {
+			continue
+		}
+		j++
+		copied[j] = copied[i]
+	}
+	*queues = copied[:j+1]
+}
+
+func (workers *Workers) Merge(src Workers) {
+	if workers == nil || len(src) == 0 {
+		return
+	}
+
+	copied := *workers
+	copied = append(copied, src...)
+	sort.Sort(copied)
+	j := 0
+	for i := 1; i < len(copied); i++ {
+		if copied[j].Name == copied[i].Name {
+			continue
+		}
+		j++
+		copied[j] = copied[i]
+	}
+	*workers = copied[:j+1]
+}
+
+func (vars *EnvironmentVariables) Merge(src EnvironmentVariables) {
 	if len(src) == 0 {
 		return
+	}
+	if vars == nil || *vars == nil {
+		*vars = make(EnvironmentVariables)
+	}
+	dst := *vars
+	for env, val := range src {
+		dst[env] = val
 	}
 }
