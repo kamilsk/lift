@@ -11,7 +11,7 @@ func (app *Application) Merge(apps ...Application) {
 	}
 
 	for _, src := range apps {
-		app.Specification.Merge(&src.Specification)
+		app.Specification.Merge(&(src.Specification))
 		for env, spec := range src.Envs {
 			if spec == nil {
 				continue
@@ -39,16 +39,32 @@ func (spec *Specification) Merge(src *Specification) {
 		spec.Kind = src.Kind
 	}
 	if src.Host != "" {
-		spec.Kind = src.Kind
+		spec.Host = src.Host
 	}
 	if src.Replicas > 0 {
 		spec.Replicas = src.Replicas
 	}
 
+	if src.Engine != nil && spec.Engine == nil {
+		spec.Engine = new(Engine)
+	}
 	spec.Engine.Merge(src.Engine)
+
+	if src.Logger != nil && spec.Logger == nil {
+		spec.Logger = new(Logger)
+	}
 	spec.Logger.Merge(src.Logger)
+
+	if src.Balancing != nil && spec.Balancing == nil {
+		spec.Balancing = new(Balancing)
+	}
 	spec.Balancing.Merge(src.Balancing)
+
+	if src.SFTP != nil && spec.SFTP == nil {
+		spec.SFTP = new(SFTP)
+	}
 	spec.SFTP.Merge(src.SFTP)
+
 	spec.Crons.Merge(src.Crons)
 	spec.Dependencies.Merge(src.Dependencies)
 	spec.Executable.Merge(src.Executable)
@@ -73,6 +89,9 @@ func (engine *Engine) Merge(src *Engine) {
 		engine.Size = src.Size
 	}
 
+	if src.Resources != nil && engine.Resources == nil {
+		engine.Resources = new(Resources)
+	}
 	engine.Resources.Merge(src.Resources)
 }
 
@@ -127,7 +146,14 @@ func (resources *Resources) Merge(src *Resources) {
 		return
 	}
 
+	if src.Requests != nil && resources.Requests == nil {
+		resources.Requests = new(Resource)
+	}
 	resources.Requests.Merge(src.Requests)
+
+	if src.Limits != nil && resources.Limits == nil {
+		resources.Limits = new(Resource)
+	}
 	resources.Limits.Merge(src.Limits)
 }
 
