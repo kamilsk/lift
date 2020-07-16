@@ -1,0 +1,22 @@
+[[dependency]]
+name = "service-y"
+
+[[envs.perf.dependencies]]
+name = "service-y"
+mock = true
+mock-replicas = 1
+
+[env_vars]
+  SERVICE_Y_CONNECTION_TIMEOUT = "1s"
+  SERVICE_Y_MAX_IDLE_CONNS = "10"
+  SERVICE_Y_TIMEOUT = "1s"
+
+[envs.perf.env_vars]
+  SERVICE_Y_CONNECTION_TIMEOUT = "100ms"
+  SERVICE_Y_MAX_IDLE_CONNS = "10"
+  SERVICE_Y_TIMEOUT = "300ms"
+
+[envs.prod.env_vars]
+  SERVICE_Y_CONNECTION_TIMEOUT = "100ms"
+  SERVICE_Y_MAX_IDLE_CONNS = "100"
+  SERVICE_Y_TIMEOUT = "300ms"

@@ -1,0 +1,5 @@
+name = "service"
+kind = "business"
+description = "Some awesome service"
+host = "http://www.example.com"
+replicas = 1

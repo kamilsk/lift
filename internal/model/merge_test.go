@@ -2,6 +2,9 @@ package model_test
 
 import (
 	"bytes"
+	"flag"
+	"os"
+	"path/filepath"
 	"testing"
 
 	"github.com/mitchellh/mapstructure"
@@ -12,36 +15,43 @@ import (
 	. "github.com/kamilsk/lift/internal/model"
 )
 
+var update = flag.Bool("update", false, "update golden files")
+
 func TestMerge(t *testing.T) {
-	var spec1, spec2 Application
-	{
-		tree, err := toml.LoadFile("./testdata/env_vars.toml")
-		require.NoError(t, err)
-
-		decoder, err := mapstructure.NewDecoder(&mapstructure.DecoderConfig{
-			Result:  &spec1,
-			TagName: "toml",
-		})
-		require.NoError(t, err)
-		require.NoError(t, decoder.Decode(tree.ToMap()))
-	}
-	{
-		tree, err := toml.LoadFile("./testdata/dependencies.toml")
-		require.NoError(t, err)
-
-		decoder, err := mapstructure.NewDecoder(&mapstructure.DecoderConfig{
-			Result:  &spec2,
-			TagName: "toml",
-		})
-		require.NoError(t, err)
-		require.NoError(t, decoder.Decode(tree.ToMap()))
-	}
-	spec1.Merge(spec2)
-
-	tree, err := toml.LoadFile("./testdata/app.toml")
+	matches, err := filepath.Glob("testdata/components/*/*.toml")
 	require.NoError(t, err)
 
+	specs := make([]Application, 0, len(matches))
+	for _, path := range matches {
+		tree, err := toml.LoadFile(path)
+		require.NoError(t, err)
+
+		var spec Application
+		decoder, err := mapstructure.NewDecoder(&mapstructure.DecoderConfig{
+			Result:  &spec,
+			TagName: "toml",
+		})
+		require.NoError(t, err)
+		require.NoError(t, decoder.Decode(tree.ToMap()))
+		specs = append(specs, spec)
+	}
+
+	if *update {
+		file, err := os.Create("testdata/app.toml")
+		require.NoError(t, err)
+
+		app := new(Application)
+		app.Merge(specs...)
+		require.NoError(t, toml.NewEncoder(file).Encode(app))
+		require.NoError(t, file.Close())
+	}
+
+	tree, err := toml.LoadFile("testdata/app.toml")
+	require.NoError(t, err)
+
+	app := new(Application)
+	app.Merge(specs...)
 	buf := bytes.NewBuffer(make([]byte, 0, 1024))
-	require.NoError(t, toml.NewEncoder(buf).Encode(spec1))
+	require.NoError(t, toml.NewEncoder(buf).Encode(app))
 	assert.Equal(t, tree.String(), buf.String())
 }

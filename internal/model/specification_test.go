@@ -16,7 +16,7 @@ import (
 func TestDependencies(t *testing.T) {
 	var app Application
 
-	tree, err := toml.LoadFile("./testdata/dependencies.toml")
+	tree, err := toml.LoadFile("testdata/dependencies.toml")
 	require.NoError(t, err)
 
 	decoder, err := mapstructure.NewDecoder(&mapstructure.DecoderConfig{
@@ -34,7 +34,7 @@ func TestDependencies(t *testing.T) {
 func TestEnvironmentVariables(t *testing.T) {
 	var app Application
 
-	tree, err := toml.LoadFile("./testdata/env_vars.toml")
+	tree, err := toml.LoadFile("testdata/env_vars.toml")
 	require.NoError(t, err)
 
 	decoder, err := mapstructure.NewDecoder(&mapstructure.DecoderConfig{
