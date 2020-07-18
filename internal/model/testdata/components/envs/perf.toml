@@ -1,0 +1,14 @@
+[[envs.perf.crons]]
+name = "exporter"
+enabled = false
+
+[[envs.perf.crons]]
+name = "sampler"
+enabled = false
+
+[[envs.perf.proxy]]
+name = "s3"
+enabled = false
+
+[envs.perf.sftp]
+enabled = false

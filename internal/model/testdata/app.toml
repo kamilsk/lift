@@ -4,6 +4,32 @@ kind = "business"
 name = "service"
 replicas = 1
 
+[balancing]
+  cookie_affinity = "u"
+
+[[crons]]
+  command = "/bin/exporter --count 20"
+  enabled = true
+  name = "exporter"
+  schedule = "11 17 * * *"
+
+[[crons]]
+  command = "/bin/sampler --count 20"
+  enabled = true
+  name = "sampler"
+  schedule = "11 17 * * *"
+
+[[dependencies]]
+  name = "service-x"
+
+[[dependencies]]
+  name = "service-y"
+
+[engine]
+  name = "golang"
+  size = "medium"
+  version = "1.14"
+
 [env_vars]
   SERVICE_X_CONNECTION_TIMEOUT = "1s"
   SERVICE_X_MAX_IDLE_CONNS = "10"
@@ -15,6 +41,19 @@ replicas = 1
 [envs]
 
   [envs.perf]
+
+    [[envs.perf.crons]]
+      enabled = false
+      name = "exporter"
+
+    [[envs.perf.crons]]
+      enabled = false
+      name = "sampler"
+
+    [[envs.perf.dependencies]]
+      mock = true
+      mock-replicas = 1
+      name = "service-x"
 
     [[envs.perf.dependencies]]
       mock = true
@@ -29,7 +68,27 @@ replicas = 1
       SERVICE_Y_MAX_IDLE_CONNS = "10"
       SERVICE_Y_TIMEOUT = "300ms"
 
+    [[envs.perf.proxy]]
+      enabled = false
+      name = "s3"
+
+    [envs.perf.sftp]
+      enabled = false
+
   [envs.prod]
+
+    [envs.prod.engine]
+      size = "large"
+
+      [envs.prod.engine.resources]
+
+        [envs.prod.engine.resources.limits]
+          cpu = 10000
+          memory = 99
+
+        [envs.prod.engine.resources.requests]
+          cpu = 1000
+          memory = 9
 
     [envs.prod.env_vars]
       SERVICE_X_CONNECTION_TIMEOUT = "100ms"
@@ -38,3 +97,81 @@ replicas = 1
       SERVICE_Y_CONNECTION_TIMEOUT = "100ms"
       SERVICE_Y_MAX_IDLE_CONNS = "100"
       SERVICE_Y_TIMEOUT = "300ms"
+
+    [envs.prod.logger]
+      level = "warning"
+
+    [[envs.prod.workers]]
+      command = "php /app/workers/get-memes.php"
+      name = "memes-downloader"
+      replicas = 1
+      size = "small"
+
+    [[envs.prod.workers]]
+      command = "/usr/bin/resizer start"
+      name = "resizer"
+      replicas = 1
+      size = "small"
+
+[[executable]]
+  command = "/usr/bin/daemon listen -at 4321"
+  liveness-probe-command = "curl --fail http://127.0.0.1:4321"
+  name = "daemon"
+  readiness-probe-command = "curl --fail http://127.0.0.1:4321"
+  replicas = 1
+  service-port = 4321
+  size = "small"
+
+[[executable]]
+  command = "/usr/bin/watcher watch -at 1234"
+  liveness-probe-command = "curl --fail http://127.0.0.1:1234"
+  name = "watcher"
+  readiness-probe-command = "curl --fail http://127.0.0.1:1234"
+  replicas = 1
+  service-port = 1234
+  size = "small"
+
+[logger]
+  level = "info"
+
+[[proxy]]
+  enabled = true
+  name = "s3"
+
+  [[proxy.hosts]]
+    connections = 50
+    host = "gateway01:80"
+    weight = 100
+
+  [[proxy.hosts]]
+    backup = true
+    connections = 50
+    host = "gateway02:80"
+    weight = 100
+
+[[proxy]]
+  enabled = true
+  name = "s4"
+
+  [[proxy.hosts]]
+    connections = 50
+    host = "gateway01:80"
+    weight = 100
+
+  [[proxy.hosts]]
+    backup = true
+    connections = 50
+    host = "gateway02:80"
+    weight = 100
+
+[[queues]]
+  dlq = ["5m", "10m", "30m"]
+  schema = "item.landed.on.mars"
+
+[[queues]]
+  dlq = ["5m", "10m", "30m"]
+  schema = "item.landed.on.moon"
+
+[sftp]
+  enabled = true
+  size = "small"

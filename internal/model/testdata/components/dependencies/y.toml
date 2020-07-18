@@ -1,4 +1,4 @@
-[[dependency]]
+[[dependencies]]
 name = "service-y"
 
 [[envs.perf.dependencies]]

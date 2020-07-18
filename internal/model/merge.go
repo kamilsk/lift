@@ -13,9 +13,6 @@ func (app *Application) Merge(apps ...Application) {
 	for _, src := range apps {
 		app.Specification.Merge(&(src.Specification))
 		for env, spec := range src.Envs {
-			if spec == nil {
-				continue
-			}
 			if app.Envs[env] == nil {
 				app.Envs[env] = new(Specification)
 			}
@@ -94,10 +91,10 @@ func (engine *Engine) Merge(src *Engine) {
 }
 
 func (vars *EnvironmentVariables) Merge(src EnvironmentVariables) {
-	if len(src) == 0 {
+	if vars == nil || len(src) == 0 {
 		return
 	}
-	if vars == nil || *vars == nil {
+	if *vars == nil {
 		*vars = make(EnvironmentVariables)
 	}
 	dst := *vars

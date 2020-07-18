@@ -1,8 +1,8 @@
-[[dependency]]
-name = "service-y"
+[[dependencies]]
+name = "service-x"
 
 [[envs.perf.dependencies]]
-name = "service-y"
+name = "service-x"
 mock = true
 mock-replicas = 1
 

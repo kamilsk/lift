@@ -47,7 +47,7 @@ type Exec struct {
 	Name          string `toml:"name,omitempty"`
 	Replicas      uint   `toml:"replicas,omitempty"`
 	Command       string `toml:"command,omitempty"`
-	Port          string `toml:"service-port,omitempty"`
+	Port          int    `toml:"service-port,omitempty"`
 	Size          string `toml:"size,omitempty"`
 	RedinessProbe string `toml:"readiness-probe-command,omitempty"`
 	LivenessProbe string `toml:"liveness-probe-command,omitempty"`

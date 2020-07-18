@@ -1,0 +1,27 @@
+[envs.prod.engine]
+size = "large"
+resources.requests.cpu = 1000
+resources.requests.memory = 9
+resources.limits.cpu = 10000
+resources.limits.memory = 99
+
+[envs.prod.logger]
+level = "warning"
+
+[[envs.prod.workers]]
+name = "memes-downloader"
+replicas = 1
+command = "php /app/workers/get-memes.php"
+size = "small"
+
+[[envs.prod.workers]]
+name = "memes-downloader"
+replicas = 1
+command = "php /app/workers/get-memes.php"
+size = "small"
+
+[[envs.prod.workers]]
+name = "resizer"
+replicas = 1
+command = "/usr/bin/resizer start"
+size = "small"
