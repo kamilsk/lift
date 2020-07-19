@@ -1,5 +1,4 @@
 description = "Some awesome service"
-host = "http://www.example.com"
 kind = "business"
 name = "service"
 replicas = 1
@@ -41,6 +40,7 @@ replicas = 1
 [envs]
 
   [envs.perf]
+    host = "http://www.example.com"
 
     [[envs.perf.crons]]
       enabled = false
@@ -74,6 +74,10 @@ replicas = 1
 
     [envs.perf.sftp]
       enabled = false
+
+    [[envs.perf.sphinx]]
+      enabled = false
+      name = "search"
 
   [envs.prod]
 
@@ -169,9 +173,30 @@ replicas = 1
   schema = "item.landed.on.mars"
 
 [[queues]]
+  aliases = ["item.landed.report.1", "item.landed.report.2", "item.landed.report.3"]
   dlq = ["5m", "10m", "30m"]
   schema = "item.landed.on.moon"
 
 [sftp]
   enabled = true
   size = "small"
+
+[[sphinx]]
+  enabled = true
+  name = "search"
+
+  [[sphinx.hosts]]
+    host = "search01:9306"
+
+  [[sphinx.hosts]]
+    host = "search02:9306"
+
+[[sphinx]]
+  enabled = true
+  name = "standby"
+
+  [[sphinx.hosts]]
+    host = "search03:9306"
+
+  [[sphinx.hosts]]
+    host = "search04:9306"

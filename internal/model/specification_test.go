@@ -278,6 +278,44 @@ func TestSorting(t *testing.T) {
 			})
 		}
 	})
+	t.Run("Sphinxes", func(t *testing.T) {
+		tests := map[string]struct {
+			input    Sphinxes
+			expected Sphinxes
+		}{
+			"sorted": {
+				input: Sphinxes{
+					{Name: "a"},
+					{Name: "b"},
+					{Name: "c"},
+				},
+				expected: Sphinxes{
+					{Name: "a"},
+					{Name: "b"},
+					{Name: "c"},
+				},
+			},
+			"unsorted": {
+				input: Sphinxes{
+					{Name: "b"},
+					{Name: "c"},
+					{Name: "a"},
+				},
+				expected: Sphinxes{
+					{Name: "a"},
+					{Name: "b"},
+					{Name: "c"},
+				},
+			},
+		}
+
+		for name, test := range tests {
+			t.Run(name, func(t *testing.T) {
+				sort.Sort(test.input)
+				assert.Equal(t, test.expected, test.input)
+			})
+		}
+	})
 	t.Run("Workers", func(t *testing.T) {
 		tests := map[string]struct {
 			input    Workers

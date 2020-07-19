@@ -1,14 +1,21 @@
-[[envs.perf.crons]]
-name = "exporter"
-enabled = false
+[envs.perf]
+  host = "http://www.example.com"
 
 [[envs.perf.crons]]
-name = "sampler"
-enabled = false
+  name = "exporter"
+  enabled = false
+
+[[envs.perf.crons]]
+  name = "sampler"
+  enabled = false
 
 [[envs.perf.proxy]]
-name = "s3"
-enabled = false
+  name = "s3"
+  enabled = false
 
 [envs.perf.sftp]
-enabled = false
+  enabled = false
+
+[[envs.perf.sphinx]]
+  name = "search"
+  enabled = false

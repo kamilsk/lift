@@ -117,15 +117,20 @@ func TestMerge(t *testing.T) {
 			assert.NotPanics(t, func() { resources.Merge(&Resources{Requests: &Resource{CPU: 1}}) })
 			assert.Nil(t, resources)
 		})
+		t.Run("nil sftp", func(t *testing.T) {
+			var sftp *SFTP
+			assert.NotPanics(t, func() { sftp.Merge(&SFTP{Size: "small"}) })
+			assert.Nil(t, sftp)
+		})
 		t.Run("nil specification", func(t *testing.T) {
 			var spec *Specification
 			assert.NotPanics(t, func() { spec.Merge(&Specification{Name: "test"}) })
 			assert.Nil(t, spec)
 		})
-		t.Run("nil sftp", func(t *testing.T) {
-			var sftp *SFTP
-			assert.NotPanics(t, func() { sftp.Merge(&SFTP{Size: "small"}) })
-			assert.Nil(t, sftp)
+		t.Run("nil sphinxes", func(t *testing.T) {
+			var sphinxes *Sphinxes
+			assert.NotPanics(t, func() { sphinxes.Merge(Sphinxes{{Name: "test"}}) })
+			assert.Nil(t, sphinxes)
 		})
 		t.Run("nil workers", func(t *testing.T) {
 			var workers *Workers

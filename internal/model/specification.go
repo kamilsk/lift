@@ -47,7 +47,7 @@ type Exec struct {
 	Name          string `toml:"name,omitempty"`
 	Replicas      uint   `toml:"replicas,omitempty"`
 	Command       string `toml:"command,omitempty"`
-	Port          int    `toml:"service-port,omitempty"`
+	Port          uint   `toml:"service-port,omitempty"`
 	Size          string `toml:"size,omitempty"`
 	RedinessProbe string `toml:"readiness-probe-command,omitempty"`
 	LivenessProbe string `toml:"liveness-probe-command,omitempty"`
@@ -61,7 +61,9 @@ func (exec Executable) Swap(i, j int)      { exec[i], exec[j] = exec[j], exec[i]
 
 type Host struct {
 	Name        string `toml:"host,omitempty"`
+	AgentPort   uint   `toml:"agent_port,omitempty"`
 	Connections uint   `toml:"connections,omitempty"`
+	MaxConns    uint   `toml:"maxconn,omitempty"`
 	Weight      uint   `toml:"weight,omitempty"`
 	Backup      bool   `toml:"backup,omitempty"`
 }
@@ -101,13 +103,18 @@ func (queues Queues) Less(i, j int) bool { return queues[i].Name < queues[j].Nam
 func (queues Queues) Swap(i, j int)      { queues[i], queues[j] = queues[j], queues[i] }
 
 type Resource struct {
-	CPU    int `toml:"cpu,omitempty"`
-	Memory int `toml:"memory,omitempty"`
+	CPU    uint `toml:"cpu,omitempty"`
+	Memory uint `toml:"memory,omitempty"`
 }
 
 type Resources struct {
 	Requests *Resource `toml:"requests,omitempty"`
 	Limits   *Resource `toml:"limits,omitempty"`
+}
+
+type SFTP struct {
+	Size    string `toml:"size,omitempty"`
+	Enabled *bool  `toml:"enabled,omitempty"`
 }
 
 type Specification struct {
@@ -125,24 +132,33 @@ type Specification struct {
 	Executable   Executable           `toml:"executable,omitempty"`
 	Proxies      Proxies              `toml:"proxy,omitempty"`
 	Queues       Queues               `toml:"queues,omitempty"`
+	Sphinxes     Sphinxes             `toml:"sphinx,omitempty"`
 	Workers      Workers              `toml:"workers,omitempty"`
 	EnvVars      EnvironmentVariables `toml:"env_vars,omitempty"`
 }
 
-type SFTP struct {
-	Size    string `toml:"size,omitempty"`
-	Enabled *bool  `toml:"enabled,omitempty"`
+type Sphinx struct {
+	Name    string `toml:"name,omitepmty"`
+	Enabled *bool  `toml:"enabled,omitepmty"`
+	Haproxy string `toml:"haproxy_tag,omitempty"`
+	Hosts   Hosts  `toml:"hosts,omitempty"`
 }
 
+type Sphinxes []Sphinx
+
+func (sphinxes Sphinxes) Len() int           { return len(sphinxes) }
+func (sphinxes Sphinxes) Less(i, j int) bool { return sphinxes[i].Name < sphinxes[j].Name }
+func (sphinxes Sphinxes) Swap(i, j int)      { sphinxes[i], sphinxes[j] = sphinxes[j], sphinxes[i] }
+
 type Worker struct {
-	Name          string    `toml:"name,omitempty"`
-	Enabled       *bool     `toml:"enabled,omitempty"`
-	Replicas      uint      `toml:"replicas,omitempty"`
-	Command       string    `toml:"command,omitempty"`
-	Commands      []string  `toml:"commands,omitempty"`
-	Size          string    `toml:"size,omitempty"`
-	LivenessProbe string    `toml:"liveness-probe-command,omitempty"`
-	Resources     Resources `toml:"resources,omitempty"`
+	Name          string     `toml:"name,omitempty"`
+	Enabled       *bool      `toml:"enabled,omitempty"`
+	Replicas      uint       `toml:"replicas,omitempty"`
+	Command       string     `toml:"command,omitempty"`
+	Commands      []string   `toml:"commands,omitempty"`
+	Size          string     `toml:"size,omitempty"`
+	LivenessProbe string     `toml:"liveness-probe-command,omitempty"`
+	Resources     *Resources `toml:"resources,omitempty"`
 }
 
 type Workers []Worker

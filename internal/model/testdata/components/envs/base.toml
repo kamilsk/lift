@@ -1,104 +1,128 @@
 name = "service"
 kind = "business"
 description = "Some awesome service"
-host = "http://www.example.com"
 replicas = 1
 
 [engine]
-name = "golang"
-version = "1.14"
-size = "medium"
+  name = "golang"
+  version = "1.14"
+  size = "medium"
 
 [balancing]
-cookie_affinity = "u"
+  cookie_affinity = "u"
 
 [[crons]]
-name = "exporter"
-enabled = true
-schedule = "11 17 * * *"
-command = "/bin/exporter --count 20"
+  name = "exporter"
+  enabled = true
+  schedule = "11 17 * * *"
+  command = "/bin/exporter --count 20"
 
 [[crons]]
-name = "exporter"
-enabled = true
-schedule = "11 17 * * *"
-command = "/bin/exporter --count 20"
+  name = "exporter"
+  enabled = true
+  schedule = "11 17 * * *"
+  command = "/bin/exporter --count 20"
 
 [[crons]]
-name = "sampler"
-enabled = true
-schedule = "11 17 * * *"
-command = "/bin/sampler --count 20"
+  name = "sampler"
+  enabled = true
+  schedule = "11 17 * * *"
+  command = "/bin/sampler --count 20"
 
 [[dependencies]]
-name = "service-x"
+  name = "service-x"
 
 [[executable]]
-name = "daemon"
-replicas = 1
-readiness-probe-command = "curl --fail http://127.0.0.1:4321"
-liveness-probe-command = "curl --fail http://127.0.0.1:4321"
-command = "/usr/bin/daemon listen -at 4321"
-service-port = 4321
-size = "small"
+  name = "daemon"
+  replicas = 1
+  readiness-probe-command = "curl --fail http://127.0.0.1:4321"
+  liveness-probe-command = "curl --fail http://127.0.0.1:4321"
+  command = "/usr/bin/daemon listen -at 4321"
+  service-port = 4321
+  size = "small"
 
 [[executable]]
-name = "watcher"
-replicas = 1
-readiness-probe-command = "curl --fail http://127.0.0.1:1234"
-liveness-probe-command = "curl --fail http://127.0.0.1:1234"
-command = "/usr/bin/watcher watch -at 1234"
-service-port = 1234
-size = "small"
+  name = "watcher"
+  replicas = 1
+  readiness-probe-command = "curl --fail http://127.0.0.1:1234"
+  liveness-probe-command = "curl --fail http://127.0.0.1:1234"
+  command = "/usr/bin/watcher watch -at 1234"
+  service-port = 1234
+  size = "small"
 
 [[executable]]
-name = "watcher"
-replicas = 1
-readiness-probe-command = "curl --fail http://127.0.0.1:1234"
-liveness-probe-command = "curl --fail http://127.0.0.1:1234"
-command = "/usr/bin/watcher watch -at 1234"
-service-port = 1234
-size = "small"
+  name = "watcher"
+  replicas = 1
+  readiness-probe-command = "curl --fail http://127.0.0.1:1234"
+  liveness-probe-command = "curl --fail http://127.0.0.1:1234"
+  command = "/usr/bin/watcher watch -at 1234"
+  service-port = 1234
+  size = "small"
 
 [logger]
-level = "info"
+  level = "info"
 
 [[proxy]]
-name = "s3"
-enabled = true
-hosts = [
-  {host = "gateway01:80", connections = 50, weight = 100},
-  {host = "gateway02:80", connections = 50, weight = 100, backup = true},
-]
+  name = "s3"
+  enabled = true
+  hosts = [
+    {host = "gateway01:80", connections = 50, weight = 100},
+    {host = "gateway02:80", connections = 50, weight = 100, backup = true},
+  ]
 
 [[proxy]]
-name = "s3"
-enabled = true
-hosts = [
-  {host = "gateway01:80", connections = 50, weight = 100},
-  {host = "gateway02:80", connections = 50, weight = 100, backup = true},
-]
+  name = "s3"
+  enabled = true
+  hosts = [
+    {host = "gateway01:80", connections = 50, weight = 100},
+    {host = "gateway02:80", connections = 50, weight = 100, backup = true},
+  ]
 
 [[proxy]]
-name = "s4"
-enabled = true
-hosts = [
-  {host = "gateway01:80", connections = 50, weight = 100},
-  {host = "gateway02:80", connections = 50, weight = 100, backup = true},
-]
+  name = "s4"
+  enabled = true
+  hosts = [
+    {host = "gateway01:80", connections = 50, weight = 100},
+    {host = "gateway02:80", connections = 50, weight = 100, backup = true},
+  ]
 
 [[queues]]
-schema = "item.landed.on.mars"
-dlq=["5m", "10m", "30m"]
+  schema = "item.landed.on.mars"
+  dlq = ["5m", "10m", "30m"]
 
 [[queues]]
-schema = "item.landed.on.mars"
-dlq=["5m", "10m", "30m"]
+  schema = "item.landed.on.mars"
+  dlq = ["5m", "10m", "30m"]
 
 [[queues]]
-schema = "item.landed.on.moon"
-dlq=["5m", "10m", "30m"]
+  schema = "item.landed.on.moon"
+  dlq = ["5m", "10m", "30m"]
+  aliases = ["item.landed.report.1", "item.landed.report.2", "item.landed.report.3"]
 
 [sftp]
-enabled = true
-size = "small"
+  enabled = true
+  size = "small"
+
+[[sphinx]]
+  name = "search"
+  enabled = true
+  hosts = [
+    {host = "search01:9306"},
+    {host = "search02:9306"},
+  ]
+
+[[sphinx]]
+  name = "search"
+  enabled = true
+  hosts = [
+    {host = "search01:9306"},
+    {host = "search02:9306"},
+  ]
+
+[[sphinx]]
+  name = "standby"
+  enabled = true
+  hosts = [
+    {host = "search03:9306"},
+    {host = "search04:9306"},
+  ]

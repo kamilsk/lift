@@ -39,15 +39,15 @@ func (crons *Crons) Merge(src Crons) {
 	copied := *crons
 	copied = append(copied, src...)
 	sort.Sort(copied)
-	j := 0
+	shift := 0
 	for i := 1; i < len(copied); i++ {
-		if copied[j].Name == copied[i].Name {
+		if copied[shift].Name == copied[i].Name {
 			continue
 		}
-		j++
-		copied[j] = copied[i]
+		shift++
+		copied[shift] = copied[i]
 	}
-	*crons = copied[:j+1]
+	*crons = copied[:shift+1]
 }
 
 func (deps *Dependencies) Merge(src Dependencies) {
@@ -58,15 +58,15 @@ func (deps *Dependencies) Merge(src Dependencies) {
 	copied := *deps
 	copied = append(copied, src...)
 	sort.Sort(copied)
-	j := 0
+	shift := 0
 	for i := 1; i < len(copied); i++ {
-		if copied[j].Name == copied[i].Name {
+		if copied[shift].Name == copied[i].Name {
 			continue
 		}
-		j++
-		copied[j] = copied[i]
+		shift++
+		copied[shift] = copied[i]
 	}
-	*deps = copied[:j+1]
+	*deps = copied[:shift+1]
 }
 
 func (engine *Engine) Merge(src *Engine) {
@@ -111,15 +111,15 @@ func (exec *Executable) Merge(src Executable) {
 	copied := *exec
 	copied = append(copied, src...)
 	sort.Sort(copied)
-	j := 0
+	shift := 0
 	for i := 1; i < len(copied); i++ {
-		if copied[j].Name == copied[i].Name {
+		if copied[shift].Name == copied[i].Name {
 			continue
 		}
-		j++
-		copied[j] = copied[i]
+		shift++
+		copied[shift] = copied[i]
 	}
-	*exec = copied[:j+1]
+	*exec = copied[:shift+1]
 }
 
 func (logger *Logger) Merge(src *Logger) {
@@ -140,15 +140,15 @@ func (proxies *Proxies) Merge(src Proxies) {
 	copied := *proxies
 	copied = append(copied, src...)
 	sort.Sort(copied)
-	j := 0
+	shift := 0
 	for i := 1; i < len(copied); i++ {
-		if copied[j].Name == copied[i].Name {
+		if copied[shift].Name == copied[i].Name {
 			continue
 		}
-		j++
-		copied[j] = copied[i]
+		shift++
+		copied[shift] = copied[i]
 	}
-	*proxies = copied[:j+1]
+	*proxies = copied[:shift+1]
 }
 
 func (queues *Queues) Merge(src Queues) {
@@ -159,15 +159,15 @@ func (queues *Queues) Merge(src Queues) {
 	copied := *queues
 	copied = append(copied, src...)
 	sort.Sort(copied)
-	j := 0
+	shift := 0
 	for i := 1; i < len(copied); i++ {
-		if copied[j].Name == copied[i].Name {
+		if copied[shift].Name == copied[i].Name {
 			continue
 		}
-		j++
-		copied[j] = copied[i]
+		shift++
+		copied[shift] = copied[i]
 	}
-	*queues = copied[:j+1]
+	*queues = copied[:shift+1]
 }
 
 func (resource *Resource) Merge(src *Resource) {
@@ -197,6 +197,19 @@ func (resources *Resources) Merge(src *Resources) {
 		resources.Limits = new(Resource)
 	}
 	resources.Limits.Merge(src.Limits)
+}
+
+func (sftp *SFTP) Merge(src *SFTP) {
+	if sftp == nil || src == nil {
+		return
+	}
+
+	if src.Size != "" {
+		sftp.Size = src.Size
+	}
+	if src.Enabled != nil {
+		sftp.Enabled = src.Enabled
+	}
 }
 
 func (spec *Specification) Merge(src *Specification) {
@@ -245,21 +258,28 @@ func (spec *Specification) Merge(src *Specification) {
 	spec.Executable.Merge(src.Executable)
 	spec.Proxies.Merge(src.Proxies)
 	spec.Queues.Merge(src.Queues)
+	spec.Sphinxes.Merge(src.Sphinxes)
 	spec.Workers.Merge(src.Workers)
 	spec.EnvVars.Merge(src.EnvVars)
 }
 
-func (sftp *SFTP) Merge(src *SFTP) {
-	if sftp == nil || src == nil {
+func (sphinxes *Sphinxes) Merge(src Sphinxes) {
+	if sphinxes == nil || len(src) == 0 {
 		return
 	}
 
-	if src.Size != "" {
-		sftp.Size = src.Size
+	copied := *sphinxes
+	copied = append(copied, src...)
+	sort.Sort(copied)
+	shift := 0
+	for i := 1; i < len(copied); i++ {
+		if copied[shift].Name == copied[i].Name {
+			continue
+		}
+		shift++
+		copied[shift] = copied[i]
 	}
-	if src.Enabled != nil {
-		sftp.Enabled = src.Enabled
-	}
+	*sphinxes = copied[:shift+1]
 }
 
 func (workers *Workers) Merge(src Workers) {
@@ -270,13 +290,13 @@ func (workers *Workers) Merge(src Workers) {
 	copied := *workers
 	copied = append(copied, src...)
 	sort.Sort(copied)
-	j := 0
+	shift := 0
 	for i := 1; i < len(copied); i++ {
-		if copied[j].Name == copied[i].Name {
+		if copied[shift].Name == copied[i].Name {
 			continue
 		}
-		j++
-		copied[j] = copied[i]
+		shift++
+		copied[shift] = copied[i]
 	}
-	*workers = copied[:j+1]
+	*workers = copied[:shift+1]
 }
