@@ -12,4 +12,8 @@ var Features = config.Features{
 		Name:    "process-manager",
 		Enabled: false,
 	},
+	{
+		Name:    "templating",
+		Enabled: false,
+	},
 }
