@@ -28,9 +28,9 @@ brews:
     install: |
       bin.install "lift"
       output = Utils.popen_read("#{bin}/lift completion bash")
-      (bash_completion/"lift").write output
+      (bash_completion/lift).write output
       output = Utils.popen_read("#{bin}/lift completion zsh")
-      (zsh_completion/"_lift").write output
+      (zsh_completion/_lift).write output
       prefix.install_metafiles
     test: |
       system "#{bin}/lift version"
