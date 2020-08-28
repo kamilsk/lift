@@ -194,6 +194,66 @@ func (queues *Queues) Merge(src Queues) {
 	*queues = copied[:shift+1]
 }
 
+func (redis *Redis) Merge(src *Redis) {
+	if redis == nil || src == nil {
+		return
+	}
+
+	if src.Version != "" {
+		redis.Version = src.Version
+	}
+	if src.Size != "" {
+		redis.Size = src.Size
+	}
+	if src.Type != "" {
+		redis.Type = src.Type
+	}
+	if src.Replicas != 0 {
+		redis.Replicas = src.Replicas
+	}
+	if src.Enabled != nil {
+		redis.Enabled = src.Enabled
+	}
+}
+
+func (redis *ShardedRedis) Merge(src *ShardedRedis) {
+	if redis == nil || src == nil {
+		return
+	}
+
+	if src.Version != "" {
+		redis.Version = src.Version
+	}
+	if src.Size != "" {
+		redis.Size = src.Size
+	}
+	redis.Enabled = src.Enabled
+	if src.SelfSharded != nil {
+		redis.SelfSharded = src.SelfSharded
+	}
+
+	redis.Shards.Merge(src.Shards)
+}
+
+func (shards *Shards) Merge(src Shards) {
+	if shards == nil || len(src) == 0 {
+		return
+	}
+
+	copied := *shards
+	copied = append(copied, src...)
+	sort.Sort(copied)
+	shift := 0
+	for i := 1; i < len(copied); i++ {
+		if copied[shift].Master == copied[i].Master {
+			continue
+		}
+		shift++
+		copied[shift] = copied[i]
+	}
+	*shards = copied[:shift+1]
+}
+
 func (resource *Resource) Merge(src *Resource) {
 	if resource == nil || src == nil {
 		return
@@ -276,6 +336,16 @@ func (spec *Specification) Merge(src *Specification) {
 		spec.PostgreSQL = new(PostgreSQL)
 	}
 	spec.PostgreSQL.Merge(src.PostgreSQL)
+
+	if src.Redis != nil && spec.Redis == nil {
+		spec.Redis = new(Redis)
+	}
+	spec.Redis.Merge(src.Redis)
+
+	if src.RedisSharded != nil && spec.RedisSharded == nil {
+		spec.RedisSharded = new(ShardedRedis)
+	}
+	spec.RedisSharded.Merge(src.RedisSharded)
 
 	if src.SFTP != nil && spec.SFTP == nil {
 		spec.SFTP = new(SFTP)

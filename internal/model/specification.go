@@ -86,6 +86,14 @@ type PostgreSQL struct {
 	Fixtures *bool  `toml:"fixtures_enabled,omitempty"`
 }
 
+type Redis struct {
+	Version  string `toml:"version,omitempty"`
+	Size     string `toml:"size,omitempty"`
+	Type     string `toml:"type,omitempty"`
+	Replicas int    `toml:"replicas,omitempty"`
+	Enabled  *bool  `toml:"enabled,omitempty"`
+}
+
 type Proxy struct {
 	Name    string `toml:"name,omitempty"`
 	Enabled *bool  `toml:"enabled,omitempty"`
@@ -125,6 +133,25 @@ type SFTP struct {
 	Enabled *bool  `toml:"enabled,omitempty"`
 }
 
+type Shard struct {
+	Master string   `toml:"master"`
+	Slaves []string `toml:"slaves"`
+}
+
+type Shards []Shard
+
+func (shards Shards) Len() int           { return len(shards) }
+func (shards Shards) Less(i, j int) bool { return shards[i].Master < shards[j].Master }
+func (shards Shards) Swap(i, j int)      { shards[i], shards[j] = shards[j], shards[i] }
+
+type ShardedRedis struct {
+	Version     string `toml:"version"`
+	Size        string `toml:"size"`
+	Shards      Shards `toml:"shards"`
+	Enabled     bool   `toml:"enabled"`
+	SelfSharded *bool  `toml:"self-sharded,omitempty"`
+}
+
 type Specification struct {
 	Name         string               `toml:"name,omitempty"`
 	Description  string               `toml:"kind,omitempty"`
@@ -135,6 +162,8 @@ type Specification struct {
 	Logger       *Logger              `toml:"logger,omitempty"`
 	Balancing    *Balancing           `toml:"balancing,omitempty"`
 	PostgreSQL   *PostgreSQL          `toml:"postgresql,omitempty"`
+	Redis        *Redis               `toml:"redis,omitempty"`
+	RedisSharded *ShardedRedis        `toml:"redis-sharded,omitempty"`
 	SFTP         *SFTP                `toml:"sftp,omitempty"`
 	Crons        Crons                `toml:"crons,omitepmty"`
 	Dependencies Dependencies         `toml:"dependencies,omitempty"`
