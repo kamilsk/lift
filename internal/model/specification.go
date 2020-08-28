@@ -78,6 +78,14 @@ type Logger struct {
 	Level string `toml:"level,omitempty"`
 }
 
+type PostgreSQL struct {
+	Version  string `toml:"version,omitempty"`
+	Size     string `toml:"size,omitempty"`
+	Enabled  *bool  `toml:"enabled,omitempty"`
+	OwnName  *bool  `toml:"use_own_maintenance_table_name,omitempty"`
+	Fixtures *bool  `toml:"fixtures_enabled,omitempty"`
+}
+
 type Proxy struct {
 	Name    string `toml:"name,omitempty"`
 	Enabled *bool  `toml:"enabled,omitempty"`
@@ -126,6 +134,7 @@ type Specification struct {
 	Engine       *Engine              `toml:"engine,omitempty"`
 	Logger       *Logger              `toml:"logger,omitempty"`
 	Balancing    *Balancing           `toml:"balancing,omitempty"`
+	PostgreSQL   *PostgreSQL          `toml:"postgresql,omitempty"`
 	SFTP         *SFTP                `toml:"sftp,omitempty"`
 	Crons        Crons                `toml:"crons,omitepmty"`
 	Dependencies Dependencies         `toml:"dependencies,omitempty"`

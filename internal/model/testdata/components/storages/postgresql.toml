@@ -1,0 +1,7 @@
+[postgresql]
+enabled = true
+size = "medium"
+version = "9.6"
+
+use_own_maintenance_table_name = false
+fixtures_enabled = false

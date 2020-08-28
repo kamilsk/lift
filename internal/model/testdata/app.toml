@@ -138,6 +138,13 @@ replicas = 1
 [logger]
   level = "info"
 
+[postgresql]
+  enabled = true
+  fixtures_enabled = false
+  size = "medium"
+  use_own_maintenance_table_name = false
+  version = "9.6"
+
 [[proxy]]
   enabled = true
   name = "s3"

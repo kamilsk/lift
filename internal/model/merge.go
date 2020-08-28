@@ -1,6 +1,8 @@
 package model
 
-import "sort"
+import (
+	"sort"
+)
 
 func (app *Application) Merge(apps ...Application) {
 	if app == nil {
@@ -132,6 +134,28 @@ func (logger *Logger) Merge(src *Logger) {
 	}
 }
 
+func (postgres *PostgreSQL) Merge(src *PostgreSQL) {
+	if postgres == nil || src == nil {
+		return
+	}
+
+	if src.Version != "" {
+		postgres.Version = src.Version
+	}
+	if src.Size != "" {
+		postgres.Size = src.Size
+	}
+	if src.Enabled != nil {
+		postgres.Enabled = src.Enabled
+	}
+	if src.OwnName != nil {
+		postgres.OwnName = src.OwnName
+	}
+	if src.Fixtures != nil {
+		postgres.Fixtures = src.Fixtures
+	}
+}
+
 func (proxies *Proxies) Merge(src Proxies) {
 	if proxies == nil || len(src) == 0 {
 		return
@@ -247,6 +271,11 @@ func (spec *Specification) Merge(src *Specification) {
 		spec.Balancing = new(Balancing)
 	}
 	spec.Balancing.Merge(src.Balancing)
+
+	if src.PostgreSQL != nil && spec.PostgreSQL == nil {
+		spec.PostgreSQL = new(PostgreSQL)
+	}
+	spec.PostgreSQL.Merge(src.PostgreSQL)
 
 	if src.SFTP != nil && spec.SFTP == nil {
 		spec.SFTP = new(SFTP)
