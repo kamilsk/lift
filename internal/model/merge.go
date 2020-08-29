@@ -93,28 +93,6 @@ func (exec *Executable) Merge(src Executable) {
 	*exec = copied[:shift+1]
 }
 
-func (postgres *PostgreSQL) Merge(src *PostgreSQL) {
-	if postgres == nil || src == nil {
-		return
-	}
-
-	if src.Version != "" {
-		postgres.Version = src.Version
-	}
-	if src.Size != "" {
-		postgres.Size = src.Size
-	}
-	if src.Enabled != nil {
-		postgres.Enabled = src.Enabled
-	}
-	if src.OwnName != nil {
-		postgres.OwnName = src.OwnName
-	}
-	if src.Fixtures != nil {
-		postgres.Fixtures = src.Fixtures
-	}
-}
-
 func (proxies *Proxies) Merge(src Proxies) {
 	if proxies == nil || len(src) == 0 {
 		return
@@ -151,66 +129,6 @@ func (queues *Queues) Merge(src Queues) {
 		copied[shift] = copied[i]
 	}
 	*queues = copied[:shift+1]
-}
-
-func (redis *Redis) Merge(src *Redis) {
-	if redis == nil || src == nil {
-		return
-	}
-
-	if src.Version != "" {
-		redis.Version = src.Version
-	}
-	if src.Size != "" {
-		redis.Size = src.Size
-	}
-	if src.Type != "" {
-		redis.Type = src.Type
-	}
-	if src.Replicas != 0 {
-		redis.Replicas = src.Replicas
-	}
-	if src.Enabled != nil {
-		redis.Enabled = src.Enabled
-	}
-}
-
-func (redis *ShardedRedis) Merge(src *ShardedRedis) {
-	if redis == nil || src == nil {
-		return
-	}
-
-	if src.Version != "" {
-		redis.Version = src.Version
-	}
-	if src.Size != "" {
-		redis.Size = src.Size
-	}
-	redis.Enabled = src.Enabled
-	if src.SelfSharded != nil {
-		redis.SelfSharded = src.SelfSharded
-	}
-
-	redis.Shards.Merge(src.Shards)
-}
-
-func (shards *Shards) Merge(src Shards) {
-	if shards == nil || len(src) == 0 {
-		return
-	}
-
-	copied := *shards
-	copied = append(copied, src...)
-	sort.Sort(copied)
-	shift := 0
-	for i := 1; i < len(copied); i++ {
-		if copied[shift].Master == copied[i].Master {
-			continue
-		}
-		shift++
-		copied[shift] = copied[i]
-	}
-	*shards = copied[:shift+1]
 }
 
 func (sftp *SFTP) Merge(src *SFTP) {

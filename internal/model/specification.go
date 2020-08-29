@@ -63,22 +63,6 @@ func (hosts Hosts) Len() int           { return len(hosts) }
 func (hosts Hosts) Less(i, j int) bool { return hosts[i].Name < hosts[j].Name }
 func (hosts Hosts) Swap(i, j int)      { hosts[i], hosts[j] = hosts[j], hosts[i] }
 
-type PostgreSQL struct {
-	Version  string `toml:"version,omitempty"`
-	Size     string `toml:"size,omitempty"`
-	Enabled  *bool  `toml:"enabled,omitempty"`
-	OwnName  *bool  `toml:"use_own_maintenance_table_name,omitempty"`
-	Fixtures *bool  `toml:"fixtures_enabled,omitempty"`
-}
-
-type Redis struct {
-	Version  string `toml:"version,omitempty"`
-	Size     string `toml:"size,omitempty"`
-	Type     string `toml:"type,omitempty"`
-	Replicas int    `toml:"replicas,omitempty"`
-	Enabled  *bool  `toml:"enabled,omitempty"`
-}
-
 type Proxy struct {
 	Name    string `toml:"name,omitempty"`
 	Enabled *bool  `toml:"enabled,omitempty"`
@@ -106,25 +90,6 @@ func (queues Queues) Swap(i, j int)      { queues[i], queues[j] = queues[j], que
 type SFTP struct {
 	Size    string `toml:"size,omitempty"`
 	Enabled *bool  `toml:"enabled,omitempty"`
-}
-
-type Shard struct {
-	Master string   `toml:"master"`
-	Slaves []string `toml:"slaves"`
-}
-
-type Shards []Shard
-
-func (shards Shards) Len() int           { return len(shards) }
-func (shards Shards) Less(i, j int) bool { return shards[i].Master < shards[j].Master }
-func (shards Shards) Swap(i, j int)      { shards[i], shards[j] = shards[j], shards[i] }
-
-type ShardedRedis struct {
-	Version     string `toml:"version"`
-	Size        string `toml:"size"`
-	Shards      Shards `toml:"shards"`
-	Enabled     bool   `toml:"enabled"`
-	SelfSharded *bool  `toml:"self-sharded,omitempty"`
 }
 
 type Specification struct {
