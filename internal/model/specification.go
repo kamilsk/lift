@@ -5,31 +5,6 @@ type Application struct {
 	Envs          map[string]*Specification `toml:"envs,omitempty"`
 }
 
-type Cron struct {
-	Name     string `toml:"name,omitempty"`
-	Enabled  *bool  `toml:"enabled,omitempty"`
-	Schedule string `toml:"schedule,omitempty"`
-	Command  string `toml:"command,omitempty"`
-}
-
-type Crons []Cron
-
-func (crons Crons) Len() int           { return len(crons) }
-func (crons Crons) Less(i, j int) bool { return crons[i].Name < crons[j].Name }
-func (crons Crons) Swap(i, j int)      { crons[i], crons[j] = crons[j], crons[i] }
-
-type Dependency struct {
-	Name     string `toml:"name,omitempty"`
-	Mock     bool   `toml:"mock,omitempty"`
-	Replicas uint   `toml:"mock-replicas,omitempty"`
-}
-
-type Dependencies []Dependency
-
-func (deps Dependencies) Len() int           { return len(deps) }
-func (deps Dependencies) Less(i, j int) bool { return deps[i].Name < deps[j].Name }
-func (deps Dependencies) Swap(i, j int)      { deps[i], deps[j] = deps[j], deps[i] }
-
 type EnvironmentVariables map[string]string
 
 type Exec struct {
@@ -86,11 +61,6 @@ type Queues []Queue
 func (queues Queues) Len() int           { return len(queues) }
 func (queues Queues) Less(i, j int) bool { return queues[i].Name < queues[j].Name }
 func (queues Queues) Swap(i, j int)      { queues[i], queues[j] = queues[j], queues[i] }
-
-type SFTP struct {
-	Size    string `toml:"size,omitempty"`
-	Enabled *bool  `toml:"enabled,omitempty"`
-}
 
 type Specification struct {
 	Name         string               `toml:"name,omitempty"`

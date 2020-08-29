@@ -23,44 +23,6 @@ func (app *Application) Merge(apps ...Application) {
 	}
 }
 
-func (crons *Crons) Merge(src Crons) {
-	if crons == nil || len(src) == 0 {
-		return
-	}
-
-	copied := *crons
-	copied = append(copied, src...)
-	sort.Sort(copied)
-	shift := 0
-	for i := 1; i < len(copied); i++ {
-		if copied[shift].Name == copied[i].Name {
-			continue
-		}
-		shift++
-		copied[shift] = copied[i]
-	}
-	*crons = copied[:shift+1]
-}
-
-func (deps *Dependencies) Merge(src Dependencies) {
-	if deps == nil || len(src) == 0 {
-		return
-	}
-
-	copied := *deps
-	copied = append(copied, src...)
-	sort.Sort(copied)
-	shift := 0
-	for i := 1; i < len(copied); i++ {
-		if copied[shift].Name == copied[i].Name {
-			continue
-		}
-		shift++
-		copied[shift] = copied[i]
-	}
-	*deps = copied[:shift+1]
-}
-
 func (vars *EnvironmentVariables) Merge(src EnvironmentVariables) {
 	if vars == nil || len(src) == 0 {
 		return
@@ -129,19 +91,6 @@ func (queues *Queues) Merge(src Queues) {
 		copied[shift] = copied[i]
 	}
 	*queues = copied[:shift+1]
-}
-
-func (sftp *SFTP) Merge(src *SFTP) {
-	if sftp == nil || src == nil {
-		return
-	}
-
-	if src.Size != "" {
-		sftp.Size = src.Size
-	}
-	if src.Enabled != nil {
-		sftp.Enabled = src.Enabled
-	}
 }
 
 func (spec *Specification) Merge(src *Specification) {
