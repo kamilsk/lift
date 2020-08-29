@@ -34,13 +34,6 @@ func (deps Dependencies) Len() int           { return len(deps) }
 func (deps Dependencies) Less(i, j int) bool { return deps[i].Name < deps[j].Name }
 func (deps Dependencies) Swap(i, j int)      { deps[i], deps[j] = deps[j], deps[i] }
 
-type Engine struct {
-	Name      string     `toml:"name,omitempty"`
-	Version   string     `toml:"version,omitempty"`
-	Size      string     `toml:"size,omitempty"`
-	Resources *Resources `toml:"resources,omitempty"`
-}
-
 type EnvironmentVariables map[string]string
 
 type Exec struct {
@@ -117,16 +110,6 @@ type Queues []Queue
 func (queues Queues) Len() int           { return len(queues) }
 func (queues Queues) Less(i, j int) bool { return queues[i].Name < queues[j].Name }
 func (queues Queues) Swap(i, j int)      { queues[i], queues[j] = queues[j], queues[i] }
-
-type Resource struct {
-	CPU    uint `toml:"cpu,omitempty"`
-	Memory uint `toml:"memory,omitempty"`
-}
-
-type Resources struct {
-	Requests *Resource `toml:"requests,omitempty"`
-	Limits   *Resource `toml:"limits,omitempty"`
-}
 
 type SFTP struct {
 	Size    string `toml:"size,omitempty"`

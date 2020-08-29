@@ -71,27 +71,6 @@ func (deps *Dependencies) Merge(src Dependencies) {
 	*deps = copied[:shift+1]
 }
 
-func (engine *Engine) Merge(src *Engine) {
-	if engine == nil || src == nil {
-		return
-	}
-
-	if src.Name != "" {
-		engine.Name = src.Name
-	}
-	if src.Version != "" {
-		engine.Version = src.Version
-	}
-	if src.Size != "" {
-		engine.Size = src.Size
-	}
-
-	if src.Resources != nil && engine.Resources == nil {
-		engine.Resources = new(Resources)
-	}
-	engine.Resources.Merge(src.Resources)
-}
-
 func (vars *EnvironmentVariables) Merge(src EnvironmentVariables) {
 	if vars == nil || len(src) == 0 {
 		return
@@ -252,35 +231,6 @@ func (shards *Shards) Merge(src Shards) {
 		copied[shift] = copied[i]
 	}
 	*shards = copied[:shift+1]
-}
-
-func (resource *Resource) Merge(src *Resource) {
-	if resource == nil || src == nil {
-		return
-	}
-
-	if src.CPU > 0 {
-		resource.CPU = src.CPU
-	}
-	if src.Memory > 0 {
-		resource.Memory = src.Memory
-	}
-}
-
-func (resources *Resources) Merge(src *Resources) {
-	if resources == nil || src == nil {
-		return
-	}
-
-	if src.Requests != nil && resources.Requests == nil {
-		resources.Requests = new(Resource)
-	}
-	resources.Requests.Merge(src.Requests)
-
-	if src.Limits != nil && resources.Limits == nil {
-		resources.Limits = new(Resource)
-	}
-	resources.Limits.Merge(src.Limits)
 }
 
 func (sftp *SFTP) Merge(src *SFTP) {
