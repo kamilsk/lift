@@ -63,8 +63,8 @@ func TestMerge(t *testing.T) {
 			assert.Nil(t, app)
 		})
 		t.Run("nil balancing", func(t *testing.T) {
-			var balancer *Balancing
-			assert.NotPanics(t, func() { balancer.Merge(&Balancing{CookieAffinity: "u"}) })
+			var balancer *Balancer
+			assert.NotPanics(t, func() { balancer.Merge(&Balancer{CookieAffinity: "u"}) })
 			assert.Nil(t, balancer)
 		})
 		t.Run("nil crons", func(t *testing.T) {

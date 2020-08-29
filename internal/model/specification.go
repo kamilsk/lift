@@ -5,10 +5,6 @@ type Application struct {
 	Envs          map[string]*Specification `toml:"envs,omitempty"`
 }
 
-type Balancing struct {
-	CookieAffinity string `toml:"cookie_affinity,omitempty"`
-}
-
 type Cron struct {
 	Name     string `toml:"name,omitempty"`
 	Enabled  *bool  `toml:"enabled,omitempty"`
@@ -66,10 +62,6 @@ type Hosts []Host
 func (hosts Hosts) Len() int           { return len(hosts) }
 func (hosts Hosts) Less(i, j int) bool { return hosts[i].Name < hosts[j].Name }
 func (hosts Hosts) Swap(i, j int)      { hosts[i], hosts[j] = hosts[j], hosts[i] }
-
-type Logger struct {
-	Level string `toml:"level,omitempty"`
-}
 
 type PostgreSQL struct {
 	Version  string `toml:"version,omitempty"`
@@ -143,7 +135,7 @@ type Specification struct {
 	Replicas     uint                 `toml:"replicas,omitempty"`
 	Engine       *Engine              `toml:"engine,omitempty"`
 	Logger       *Logger              `toml:"logger,omitempty"`
-	Balancing    *Balancing           `toml:"balancing,omitempty"`
+	Balancer     *Balancer            `toml:"balancing,omitempty"`
 	PostgreSQL   *PostgreSQL          `toml:"postgresql,omitempty"`
 	Redis        *Redis               `toml:"redis,omitempty"`
 	RedisSharded *ShardedRedis        `toml:"redis-sharded,omitempty"`

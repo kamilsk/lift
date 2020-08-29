@@ -23,16 +23,6 @@ func (app *Application) Merge(apps ...Application) {
 	}
 }
 
-func (balancing *Balancing) Merge(src *Balancing) {
-	if balancing == nil || src == nil {
-		return
-	}
-
-	if src.CookieAffinity != "" {
-		balancing.CookieAffinity = src.CookieAffinity
-	}
-}
-
 func (crons *Crons) Merge(src Crons) {
 	if crons == nil || len(src) == 0 {
 		return
@@ -101,16 +91,6 @@ func (exec *Executable) Merge(src Executable) {
 		copied[shift] = copied[i]
 	}
 	*exec = copied[:shift+1]
-}
-
-func (logger *Logger) Merge(src *Logger) {
-	if logger == nil || src == nil {
-		return
-	}
-
-	if src.Level != "" {
-		logger.Level = src.Level
-	}
 }
 
 func (postgres *PostgreSQL) Merge(src *PostgreSQL) {
@@ -277,10 +257,10 @@ func (spec *Specification) Merge(src *Specification) {
 	}
 	spec.Logger.Merge(src.Logger)
 
-	if src.Balancing != nil && spec.Balancing == nil {
-		spec.Balancing = new(Balancing)
+	if src.Balancer != nil && spec.Balancer == nil {
+		spec.Balancer = new(Balancer)
 	}
-	spec.Balancing.Merge(src.Balancing)
+	spec.Balancer.Merge(src.Balancer)
 
 	if src.PostgreSQL != nil && spec.PostgreSQL == nil {
 		spec.PostgreSQL = new(PostgreSQL)
