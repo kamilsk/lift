@@ -1,27 +1,5 @@
 package model
 
-type Application struct {
-	Specification `toml:",omitempty,squash"`
-	Envs          map[string]*Specification `toml:"envs,omitempty"`
-}
-
-type EnvironmentVariables map[string]string
-
-type Host struct {
-	Name        string `toml:"host,omitempty"`
-	AgentPort   uint   `toml:"agent_port,omitempty"`
-	Connections uint   `toml:"connections,omitempty"`
-	MaxConns    uint   `toml:"maxconn,omitempty"`
-	Weight      uint   `toml:"weight,omitempty"`
-	Backup      bool   `toml:"backup,omitempty"`
-}
-
-type Hosts []Host
-
-func (hosts Hosts) Len() int           { return len(hosts) }
-func (hosts Hosts) Less(i, j int) bool { return hosts[i].Name < hosts[j].Name }
-func (hosts Hosts) Swap(i, j int)      { hosts[i], hosts[j] = hosts[j], hosts[i] }
-
 type Specification struct {
 	Name         string               `toml:"name,omitempty"`
 	Description  string               `toml:"kind,omitempty"`
@@ -45,19 +23,68 @@ type Specification struct {
 	EnvVars      EnvironmentVariables `toml:"env_vars,omitempty"`
 }
 
-type Worker struct {
-	Name          string     `toml:"name,omitempty"`
-	Enabled       *bool      `toml:"enabled,omitempty"`
-	Replicas      uint       `toml:"replicas,omitempty"`
-	Command       string     `toml:"command,omitempty"`
-	Commands      []string   `toml:"commands,omitempty"`
-	Size          string     `toml:"size,omitempty"`
-	LivenessProbe string     `toml:"liveness-probe-command,omitempty"`
-	Resources     *Resources `toml:"resources,omitempty"`
+func (spec *Specification) Merge(src *Specification) {
+	if spec == nil || src == nil {
+		return
+	}
+
+	if src.Name != "" {
+		spec.Name = src.Name
+	}
+	if src.Description != "" {
+		spec.Description = src.Description
+	}
+	if src.Kind != "" {
+		spec.Kind = src.Kind
+	}
+	if src.Host != "" {
+		spec.Host = src.Host
+	}
+	if src.Replicas > 0 {
+		spec.Replicas = src.Replicas
+	}
+
+	if src.Engine != nil && spec.Engine == nil {
+		spec.Engine = new(Engine)
+	}
+	spec.Engine.Merge(src.Engine)
+
+	if src.Logger != nil && spec.Logger == nil {
+		spec.Logger = new(Logger)
+	}
+	spec.Logger.Merge(src.Logger)
+
+	if src.Balancer != nil && spec.Balancer == nil {
+		spec.Balancer = new(Balancer)
+	}
+	spec.Balancer.Merge(src.Balancer)
+
+	if src.PostgreSQL != nil && spec.PostgreSQL == nil {
+		spec.PostgreSQL = new(PostgreSQL)
+	}
+	spec.PostgreSQL.Merge(src.PostgreSQL)
+
+	if src.Redis != nil && spec.Redis == nil {
+		spec.Redis = new(Redis)
+	}
+	spec.Redis.Merge(src.Redis)
+
+	if src.RedisSharded != nil && spec.RedisSharded == nil {
+		spec.RedisSharded = new(ShardedRedis)
+	}
+	spec.RedisSharded.Merge(src.RedisSharded)
+
+	if src.SFTP != nil && spec.SFTP == nil {
+		spec.SFTP = new(SFTP)
+	}
+	spec.SFTP.Merge(src.SFTP)
+
+	spec.Crons.Merge(src.Crons)
+	spec.Dependencies.Merge(src.Dependencies)
+	spec.Executable.Merge(src.Executable)
+	spec.Proxies.Merge(src.Proxies)
+	spec.Queues.Merge(src.Queues)
+	spec.Sphinxes.Merge(src.Sphinxes)
+	spec.Workers.Merge(src.Workers)
+	spec.EnvVars.Merge(src.EnvVars)
 }
-
-type Workers []Worker
-
-func (workers Workers) Len() int           { return len(workers) }
-func (workers Workers) Less(i, j int) bool { return workers[i].Name < workers[j].Name }
-func (workers Workers) Swap(i, j int)      { workers[i], workers[j] = workers[j], workers[i] }
