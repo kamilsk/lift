@@ -22,18 +22,6 @@ func (hosts Hosts) Len() int           { return len(hosts) }
 func (hosts Hosts) Less(i, j int) bool { return hosts[i].Name < hosts[j].Name }
 func (hosts Hosts) Swap(i, j int)      { hosts[i], hosts[j] = hosts[j], hosts[i] }
 
-type Queue struct {
-	Name    string   `toml:"schema,omitempty"`
-	DLQ     []string `toml:"dlq,omitempty"`
-	Aliases []string `toml:"aliases,omitempty"`
-}
-
-type Queues []Queue
-
-func (queues Queues) Len() int           { return len(queues) }
-func (queues Queues) Less(i, j int) bool { return queues[i].Name < queues[j].Name }
-func (queues Queues) Swap(i, j int)      { queues[i], queues[j] = queues[j], queues[i] }
-
 type Specification struct {
 	Name         string               `toml:"name,omitempty"`
 	Description  string               `toml:"kind,omitempty"`
@@ -56,19 +44,6 @@ type Specification struct {
 	Workers      Workers              `toml:"workers,omitempty"`
 	EnvVars      EnvironmentVariables `toml:"env_vars,omitempty"`
 }
-
-type Sphinx struct {
-	Name    string `toml:"name,omitepmty"`
-	Enabled *bool  `toml:"enabled,omitepmty"`
-	Haproxy string `toml:"haproxy_tag,omitempty"`
-	Hosts   Hosts  `toml:"hosts,omitempty"`
-}
-
-type Sphinxes []Sphinx
-
-func (sphinxes Sphinxes) Len() int           { return len(sphinxes) }
-func (sphinxes Sphinxes) Less(i, j int) bool { return sphinxes[i].Name < sphinxes[j].Name }
-func (sphinxes Sphinxes) Swap(i, j int)      { sphinxes[i], sphinxes[j] = sphinxes[j], sphinxes[i] }
 
 type Worker struct {
 	Name          string     `toml:"name,omitempty"`

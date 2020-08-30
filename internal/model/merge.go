@@ -36,25 +36,6 @@ func (vars *EnvironmentVariables) Merge(src EnvironmentVariables) {
 	}
 }
 
-func (queues *Queues) Merge(src Queues) {
-	if queues == nil || len(src) == 0 {
-		return
-	}
-
-	copied := *queues
-	copied = append(copied, src...)
-	sort.Sort(copied)
-	shift := 0
-	for i := 1; i < len(copied); i++ {
-		if copied[shift].Name == copied[i].Name {
-			continue
-		}
-		shift++
-		copied[shift] = copied[i]
-	}
-	*queues = copied[:shift+1]
-}
-
 func (spec *Specification) Merge(src *Specification) {
 	if spec == nil || src == nil {
 		return
@@ -119,25 +100,6 @@ func (spec *Specification) Merge(src *Specification) {
 	spec.Sphinxes.Merge(src.Sphinxes)
 	spec.Workers.Merge(src.Workers)
 	spec.EnvVars.Merge(src.EnvVars)
-}
-
-func (sphinxes *Sphinxes) Merge(src Sphinxes) {
-	if sphinxes == nil || len(src) == 0 {
-		return
-	}
-
-	copied := *sphinxes
-	copied = append(copied, src...)
-	sort.Sort(copied)
-	shift := 0
-	for i := 1; i < len(copied); i++ {
-		if copied[shift].Name == copied[i].Name {
-			continue
-		}
-		shift++
-		copied[shift] = copied[i]
-	}
-	*sphinxes = copied[:shift+1]
 }
 
 func (workers *Workers) Merge(src Workers) {
