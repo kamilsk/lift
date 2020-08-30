@@ -36,44 +36,6 @@ func (vars *EnvironmentVariables) Merge(src EnvironmentVariables) {
 	}
 }
 
-func (exec *Executable) Merge(src Executable) {
-	if exec == nil || len(src) == 0 {
-		return
-	}
-
-	copied := *exec
-	copied = append(copied, src...)
-	sort.Sort(copied)
-	shift := 0
-	for i := 1; i < len(copied); i++ {
-		if copied[shift].Name == copied[i].Name {
-			continue
-		}
-		shift++
-		copied[shift] = copied[i]
-	}
-	*exec = copied[:shift+1]
-}
-
-func (proxies *Proxies) Merge(src Proxies) {
-	if proxies == nil || len(src) == 0 {
-		return
-	}
-
-	copied := *proxies
-	copied = append(copied, src...)
-	sort.Sort(copied)
-	shift := 0
-	for i := 1; i < len(copied); i++ {
-		if copied[shift].Name == copied[i].Name {
-			continue
-		}
-		shift++
-		copied[shift] = copied[i]
-	}
-	*proxies = copied[:shift+1]
-}
-
 func (queues *Queues) Merge(src Queues) {
 	if queues == nil || len(src) == 0 {
 		return

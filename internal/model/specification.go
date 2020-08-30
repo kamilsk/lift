@@ -7,22 +7,6 @@ type Application struct {
 
 type EnvironmentVariables map[string]string
 
-type Exec struct {
-	Name          string `toml:"name,omitempty"`
-	Replicas      uint   `toml:"replicas,omitempty"`
-	Command       string `toml:"command,omitempty"`
-	Port          uint   `toml:"service-port,omitempty"`
-	Size          string `toml:"size,omitempty"`
-	RedinessProbe string `toml:"readiness-probe-command,omitempty"`
-	LivenessProbe string `toml:"liveness-probe-command,omitempty"`
-}
-
-type Executable []Exec
-
-func (exec Executable) Len() int           { return len(exec) }
-func (exec Executable) Less(i, j int) bool { return exec[i].Name < exec[j].Name }
-func (exec Executable) Swap(i, j int)      { exec[i], exec[j] = exec[j], exec[i] }
-
 type Host struct {
 	Name        string `toml:"host,omitempty"`
 	AgentPort   uint   `toml:"agent_port,omitempty"`
@@ -37,18 +21,6 @@ type Hosts []Host
 func (hosts Hosts) Len() int           { return len(hosts) }
 func (hosts Hosts) Less(i, j int) bool { return hosts[i].Name < hosts[j].Name }
 func (hosts Hosts) Swap(i, j int)      { hosts[i], hosts[j] = hosts[j], hosts[i] }
-
-type Proxy struct {
-	Name    string `toml:"name,omitempty"`
-	Enabled *bool  `toml:"enabled,omitempty"`
-	Hosts   Hosts  `toml:"hosts,omitempty"`
-}
-
-type Proxies []Proxy
-
-func (proxies Proxies) Len() int           { return len(proxies) }
-func (proxies Proxies) Less(i, j int) bool { return proxies[i].Name < proxies[j].Name }
-func (proxies Proxies) Swap(i, j int)      { proxies[i], proxies[j] = proxies[j], proxies[i] }
 
 type Queue struct {
 	Name    string   `toml:"schema,omitempty"`
