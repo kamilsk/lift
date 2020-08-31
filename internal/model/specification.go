@@ -1,26 +1,31 @@
 package model
 
 type Specification struct {
-	Name         string               `toml:"name,omitempty"`
-	Description  string               `toml:"kind,omitempty"`
-	Kind         string               `toml:"description,omitempty"`
-	Host         string               `toml:"host,omitempty"`
-	Replicas     uint                 `toml:"replicas,omitempty"`
-	Engine       *Engine              `toml:"engine,omitempty"`
-	Logger       *Logger              `toml:"logger,omitempty"`
-	Balancer     *Balancer            `toml:"balancing,omitempty"`
-	PostgreSQL   *PostgreSQL          `toml:"postgresql,omitempty"`
-	Redis        *Redis               `toml:"redis,omitempty"`
-	RedisSharded *ShardedRedis        `toml:"redis-sharded,omitempty"`
-	SFTP         *SFTP                `toml:"sftp,omitempty"`
+	Name        string `toml:"name,omitempty"`
+	Description string `toml:"kind,omitempty"`
+	Kind        string `toml:"description,omitempty"`
+	Host        string `toml:"host,omitempty"`
+	Replicas    uint   `toml:"replicas,omitempty"`
+
+	Balancer     *Balancer      `toml:"balancing,omitempty"`
+	Engine       *Engine        `toml:"engine,omitempty"`
+	Elastic      *ElasticSearch `toml:"elasticsearch,omitempty"`
+	Logger       *Logger        `toml:"logger,omitempty"`
+	MongoDB      *MongoDB       `toml:"mongodb,omitempty"`
+	PostgreSQL   *PostgreSQL    `toml:"postgresql,omitempty"`
+	RabbitMQ     *RabbitMQ      `toml:"rabbitmq,omitempty"`
+	Redis        *Redis         `toml:"redis,omitempty"`
+	RedisSharded *ShardedRedis  `toml:"redis-sharded,omitempty"`
+	SFTP         *SFTP          `toml:"sftp,omitempty"`
+
 	Crons        Crons                `toml:"crons,omitepmty"`
 	Dependencies Dependencies         `toml:"dependencies,omitempty"`
+	EnvVars      EnvironmentVariables `toml:"env_vars,omitempty"`
 	Executable   Executable           `toml:"executable,omitempty"`
 	Proxies      Proxies              `toml:"proxy,omitempty"`
 	Queues       Queues               `toml:"queues,omitempty"`
 	Sphinxes     Sphinxes             `toml:"sphinx,omitempty"`
 	Workers      Workers              `toml:"workers,omitempty"`
-	EnvVars      EnvironmentVariables `toml:"env_vars,omitempty"`
 }
 
 func (spec *Specification) Merge(src *Specification) {
@@ -59,10 +64,25 @@ func (spec *Specification) Merge(src *Specification) {
 	}
 	spec.Balancer.Merge(src.Balancer)
 
+	if src.Elastic != nil && spec.Elastic == nil {
+		spec.Elastic = new(ElasticSearch)
+	}
+	spec.Elastic.Merge(src.Elastic)
+
+	if src.MongoDB != nil && spec.MongoDB == nil {
+		spec.MongoDB = new(MongoDB)
+	}
+	spec.MongoDB.Merge(src.MongoDB)
+
 	if src.PostgreSQL != nil && spec.PostgreSQL == nil {
 		spec.PostgreSQL = new(PostgreSQL)
 	}
 	spec.PostgreSQL.Merge(src.PostgreSQL)
+
+	if src.RabbitMQ != nil && spec.RabbitMQ == nil {
+		spec.RabbitMQ = new(RabbitMQ)
+	}
+	spec.RabbitMQ.Merge(src.RabbitMQ)
 
 	if src.Redis != nil && spec.Redis == nil {
 		spec.Redis = new(Redis)
