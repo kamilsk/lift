@@ -6,7 +6,7 @@ type Application struct {
 }
 
 func (app *Application) Merge(apps ...Application) {
-	if app == nil {
+	if app == nil || len(apps) == 0 {
 		return
 	}
 
