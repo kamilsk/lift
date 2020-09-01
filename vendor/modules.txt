@@ -22,7 +22,9 @@ github.com/stretchr/testify/assert
 github.com/stretchr/testify/require
 # go.octolab.org v0.2.0
 go.octolab.org/errors
+go.octolab.org/pointer
 go.octolab.org/safe
+go.octolab.org/strings
 go.octolab.org/unsafe
 # go.octolab.org/toolkit/cli v0.1.1
 go.octolab.org/toolkit/cli/cobra

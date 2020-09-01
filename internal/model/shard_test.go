@@ -10,10 +10,67 @@ import (
 )
 
 func TestShards_Merge(t *testing.T) {
-	t.Run("nil shards", func(t *testing.T) {
-		var shards *Shards
-		assert.NotPanics(t, func() { shards.Merge(Shards{{Master: "test"}}) })
-		assert.Nil(t, shards)
+	t.Run("nil destination", func(t *testing.T) {
+		var dst *Shards
+		assert.NotPanics(t, func() { dst.Merge(Shards{{Master: "test"}}) })
+		assert.Nil(t, dst)
+	})
+
+	t.Run("nil source", func(t *testing.T) {
+		var dst = new(Shards)
+		assert.NotPanics(t, func() { dst.Merge(nil) })
+		assert.Empty(t, dst)
+	})
+
+	t.Run("with duplicates", func(t *testing.T) {
+		dst := Shards{
+			{
+				Master: "master-a",
+				Slaves: []string{"slave-a"},
+			},
+			{
+				Master: "master-c",
+				Slaves: []string{"slave-c", "slave-a"},
+			},
+			{
+				Master: "master-b",
+				Slaves: []string{"slave-d"},
+			},
+		}
+		src := Shards{
+			{
+				Master: "master-d",
+				Slaves: []string{"slave-a"},
+			},
+			{
+				Master: "master-c",
+				Slaves: []string{"slave-b"},
+			},
+			{
+				Master: "master-a",
+				Slaves: []string{"slave-d", "slave-a"},
+			},
+		}
+
+		dst.Merge(src)
+		assert.Equal(t, Shards{
+			{
+				Master: "master-a",
+				Slaves: []string{"slave-a", "slave-d"},
+			},
+			{
+				Master: "master-c",
+				Slaves: []string{"slave-c", "slave-a", "slave-b"},
+			},
+			{
+				Master: "master-b",
+				Slaves: []string{"slave-d"},
+			},
+			{
+				Master: "master-d",
+				Slaves: []string{"slave-a"},
+			},
+		}, dst)
 	})
 }
 

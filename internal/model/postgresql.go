@@ -1,32 +1,40 @@
 package model
 
+// A PostgreSQL contains configuration for a database.
 type PostgreSQL struct {
-	Enabled  *bool    `toml:"enabled,omitempty"`
-	Version  string   `toml:"version,omitempty"`
-	Size     string   `toml:"size,omitempty"`
-	OwnName  *bool    `toml:"use_own_maintenance_table_name,omitempty"`
+	Enabled  *bool    `toml:"enabled"`
+	Version  string   `toml:"version"`
+	Size     string   `toml:"size"`
 	Fixtures *bool    `toml:"fixtures_enabled,omitempty"`
+	OwnName  *bool    `toml:"use_own_maintenance_table_name,omitempty"`
 	DataBus  *DataBus `toml:"data_bus,omitempty"`
 }
 
-func (postgres *PostgreSQL) Merge(src *PostgreSQL) {
-	if postgres == nil || src == nil {
+// Merge combines two database configurations.
+func (dst *PostgreSQL) Merge(src *PostgreSQL) {
+	if dst == nil || src == nil {
 		return
 	}
 
 	if src.Enabled != nil {
-		postgres.Enabled = src.Enabled
+		dst.Enabled = src.Enabled
 	}
 	if src.Version != "" {
-		postgres.Version = src.Version
+		dst.Version = src.Version
 	}
 	if src.Size != "" {
-		postgres.Size = src.Size
+		dst.Size = src.Size
+	}
+
+	if src.Fixtures != nil {
+		dst.Fixtures = src.Fixtures
 	}
 	if src.OwnName != nil {
-		postgres.OwnName = src.OwnName
+		dst.OwnName = src.OwnName
 	}
-	if src.Fixtures != nil {
-		postgres.Fixtures = src.Fixtures
+
+	if src.DataBus != nil && dst.DataBus == nil {
+		dst.DataBus = new(DataBus)
 	}
+	dst.DataBus.Merge(src.DataBus)
 }

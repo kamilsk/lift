@@ -1,23 +1,25 @@
 package model
 
+// A ElasticSearch contains configuration for a database.
 type ElasticSearch struct {
-	Enabled *bool  `toml:"enabled,omitempty"`
-	Version string `toml:"version,omitempty"`
-	Size    string `toml:"size,omitempty"`
+	Enabled *bool  `toml:"enabled"`
+	Version string `toml:"version"`
+	Size    string `toml:"size"`
 }
 
-func (elastic *ElasticSearch) Merge(src *ElasticSearch) {
-	if elastic == nil || src == nil {
+// Merge combines two database configurations.
+func (dst *ElasticSearch) Merge(src *ElasticSearch) {
+	if dst == nil || src == nil {
 		return
 	}
 
 	if src.Enabled != nil {
-		elastic.Enabled = src.Enabled
+		dst.Enabled = src.Enabled
 	}
 	if src.Version != "" {
-		elastic.Version = src.Version
+		dst.Version = src.Version
 	}
 	if src.Size != "" {
-		elastic.Size = src.Size
+		dst.Size = src.Size
 	}
 }

@@ -1,27 +1,43 @@
 package model
 
+import (
+	"strings"
+
+	xstrings "go.octolab.org/strings"
+)
+
+// A RabbitMQ contains configuration for a database.
 type RabbitMQ struct {
-	Enabled *bool  `toml:"enabled,omitempty"`
-	Version string `toml:"version,omitempty"`
-	Size    string `toml:"size,omitempty"`
+	Enabled *bool  `toml:"enabled"`
+	Version string `toml:"version"`
+	Size    string `toml:"size"`
 	Vhosts  string `toml:"vhosts,omitempty"`
 }
 
-func (rabbitmq *RabbitMQ) Merge(src *RabbitMQ) {
-	if rabbitmq == nil || src == nil {
+// Merge combines two database configurations.
+func (dst *RabbitMQ) Merge(src *RabbitMQ) {
+	if dst == nil || src == nil {
 		return
 	}
 
 	if src.Enabled != nil {
-		rabbitmq.Enabled = src.Enabled
+		dst.Enabled = src.Enabled
 	}
 	if src.Version != "" {
-		rabbitmq.Version = src.Version
+		dst.Version = src.Version
 	}
 	if src.Size != "" {
-		rabbitmq.Size = src.Size
+		dst.Size = src.Size
 	}
+
 	if src.Vhosts != "" {
-		rabbitmq.Vhosts = src.Vhosts
+		dst.Vhosts = strings.Join(
+			xstrings.Unique(
+				xstrings.NotEmpty(
+					strings.Split(dst.Vhosts+","+src.Vhosts, ","),
+				),
+			),
+			",",
+		)
 	}
 }

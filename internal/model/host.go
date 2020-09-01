@@ -3,26 +3,27 @@ package model
 import "sort"
 
 type Host struct {
-	Name        string `toml:"host,omitempty"`
-	AgentPort   uint   `toml:"agent_port,omitempty"`
+	Name        string `toml:"host"`
+	AgentPort   uint   `toml:"agent_port"`
 	Connections uint   `toml:"connections,omitempty"`
 	MaxConns    uint   `toml:"maxconn,omitempty"`
 	Weight      uint   `toml:"weight,omitempty"`
-	Backup      bool   `toml:"backup,omitempty"`
+	Backup      *bool  `toml:"backup,omitempty"`
 }
 
 type Hosts []Host
 
-func (hosts Hosts) Len() int           { return len(hosts) }
-func (hosts Hosts) Less(i, j int) bool { return hosts[i].Name < hosts[j].Name }
-func (hosts Hosts) Swap(i, j int)      { hosts[i], hosts[j] = hosts[j], hosts[i] }
+// Len, Less, Swap implements the sort.Interface.
+func (dst Hosts) Len() int           { return len(dst) }
+func (dst Hosts) Less(i, j int) bool { return dst[i].Name < dst[j].Name }
+func (dst Hosts) Swap(i, j int)      { dst[i], dst[j] = dst[j], dst[i] }
 
-func (hosts *Hosts) Merge(src Hosts) {
-	if hosts == nil || len(src) == 0 {
+func (dst *Hosts) Merge(src Hosts) {
+	if dst == nil || len(src) == 0 {
 		return
 	}
 
-	copied := *hosts
+	copied := *dst
 	copied = append(copied, src...)
 	sort.Sort(copied)
 	shift := 0
@@ -33,5 +34,5 @@ func (hosts *Hosts) Merge(src Hosts) {
 		shift++
 		copied[shift] = copied[i]
 	}
-	*hosts = copied[:shift+1]
+	*dst = copied[:shift+1]
 }

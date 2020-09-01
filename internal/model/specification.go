@@ -7,16 +7,18 @@ type Specification struct {
 	Host        string `toml:"host,omitempty"`
 	Replicas    uint   `toml:"replicas,omitempty"`
 
-	Balancer     *Balancer      `toml:"balancing,omitempty"`
-	Engine       *Engine        `toml:"engine,omitempty"`
+	Balancer *Balancer `toml:"balancing,omitempty"`
+	Engine   *Engine   `toml:"engine,omitempty"`
+	Logger   *Logger   `toml:"logger,omitempty"`
+	SFTP     *SFTP     `toml:"sftp,omitempty"`
+
 	Elastic      *ElasticSearch `toml:"elasticsearch,omitempty"`
-	Logger       *Logger        `toml:"logger,omitempty"`
 	MongoDB      *MongoDB       `toml:"mongodb,omitempty"`
 	PostgreSQL   *PostgreSQL    `toml:"postgresql,omitempty"`
 	RabbitMQ     *RabbitMQ      `toml:"rabbitmq,omitempty"`
 	Redis        *Redis         `toml:"redis,omitempty"`
 	RedisSharded *ShardedRedis  `toml:"redis-sharded,omitempty"`
-	SFTP         *SFTP          `toml:"sftp,omitempty"`
+	Sphinxes     Sphinxes       `toml:"sphinx,omitempty"`
 
 	Crons        Crons                `toml:"crons,omitepmty"`
 	Dependencies Dependencies         `toml:"dependencies,omitempty"`
@@ -24,7 +26,6 @@ type Specification struct {
 	Executable   Executable           `toml:"executable,omitempty"`
 	Proxies      Proxies              `toml:"proxy,omitempty"`
 	Queues       Queues               `toml:"queues,omitempty"`
-	Sphinxes     Sphinxes             `toml:"sphinx,omitempty"`
 	Workers      Workers              `toml:"workers,omitempty"`
 }
 

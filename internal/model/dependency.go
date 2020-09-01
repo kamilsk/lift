@@ -3,9 +3,9 @@ package model
 import "sort"
 
 type Dependency struct {
-	Name     string `toml:"name,omitempty"`
-	Mock     bool   `toml:"mock,omitempty"`
-	Replicas uint   `toml:"mock-replicas,omitempty"`
+	Name         string `toml:"name,omitempty"`
+	Mock         bool   `toml:"mock,omitempty"`
+	MockReplicas uint   `toml:"mock-replicas,omitempty"`
 }
 
 type Dependencies []Dependency

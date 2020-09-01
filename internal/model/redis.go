@@ -1,58 +1,65 @@
 package model
 
+// A Redis contains configuration for a database.
 type Redis struct {
-	Version  string `toml:"version,omitempty"`
-	Size     string `toml:"size,omitempty"`
+	Enabled  *bool  `toml:"enabled"`
+	Version  string `toml:"version"`
+	Size     string `toml:"size"`
 	Type     string `toml:"type,omitempty"`
-	Replicas int    `toml:"replicas,omitempty"`
-	Enabled  *bool  `toml:"enabled,omitempty"`
+	Replicas uint   `toml:"replicas,omitempty"`
 }
 
-func (redis *Redis) Merge(src *Redis) {
-	if redis == nil || src == nil {
+// Merge combines two database configurations.
+func (dst *Redis) Merge(src *Redis) {
+	if dst == nil || src == nil {
 		return
 	}
 
+	if src.Enabled != nil {
+		dst.Enabled = src.Enabled
+	}
 	if src.Version != "" {
-		redis.Version = src.Version
+		dst.Version = src.Version
 	}
 	if src.Size != "" {
-		redis.Size = src.Size
+		dst.Size = src.Size
 	}
+
 	if src.Type != "" {
-		redis.Type = src.Type
+		dst.Type = src.Type
 	}
 	if src.Replicas != 0 {
-		redis.Replicas = src.Replicas
-	}
-	if src.Enabled != nil {
-		redis.Enabled = src.Enabled
+		dst.Replicas = src.Replicas
 	}
 }
 
+// A ShardedRedis contains configuration for a database.
 type ShardedRedis struct {
+	Enabled     *bool  `toml:"enabled"`
 	Version     string `toml:"version"`
 	Size        string `toml:"size"`
 	Shards      Shards `toml:"shards"`
-	Enabled     bool   `toml:"enabled"`
 	SelfSharded *bool  `toml:"self-sharded,omitempty"`
 }
 
-func (redis *ShardedRedis) Merge(src *ShardedRedis) {
-	if redis == nil || src == nil {
+// Merge combines two database configurations.
+func (dst *ShardedRedis) Merge(src *ShardedRedis) {
+	if dst == nil || src == nil {
 		return
 	}
 
+	if src.Enabled != nil {
+		dst.Enabled = src.Enabled
+	}
 	if src.Version != "" {
-		redis.Version = src.Version
+		dst.Version = src.Version
 	}
 	if src.Size != "" {
-		redis.Size = src.Size
-	}
-	redis.Enabled = src.Enabled
-	if src.SelfSharded != nil {
-		redis.SelfSharded = src.SelfSharded
+		dst.Size = src.Size
 	}
 
-	redis.Shards.Merge(src.Shards)
+	dst.Shards.Merge(src.Shards)
+	if src.SelfSharded != nil {
+		dst.SelfSharded = src.SelfSharded
+	}
 }

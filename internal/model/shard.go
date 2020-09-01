@@ -1,33 +1,43 @@
 package model
 
-import "sort"
+import "go.octolab.org/strings"
 
+// A Shard contains configuration for an abstract database shard.
 type Shard struct {
 	Master string   `toml:"master"`
 	Slaves []string `toml:"slaves"`
 }
 
+// Shards is a list of Shard.
 type Shards []Shard
 
-func (shards Shards) Len() int           { return len(shards) }
-func (shards Shards) Less(i, j int) bool { return shards[i].Master < shards[j].Master }
-func (shards Shards) Swap(i, j int)      { shards[i], shards[j] = shards[j], shards[i] }
+// Len, Less, Swap implements the sort.Interface.
+func (dst Shards) Len() int           { return len(dst) }
+func (dst Shards) Less(i, j int) bool { return dst[i].Master < dst[j].Master }
+func (dst Shards) Swap(i, j int)      { dst[i], dst[j] = dst[j], dst[i] }
 
-func (shards *Shards) Merge(src Shards) {
-	if shards == nil || len(src) == 0 {
+// Merge combines two shards configurations.
+func (dst *Shards) Merge(src Shards) {
+	if dst == nil || len(src) == 0 {
 		return
 	}
 
-	copied := *shards
+	copied := *dst
 	copied = append(copied, src...)
-	sort.Sort(copied)
-	shift := 0
-	for i := 1; i < len(copied); i++ {
-		if copied[shift].Master == copied[i].Master {
+
+	registry := map[string]int{}
+	for i := len(copied); i > 0; i-- {
+		registry[copied[i-1].Master] = i - 1
+	}
+	unique := copied[:0]
+	for i, shard := range copied {
+		origin := registry[shard.Master]
+		if i == origin {
+			unique = append(unique, shard)
 			continue
 		}
-		shift++
-		copied[shift] = copied[i]
+		unique[origin].Slaves = strings.Unique(append(unique[origin].Slaves, shard.Slaves...))
 	}
-	*shards = copied[:shift+1]
+
+	*dst = unique
 }

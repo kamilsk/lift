@@ -5,15 +5,107 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"go.octolab.org/pointer"
 
 	. "github.com/kamilsk/lift/internal/model"
 )
 
 func TestSphinxes_Merge(t *testing.T) {
-	t.Run("nil sphinxes", func(t *testing.T) {
-		var sphinxes *Sphinxes
-		assert.NotPanics(t, func() { sphinxes.Merge(Sphinxes{{Name: "test"}}) })
-		assert.Nil(t, sphinxes)
+	t.Run("nil destination", func(t *testing.T) {
+		var dst *Sphinxes
+		assert.NotPanics(t, func() { dst.Merge(Sphinxes{{Name: "test"}}) })
+		assert.Nil(t, dst)
+	})
+
+	t.Run("nil source", func(t *testing.T) {
+		var dst = new(Sphinxes)
+		assert.NotPanics(t, func() { dst.Merge(nil) })
+		assert.Empty(t, dst)
+	})
+
+	t.Run("simple", func(t *testing.T) {
+		dst := Sphinxes{
+			{
+				Enabled: pointer.ToBool(false),
+				Hosts: Hosts{
+					{
+						Name:      "host-a",
+						AgentPort: 1234,
+						MaxConns:  1,
+						Backup:    pointer.ToBool(false),
+					},
+				},
+				Haproxy: "2.0.1",
+			},
+			{
+				Enabled: pointer.ToBool(true),
+				Hosts: Hosts{
+					{
+						Name:      "host-b",
+						AgentPort: 1234,
+						MaxConns:  1,
+					},
+				},
+				Name: "sphinx-a",
+			},
+		}
+		src := Sphinxes{
+			{
+				Enabled: pointer.ToBool(true),
+				Hosts: Hosts{
+					{
+						Name:      "host-c",
+						AgentPort: 1234,
+						MaxConns:  1,
+					},
+				},
+				Name: "sphinx-a",
+			},
+			{
+				Enabled: pointer.ToBool(true),
+				Hosts: Hosts{
+					{
+						Name:      "host-a",
+						AgentPort: 4321,
+						MaxConns:  10,
+						Backup:    pointer.ToBool(true),
+					},
+				},
+				Haproxy: "2.0.14",
+			},
+		}
+
+		dst.Merge(src)
+		assert.Equal(t, Sphinxes{
+			{
+				Enabled: pointer.ToBool(true),
+				Hosts: Hosts{
+					{
+						Name:      "host-a",
+						AgentPort: 4321,
+						MaxConns:  10,
+						Backup:    pointer.ToBool(true),
+					},
+				},
+				Haproxy: "2.0.14",
+			},
+			{
+				Enabled: pointer.ToBool(true),
+				Hosts: Hosts{
+					{
+						Name:      "host-b",
+						AgentPort: 1234,
+						MaxConns:  1,
+					},
+					{
+						Name:      "host-c",
+						AgentPort: 1234,
+						MaxConns:  1,
+					},
+				},
+				Name: "sphinx-a",
+			},
+		}, dst)
 	})
 }
 

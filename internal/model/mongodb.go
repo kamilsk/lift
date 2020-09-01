@@ -1,23 +1,25 @@
 package model
 
+// A MongoDB contains configuration for a database.
 type MongoDB struct {
-	Version string `toml:"version,omitempty"`
-	Size    string `toml:"size,omitempty"`
-	Enabled *bool  `toml:"enabled,omitempty"`
+	Enabled *bool  `toml:"enabled"`
+	Version string `toml:"version"`
+	Size    string `toml:"size"`
 }
 
-func (mongodb *MongoDB) Merge(src *MongoDB) {
-	if mongodb == nil || src == nil {
+// Merge combines two database configurations.
+func (dst *MongoDB) Merge(src *MongoDB) {
+	if dst == nil || src == nil {
 		return
 	}
 
+	if src.Enabled != nil {
+		dst.Enabled = src.Enabled
+	}
 	if src.Version != "" {
-		mongodb.Version = src.Version
+		dst.Version = src.Version
 	}
 	if src.Size != "" {
-		mongodb.Size = src.Size
-	}
-	if src.Enabled != nil {
-		mongodb.Enabled = src.Enabled
+		dst.Size = src.Size
 	}
 }

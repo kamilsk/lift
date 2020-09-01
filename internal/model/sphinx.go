@@ -2,25 +2,29 @@ package model
 
 import "sort"
 
+// A Sphinx contains configuration for a database.
 type Sphinx struct {
+	Enabled *bool  `toml:"enabled"`
+	Hosts   Hosts  `toml:"hosts"`
 	Name    string `toml:"name,omitepmty"`
-	Enabled *bool  `toml:"enabled,omitepmty"`
 	Haproxy string `toml:"haproxy_tag,omitempty"`
-	Hosts   Hosts  `toml:"hosts,omitempty"`
 }
 
+// Sphinxes is a list of Sphinx.
 type Sphinxes []Sphinx
 
-func (sphinxes Sphinxes) Len() int           { return len(sphinxes) }
-func (sphinxes Sphinxes) Less(i, j int) bool { return sphinxes[i].Name < sphinxes[j].Name }
-func (sphinxes Sphinxes) Swap(i, j int)      { sphinxes[i], sphinxes[j] = sphinxes[j], sphinxes[i] }
+// Len, Less, Swap implements the sort.Interface.
+func (dst Sphinxes) Len() int           { return len(dst) }
+func (dst Sphinxes) Less(i, j int) bool { return dst[i].Name < dst[j].Name }
+func (dst Sphinxes) Swap(i, j int)      { dst[i], dst[j] = dst[j], dst[i] }
 
-func (sphinxes *Sphinxes) Merge(src Sphinxes) {
-	if sphinxes == nil || len(src) == 0 {
+// Merge combines two sphinxes configurations.
+func (dst *Sphinxes) Merge(src Sphinxes) {
+	if dst == nil || len(src) == 0 {
 		return
 	}
 
-	copied := *sphinxes
+	copied := *dst
 	copied = append(copied, src...)
 	sort.Sort(copied)
 	shift := 0
@@ -31,5 +35,5 @@ func (sphinxes *Sphinxes) Merge(src Sphinxes) {
 		shift++
 		copied[shift] = copied[i]
 	}
-	*sphinxes = copied[:shift+1]
+	*dst = copied[:shift+1]
 }
