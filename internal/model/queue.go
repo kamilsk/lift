@@ -3,7 +3,7 @@ package model
 import "sort"
 
 type Queue struct {
-	Name    string   `toml:"schema,omitempty"`
+	Name    string   `toml:"schema"`
 	DLQ     []string `toml:"dlq,omitempty"`
 	Aliases []string `toml:"aliases,omitempty"`
 }
@@ -18,6 +18,11 @@ func (queues *Queues) Merge(src Queues) {
 	if queues == nil || len(src) == 0 {
 		return
 	}
+
+	// TODO:
+	//  - skip with empty name
+	//  - merge dlq for the same name
+	//  - merge aliases for the same name
 
 	copied := *queues
 	copied = append(copied, src...)
