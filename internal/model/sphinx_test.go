@@ -10,10 +10,77 @@ import (
 	. "github.com/kamilsk/lift/internal/model"
 )
 
+func TestSphinx_Merge(t *testing.T) {
+	t.Run("nil destination", func(t *testing.T) {
+		var dst *Sphinx
+		assert.NotPanics(t, func() { dst.Merge(Sphinx{Name: "sphinx"}) })
+		assert.Nil(t, dst)
+	})
+
+	t.Run("inappropriate source", func(t *testing.T) {
+		var dst = Sphinx{Name: "sphinx-a"}
+		assert.NotPanics(t, func() { dst.Merge(Sphinx{Name: "sphinx-b", Enabled: pointer.ToBool(true)}) })
+		assert.Nil(t, dst.Enabled)
+	})
+
+	t.Run("simple", func(t *testing.T) {
+		dst := Sphinx{
+			Name:    "sphinx",
+			Enabled: pointer.ToBool(false),
+			Hosts: Hosts{
+				{
+					Name:      "host-a",
+					AgentPort: 1234,
+					MaxConns:  1,
+					Backup:    pointer.ToBool(true),
+				},
+			},
+			Haproxy: "2.0.1",
+		}
+		src := Sphinx{
+			Name:    "sphinx",
+			Enabled: pointer.ToBool(true),
+			Hosts: Hosts{
+				{
+					Name:      "host-a",
+					AgentPort: 4321,
+					Backup:    pointer.ToBool(false),
+				},
+				{
+					Name:      "host-b",
+					AgentPort: 1234,
+					MaxConns:  1,
+				},
+			},
+			Haproxy: "2.0.14",
+		}
+
+		dst.Merge(src)
+		assert.Equal(t, Sphinx{
+			Name:    "sphinx",
+			Enabled: pointer.ToBool(true),
+			Hosts: Hosts{
+				{
+					Name:      "host-a",
+					AgentPort: 4321,
+					MaxConns:  1,
+					Backup:    pointer.ToBool(false),
+				},
+				{
+					Name:      "host-b",
+					AgentPort: 1234,
+					MaxConns:  1,
+				},
+			},
+			Haproxy: "2.0.14",
+		}, dst)
+	})
+}
+
 func TestSphinxes_Merge(t *testing.T) {
 	t.Run("nil destination", func(t *testing.T) {
 		var dst *Sphinxes
-		assert.NotPanics(t, func() { dst.Merge(Sphinxes{{Name: "test"}}) })
+		assert.NotPanics(t, func() { dst.Merge(Sphinxes{{Name: "sphinx-a"}}) })
 		assert.Nil(t, dst)
 	})
 

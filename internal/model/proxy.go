@@ -1,34 +1,54 @@
 package model
 
-import "sort"
-
+// A Proxy contains configuration for an abstract proxy.
 type Proxy struct {
 	Name    string `toml:"name,omitempty"`
-	Enabled *bool  `toml:"enabled,omitempty"`
-	Hosts   Hosts  `toml:"hosts,omitempty"`
+	Enabled *bool  `toml:"enabled"`
+	Hosts   Hosts  `toml:"hosts"`
 }
 
-type Proxies []Proxy
-
-func (proxies Proxies) Len() int           { return len(proxies) }
-func (proxies Proxies) Less(i, j int) bool { return proxies[i].Name < proxies[j].Name }
-func (proxies Proxies) Swap(i, j int)      { proxies[i], proxies[j] = proxies[j], proxies[i] }
-
-func (proxies *Proxies) Merge(src Proxies) {
-	if proxies == nil || len(src) == 0 {
+// Merge combines two proxy configurations.
+func (dst *Proxy) Merge(src Proxy) {
+	if dst == nil || dst.Name != src.Name {
 		return
 	}
 
-	copied := *proxies
+	if src.Enabled != nil {
+		dst.Enabled = src.Enabled
+	}
+	dst.Hosts.Merge(src.Hosts)
+}
+
+// Proxies is a list of Proxy.
+type Proxies []Proxy
+
+// Len, Less, Swap implements the sort.Interface.
+func (dst Proxies) Len() int           { return len(dst) }
+func (dst Proxies) Less(i, j int) bool { return dst[i].Name < dst[j].Name }
+func (dst Proxies) Swap(i, j int)      { dst[i], dst[j] = dst[j], dst[i] }
+
+// Merge combines two set of proxy configurations.
+func (dst *Proxies) Merge(src Proxies) {
+	if dst == nil || len(src) == 0 {
+		return
+	}
+
+	copied := *dst
 	copied = append(copied, src...)
-	sort.Sort(copied)
-	shift := 0
-	for i := 1; i < len(copied); i++ {
-		if copied[shift].Name == copied[i].Name {
+
+	registry := map[string]int{}
+	for i := len(copied); i > 0; i-- {
+		registry[copied[i-1].Name] = i - 1
+	}
+	unique := copied[:0]
+	for i, proxy := range copied {
+		origin := registry[proxy.Name]
+		if i == origin {
+			unique = append(unique, proxy)
 			continue
 		}
-		shift++
-		copied[shift] = copied[i]
+		unique[origin].Merge(proxy)
 	}
-	*proxies = copied[:shift+1]
+
+	*dst = unique
 }

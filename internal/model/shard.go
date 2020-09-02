@@ -16,7 +16,7 @@ func (dst Shards) Len() int           { return len(dst) }
 func (dst Shards) Less(i, j int) bool { return dst[i].Master < dst[j].Master }
 func (dst Shards) Swap(i, j int)      { dst[i], dst[j] = dst[j], dst[i] }
 
-// Merge combines two shards configurations.
+// Merge combines two set of shard configurations.
 func (dst *Shards) Merge(src Shards) {
 	if dst == nil || len(src) == 0 {
 		return
