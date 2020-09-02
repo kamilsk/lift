@@ -1,12 +1,14 @@
 package model
 
+// A Engine contains configuration for a service engine.
 type Engine struct {
-	Name      string     `toml:"name,omitempty"`
-	Version   string     `toml:"version,omitempty"`
-	Size      string     `toml:"size,omitempty"`
+	Name      string     `toml:"name"`
+	Version   string     `toml:"version"`
+	Size      string     `toml:"size"`
 	Resources *Resources `toml:"resources,omitempty"`
 }
 
+// Merge combines two service engine configurations.
 func (engine *Engine) Merge(src *Engine) {
 	if engine == nil || src == nil {
 		return
