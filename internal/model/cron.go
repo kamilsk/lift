@@ -1,35 +1,66 @@
 package model
 
-import "sort"
-
+// A Cron contains configuration for a cron job.
 type Cron struct {
-	Name     string `toml:"name,omitempty"`
-	Enabled  *bool  `toml:"enabled,omitempty"`
-	Schedule string `toml:"schedule,omitempty"`
-	Command  string `toml:"command,omitempty"`
+	Name      string     `toml:"name"`
+	Enabled   *bool      `toml:"enabled"`
+	Schedule  string     `toml:"schedule"`
+	Command   string     `toml:"command"`
+	Resources *Resources `toml:"resources,omitempty"`
 }
 
-type Crons []Cron
-
-func (crons Crons) Len() int           { return len(crons) }
-func (crons Crons) Less(i, j int) bool { return crons[i].Name < crons[j].Name }
-func (crons Crons) Swap(i, j int)      { crons[i], crons[j] = crons[j], crons[i] }
-
-func (crons *Crons) Merge(src Crons) {
-	if crons == nil || len(src) == 0 {
+// Merge combines two cron job configurations.
+func (dst *Cron) Merge(src Cron) {
+	if dst == nil || dst.Name != src.Name {
 		return
 	}
 
-	copied := *crons
+	if src.Enabled != nil {
+		dst.Enabled = src.Enabled
+	}
+	if src.Schedule != "" {
+		dst.Schedule = src.Schedule
+	}
+	if src.Command != "" {
+		dst.Command = src.Command
+	}
+
+	if src.Resources != nil && dst.Resources == nil {
+		dst.Resources = new(Resources)
+	}
+	dst.Resources.Merge(src.Resources)
+}
+
+// Crons is a list of Cron.
+type Crons []Cron
+
+// Len, Less, Swap implements the sort.Interface.
+func (dst Crons) Len() int           { return len(dst) }
+func (dst Crons) Less(i, j int) bool { return dst[i].Name < dst[j].Name }
+func (dst Crons) Swap(i, j int)      { dst[i], dst[j] = dst[j], dst[i] }
+
+// Merge combines two se of cron job configurations.
+func (dst *Crons) Merge(src Crons) {
+	if dst == nil || len(src) == 0 {
+		return
+	}
+
+	copied := *dst
 	copied = append(copied, src...)
-	sort.Sort(copied)
-	shift := 0
-	for i := 1; i < len(copied); i++ {
-		if copied[shift].Name == copied[i].Name {
+
+	registry := map[string]int{}
+	for i := len(copied); i > 0; i-- {
+		registry[copied[i-1].Name] = i - 1
+	}
+	unique := copied[:0]
+	for i, cron := range copied {
+		origin := registry[cron.Name]
+		if i == origin {
+			unique = append(unique, cron)
 			continue
 		}
-		shift++
-		copied[shift] = copied[i]
+		unique[origin].Merge(cron)
 	}
-	*crons = copied[:shift+1]
+
+	*dst = unique
 }

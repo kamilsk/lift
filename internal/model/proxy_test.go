@@ -77,7 +77,7 @@ func TestProxy_Merge(t *testing.T) {
 func TestProxies_Merge(t *testing.T) {
 	t.Run("nil destination", func(t *testing.T) {
 		var dst *Proxies
-		assert.NotPanics(t, func() { dst.Merge(Proxies{{Name: "proxy-a"}}) })
+		assert.NotPanics(t, func() { dst.Merge(Proxies{{Name: "proxy"}}) })
 		assert.Nil(t, dst)
 	})
 

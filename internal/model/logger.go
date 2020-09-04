@@ -6,12 +6,12 @@ type Logger struct {
 }
 
 // Merge combines two logger configurations.
-func (logger *Logger) Merge(src *Logger) {
-	if logger == nil || src == nil {
+func (dst *Logger) Merge(src *Logger) {
+	if dst == nil || src == nil {
 		return
 	}
 
 	if src.Level != "" {
-		logger.Level = src.Level
+		dst.Level = src.Level
 	}
 }

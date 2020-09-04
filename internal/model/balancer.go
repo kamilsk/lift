@@ -6,12 +6,12 @@ type Balancer struct {
 }
 
 // Merge combines two balancer configurations.
-func (balancer *Balancer) Merge(src *Balancer) {
-	if balancer == nil || src == nil {
+func (dst *Balancer) Merge(src *Balancer) {
+	if dst == nil || src == nil {
 		return
 	}
 
 	if src.CookieAffinity != "" {
-		balancer.CookieAffinity = src.CookieAffinity
+		dst.CookieAffinity = src.CookieAffinity
 	}
 }

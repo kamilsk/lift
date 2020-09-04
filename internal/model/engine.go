@@ -9,23 +9,23 @@ type Engine struct {
 }
 
 // Merge combines two service engine configurations.
-func (engine *Engine) Merge(src *Engine) {
-	if engine == nil || src == nil {
+func (dst *Engine) Merge(src *Engine) {
+	if dst == nil || src == nil {
 		return
 	}
 
 	if src.Name != "" {
-		engine.Name = src.Name
+		dst.Name = src.Name
 	}
 	if src.Version != "" {
-		engine.Version = src.Version
+		dst.Version = src.Version
 	}
 	if src.Size != "" {
-		engine.Size = src.Size
+		dst.Size = src.Size
 	}
 
-	if src.Resources != nil && engine.Resources == nil {
-		engine.Resources = new(Resources)
+	if src.Resources != nil && dst.Resources == nil {
+		dst.Resources = new(Resources)
 	}
-	engine.Resources.Merge(src.Resources)
+	dst.Resources.Merge(src.Resources)
 }

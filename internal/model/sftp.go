@@ -7,15 +7,15 @@ type SFTP struct {
 }
 
 // Merge combines two sftp server configurations.
-func (sftp *SFTP) Merge(src *SFTP) {
-	if sftp == nil || src == nil {
+func (dst *SFTP) Merge(src *SFTP) {
+	if dst == nil || src == nil {
 		return
 	}
 
 	if src.Enabled != nil {
-		sftp.Enabled = src.Enabled
+		dst.Enabled = src.Enabled
 	}
 	if src.Size != "" {
-		sftp.Size = src.Size
+		dst.Size = src.Size
 	}
 }
