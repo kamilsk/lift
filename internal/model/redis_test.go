@@ -76,8 +76,8 @@ func TestShardedRedis_Merge(t *testing.T) {
 			Size:    "medium",
 			Shards: Shards{
 				{
-					Master: "master-a",
-					Slaves: []string{"slave-a", "slave-b"},
+					Primary: "master-a",
+					Reserve: []string{"slave-a", "slave-b"},
 				},
 			},
 			SelfSharded: pointer.ToBool(false),
@@ -90,8 +90,8 @@ func TestShardedRedis_Merge(t *testing.T) {
 			Size:    "medium",
 			Shards: Shards{
 				{
-					Master: "master-a",
-					Slaves: []string{"slave-a", "slave-b"},
+					Primary: "master-a",
+					Reserve: []string{"slave-a", "slave-b"},
 				},
 			},
 			SelfSharded: pointer.ToBool(false),

@@ -1,39 +1,58 @@
 package model
 
-import "sort"
+import "go.octolab.org/strings"
 
+// A Queue contains configuration for a message queue.
 type Queue struct {
 	Name    string   `toml:"schema"`
 	DLQ     []string `toml:"dlq,omitempty"`
 	Aliases []string `toml:"aliases,omitempty"`
 }
 
-type Queues []Queue
-
-func (queues Queues) Len() int           { return len(queues) }
-func (queues Queues) Less(i, j int) bool { return queues[i].Name < queues[j].Name }
-func (queues Queues) Swap(i, j int)      { queues[i], queues[j] = queues[j], queues[i] }
-
-func (queues *Queues) Merge(src Queues) {
-	if queues == nil || len(src) == 0 {
+// Merge combines two message queue configurations.
+func (dst *Queue) Merge(src Queue) {
+	if dst == nil || dst.Name != src.Name {
 		return
 	}
 
-	// TODO:
-	//  - skip with empty name
-	//  - merge dlq for the same name
-	//  - merge aliases for the same name
+	if len(src.DLQ) > 0 {
+		dst.DLQ = strings.Unique(append(dst.DLQ, src.DLQ...))
+	}
+	if len(src.Aliases) > 0 {
+		dst.Aliases = strings.Unique(append(dst.Aliases, src.Aliases...))
+	}
+}
 
-	copied := *queues
+// Queues is a list of Queue.
+type Queues []Queue
+
+// Len, Less, Swap implements the sort.Interface.
+func (dst Queues) Len() int           { return len(dst) }
+func (dst Queues) Less(i, j int) bool { return dst[i].Name < dst[j].Name }
+func (dst Queues) Swap(i, j int)      { dst[i], dst[j] = dst[j], dst[i] }
+
+// Merge combines two set of message queue configurations.
+func (dst *Queues) Merge(src Queues) {
+	if dst == nil || len(src) == 0 {
+		return
+	}
+
+	copied := *dst
 	copied = append(copied, src...)
-	sort.Sort(copied)
-	shift := 0
-	for i := 1; i < len(copied); i++ {
-		if copied[shift].Name == copied[i].Name {
+
+	registry := map[string]int{}
+	for i := len(copied); i > 0; i-- {
+		registry[copied[i-1].Name] = i - 1
+	}
+	unique := copied[:0]
+	for i, queue := range copied {
+		origin := registry[queue.Name]
+		if i == origin {
+			unique = append(unique, queue)
 			continue
 		}
-		shift++
-		copied[shift] = copied[i]
+		unique[origin].Merge(queue)
 	}
-	*queues = copied[:shift+1]
+
+	*dst = unique
 }

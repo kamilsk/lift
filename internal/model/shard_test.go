@@ -9,10 +9,41 @@ import (
 	. "github.com/kamilsk/lift/internal/model"
 )
 
+func TestShard_Merge(t *testing.T) {
+	t.Run("nil destination", func(t *testing.T) {
+		var dst *Shard
+		assert.NotPanics(t, func() { dst.Merge(Shard{Primary: "shard"}) })
+		assert.Nil(t, dst)
+	})
+
+	t.Run("inappropriate source", func(t *testing.T) {
+		var dst = Shard{Primary: "shard-a"}
+		assert.NotPanics(t, func() { dst.Merge(Shard{Primary: "shard-b", Reserve: []string{"shard-c"}}) })
+		assert.Nil(t, dst.Reserve)
+	})
+
+	t.Run("simple", func(t *testing.T) {
+		dst := Shard{
+			Primary: "shard",
+			Reserve: []string{"shard-c", "shard-a"},
+		}
+		src := Shard{
+			Primary: "shard",
+			Reserve: []string{"shard-b", "shard-a"},
+		}
+
+		dst.Merge(src)
+		assert.Equal(t, Shard{
+			Primary: "shard",
+			Reserve: []string{"shard-c", "shard-a", "shard-b"},
+		}, dst)
+	})
+}
+
 func TestShards_Merge(t *testing.T) {
 	t.Run("nil destination", func(t *testing.T) {
 		var dst *Shards
-		assert.NotPanics(t, func() { dst.Merge(Shards{{Master: "test"}}) })
+		assert.NotPanics(t, func() { dst.Merge(Shards{{Primary: "shard"}}) })
 		assert.Nil(t, dst)
 	})
 
@@ -25,50 +56,50 @@ func TestShards_Merge(t *testing.T) {
 	t.Run("with duplicates", func(t *testing.T) {
 		dst := Shards{
 			{
-				Master: "master-a",
-				Slaves: []string{"slave-a"},
+				Primary: "shard-a",
+				Reserve: []string{"shard-b"},
 			},
 			{
-				Master: "master-c",
-				Slaves: []string{"slave-c", "slave-a"},
+				Primary: "shard-c",
+				Reserve: []string{"shard-b", "shard-a"},
 			},
 			{
-				Master: "master-b",
-				Slaves: []string{"slave-d"},
+				Primary: "shard-b",
+				Reserve: []string{"shard-d"},
 			},
 		}
 		src := Shards{
 			{
-				Master: "master-d",
-				Slaves: []string{"slave-a"},
+				Primary: "shard-d",
+				Reserve: []string{"shard-a"},
 			},
 			{
-				Master: "master-c",
-				Slaves: []string{"slave-b"},
+				Primary: "shard-c",
+				Reserve: []string{"shard-b"},
 			},
 			{
-				Master: "master-a",
-				Slaves: []string{"slave-d", "slave-a"},
+				Primary: "shard-a",
+				Reserve: []string{"shard-d", "shard-b"},
 			},
 		}
 
 		dst.Merge(src)
 		assert.Equal(t, Shards{
 			{
-				Master: "master-a",
-				Slaves: []string{"slave-a", "slave-d"},
+				Primary: "shard-a",
+				Reserve: []string{"shard-b", "shard-d"},
 			},
 			{
-				Master: "master-c",
-				Slaves: []string{"slave-c", "slave-a", "slave-b"},
+				Primary: "shard-c",
+				Reserve: []string{"shard-b", "shard-a"},
 			},
 			{
-				Master: "master-b",
-				Slaves: []string{"slave-d"},
+				Primary: "shard-b",
+				Reserve: []string{"shard-d"},
 			},
 			{
-				Master: "master-d",
-				Slaves: []string{"slave-a"},
+				Primary: "shard-d",
+				Reserve: []string{"shard-a"},
 			},
 		}, dst)
 	})
@@ -81,26 +112,26 @@ func TestShards_Sort(t *testing.T) {
 	}{
 		"sorted": {
 			input: Shards{
-				{Master: "a"},
-				{Master: "b"},
-				{Master: "c"},
+				{Primary: "a"},
+				{Primary: "b"},
+				{Primary: "c"},
 			},
 			expected: Shards{
-				{Master: "a"},
-				{Master: "b"},
-				{Master: "c"},
+				{Primary: "a"},
+				{Primary: "b"},
+				{Primary: "c"},
 			},
 		},
 		"unsorted": {
 			input: Shards{
-				{Master: "b"},
-				{Master: "c"},
-				{Master: "a"},
+				{Primary: "b"},
+				{Primary: "c"},
+				{Primary: "a"},
 			},
 			expected: Shards{
-				{Master: "a"},
-				{Master: "b"},
-				{Master: "c"},
+				{Primary: "a"},
+				{Primary: "b"},
+				{Primary: "c"},
 			},
 		},
 	}
