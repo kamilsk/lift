@@ -39,7 +39,7 @@ func (dst Crons) Len() int           { return len(dst) }
 func (dst Crons) Less(i, j int) bool { return dst[i].Name < dst[j].Name }
 func (dst Crons) Swap(i, j int)      { dst[i], dst[j] = dst[j], dst[i] }
 
-// Merge combines two se of cron job configurations.
+// Merge combines two set of cron job configurations.
 func (dst *Crons) Merge(src Crons) {
 	if dst == nil || len(src) == 0 {
 		return
