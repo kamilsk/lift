@@ -5,15 +5,180 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"go.octolab.org/pointer"
 
 	. "github.com/kamilsk/lift/internal/model"
 )
 
+func TestWorker_Merge(t *testing.T) {
+	t.Run("nil destination", func(t *testing.T) {
+		var dst *Worker
+		assert.NotPanics(t, func() { dst.Merge(Worker{Name: "worker"}) })
+		assert.Nil(t, dst)
+	})
+
+	t.Run("inappropriate source", func(t *testing.T) {
+		var dst = Worker{Name: "worker-a"}
+		assert.NotPanics(t, func() { dst.Merge(Worker{Name: "worker-b", Enabled: pointer.ToBool(true)}) })
+		assert.Nil(t, dst.Enabled)
+	})
+
+	t.Run("simple", func(t *testing.T) {
+		dst := Worker{
+			Name:          "worker",
+			Enabled:       pointer.ToBool(false),
+			Replicas:      1,
+			LivenessProbe: "/usr/bin/worker check",
+			Size:          "small",
+		}
+		src := Worker{
+			Name:     "worker",
+			Enabled:  pointer.ToBool(true),
+			Replicas: 3,
+			Command:  "/usr/bin/worker do",
+			Commands: []string{
+				"/usr/bin/worker do step",
+				"/usr/bin/worker do action",
+			},
+			LivenessProbe: "/usr/bin/worker do check",
+			Size:          "medium",
+			Resources: &Resources{
+				Requests: &Resource{
+					CPU:    1,
+					Memory: 10,
+				},
+				Limits: &Resource{
+					CPU:    2,
+					Memory: 20,
+				},
+			},
+		}
+
+		dst.Merge(src)
+		assert.Equal(t, Worker{
+			Name:     "worker",
+			Enabled:  pointer.ToBool(true),
+			Replicas: 3,
+			Command:  "/usr/bin/worker do",
+			Commands: []string{
+				"/usr/bin/worker do step",
+				"/usr/bin/worker do action",
+			},
+			LivenessProbe: "/usr/bin/worker do check",
+			Size:          "medium",
+			Resources: &Resources{
+				Requests: &Resource{
+					CPU:    1,
+					Memory: 10,
+				},
+				Limits: &Resource{
+					CPU:    2,
+					Memory: 20,
+				},
+			},
+		}, dst)
+	})
+}
+
 func TestWorkers_Merge(t *testing.T) {
-	t.Run("nil workers", func(t *testing.T) {
-		var workers *Workers
-		assert.NotPanics(t, func() { workers.Merge(Workers{{Name: "test"}}) })
-		assert.Nil(t, workers)
+	t.Run("nil destination", func(t *testing.T) {
+		var dst *Workers
+		assert.NotPanics(t, func() { dst.Merge(Workers{{Name: "worker"}}) })
+		assert.Nil(t, dst)
+	})
+
+	t.Run("nil source", func(t *testing.T) {
+		var dst = new(Workers)
+		assert.NotPanics(t, func() { dst.Merge(nil) })
+		assert.Empty(t, dst)
+	})
+
+	t.Run("with duplicates", func(t *testing.T) {
+		dst := Workers{
+			{
+				Name:          "worker-a",
+				Enabled:       pointer.ToBool(false),
+				Replicas:      1,
+				LivenessProbe: "/usr/bin/worker check",
+				Size:          "small",
+			},
+			{
+				Name:          "worker-c",
+				Enabled:       pointer.ToBool(true),
+				Replicas:      3,
+				LivenessProbe: "/usr/bin/worker run",
+				Size:          "small",
+			},
+		}
+		src := Workers{
+			{
+				Name:          "worker-b",
+				Enabled:       pointer.ToBool(true),
+				Replicas:      1,
+				LivenessProbe: "/usr/bin/worker sleep",
+				Size:          "small",
+			},
+			{
+				Name:     "worker-a",
+				Enabled:  pointer.ToBool(true),
+				Replicas: 3,
+				Commands: []string{
+					"/usr/bin/worker do step",
+					"/usr/bin/worker do action",
+				},
+				LivenessProbe: "/usr/bin/worker do check",
+				Size:          "medium",
+				Resources: &Resources{
+					Requests: &Resource{
+						CPU:    1,
+						Memory: 10,
+					},
+					Limits: &Resource{
+						CPU:    2,
+						Memory: 20,
+					},
+				},
+			},
+		}
+
+		dst.Merge(src)
+		assert.Equal(t, Workers{
+			{
+				Name:     "worker-a",
+				Enabled:  pointer.ToBool(true),
+				Replicas: 3,
+				Commands: []string{
+					"/usr/bin/worker do step",
+					"/usr/bin/worker do action",
+				},
+				LivenessProbe: "/usr/bin/worker do check",
+				Size:          "medium",
+				Resources: &Resources{
+					Requests: &Resource{
+						CPU:    1,
+						Memory: 10,
+					},
+					Limits: &Resource{
+						CPU:    2,
+						Memory: 20,
+					},
+				},
+			},
+			{
+				Name:          "worker-c",
+				Enabled:       pointer.ToBool(true),
+				Replicas:      3,
+				LivenessProbe: "/usr/bin/worker run",
+				Size:          "small",
+			},
+			{
+				Name:          "worker-b",
+				Enabled:       pointer.ToBool(true),
+				Replicas:      1,
+				LivenessProbe: "/usr/bin/worker sleep",
+				Size:          "small",
+			},
+		}, dst)
 	})
 }
 

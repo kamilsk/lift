@@ -1,39 +1,82 @@
 package model
 
-import "sort"
+import (
+	"go.octolab.org/strings"
+)
 
+// A Worker contains configuration for unit of work.
 type Worker struct {
-	Name          string     `toml:"name,omitempty"`
+	Name          string     `toml:"name"`
 	Enabled       *bool      `toml:"enabled,omitempty"`
-	Replicas      uint       `toml:"replicas,omitempty"`
+	Replicas      uint       `toml:"replicas"`
 	Command       string     `toml:"command,omitempty"`
 	Commands      []string   `toml:"commands,omitempty"`
-	Size          string     `toml:"size,omitempty"`
 	LivenessProbe string     `toml:"liveness-probe-command,omitempty"`
+	Size          string     `toml:"size"`
 	Resources     *Resources `toml:"resources,omitempty"`
 }
 
-type Workers []Worker
-
-func (workers Workers) Len() int           { return len(workers) }
-func (workers Workers) Less(i, j int) bool { return workers[i].Name < workers[j].Name }
-func (workers Workers) Swap(i, j int)      { workers[i], workers[j] = workers[j], workers[i] }
-
-func (workers *Workers) Merge(src Workers) {
-	if workers == nil || len(src) == 0 {
+// Merge combines two unit of work configurations.
+func (dst *Worker) Merge(src Worker) {
+	if dst == nil || dst.Name != src.Name {
 		return
 	}
 
-	copied := *workers
+	if src.Enabled != nil {
+		dst.Enabled = src.Enabled
+	}
+	if src.Replicas != 0 {
+		dst.Replicas = src.Replicas
+	}
+	if src.Command != "" {
+		dst.Command = src.Command
+	}
+	if len(src.Commands) > 0 {
+		dst.Commands = strings.Unique(append(dst.Commands, src.Commands...))
+	}
+	if src.LivenessProbe != "" {
+		dst.LivenessProbe = src.LivenessProbe
+	}
+	if src.Size != "" {
+		dst.Size = src.Size
+	}
+
+	if src.Resources != nil && dst.Resources == nil {
+		dst.Resources = new(Resources)
+	}
+	dst.Resources.Merge(src.Resources)
+}
+
+// Workers is a list of Worker.
+type Workers []Worker
+
+// Len, Less, Swap implements the sort.Interface.
+func (dst Workers) Len() int           { return len(dst) }
+func (dst Workers) Less(i, j int) bool { return dst[i].Name < dst[j].Name }
+func (dst Workers) Swap(i, j int)      { dst[i], dst[j] = dst[j], dst[i] }
+
+// Merge combines two set of unit of work configurations.
+func (dst *Workers) Merge(src Workers) {
+	if dst == nil || len(src) == 0 {
+		return
+	}
+
+	copied := *dst
 	copied = append(copied, src...)
-	sort.Sort(copied)
-	shift := 0
-	for i := 1; i < len(copied); i++ {
-		if copied[shift].Name == copied[i].Name {
+
+	registry := map[string]int{}
+	for i := len(copied); i > 0; i-- {
+		registry[copied[i-1].Name] = i - 1
+	}
+	unique := copied[:0]
+	for i, worker := range copied {
+		origin := registry[worker.Name]
+		if i == origin {
+			unique = append(unique, worker)
 			continue
 		}
-		shift++
-		copied[shift] = copied[i]
+		unique[origin].Merge(worker)
 	}
-	*workers = copied[:shift+1]
+
+	*dst = unique
 }
