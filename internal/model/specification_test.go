@@ -14,6 +14,8 @@ import (
 )
 
 func TestDependencies(t *testing.T) {
+	t.SkipNow()
+
 	var app Application
 
 	tree, err := toml.LoadFile("testdata/dependencies.toml")
@@ -32,6 +34,8 @@ func TestDependencies(t *testing.T) {
 }
 
 func TestEnvironmentVariables(t *testing.T) {
+	t.SkipNow()
+
 	var app Application
 
 	tree, err := toml.LoadFile("testdata/env_vars.toml")
@@ -50,6 +54,8 @@ func TestEnvironmentVariables(t *testing.T) {
 }
 
 func TestSorting(t *testing.T) {
+	t.SkipNow()
+
 	t.Run("Crons", func(t *testing.T) {
 		tests := map[string]struct {
 			input    Crons

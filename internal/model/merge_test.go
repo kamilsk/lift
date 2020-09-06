@@ -18,6 +18,8 @@ import (
 var update = flag.Bool("update", false, "update golden files")
 
 func TestMerge(t *testing.T) {
+	t.SkipNow()
+
 	t.Run("workflow", func(t *testing.T) {
 		matches, err := filepath.Glob("testdata/components/*/*.toml")
 		require.NoError(t, err)
