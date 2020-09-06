@@ -12,7 +12,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	. "github.com/kamilsk/lift/internal/model"
+	. "github.com/kamilsk/lift/sdk/paas"
 )
 
 var update = flag.Bool("update", false, "update golden files")

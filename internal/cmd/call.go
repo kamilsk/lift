@@ -13,7 +13,7 @@ import (
 	"go.octolab.org/safe"
 	"go.octolab.org/unsafe"
 
-	"github.com/kamilsk/lift/internal/model"
+	"github.com/kamilsk/lift/sdk/paas"
 )
 
 func NewCallCommand() *cobra.Command {
@@ -42,9 +42,9 @@ func NewCallCommand() *cobra.Command {
 			}
 			defer safe.Close(file, func(err error) { panic(err) })
 
-			var app model.Application
+			var app paas.Application
 			for _, component := range matches {
-				var src model.Application
+				var src paas.Application
 
 				tree, err := toml.LoadFile(component)
 				if err != nil {
