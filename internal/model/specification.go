@@ -1,5 +1,6 @@
 package model
 
+// An Specification contains configuration for a service in a specific environment.
 type Specification struct {
 	Name        string `toml:"name,omitempty"`
 	Description string `toml:"kind,omitempty"`
@@ -29,10 +30,13 @@ type Specification struct {
 	Workers      Workers              `toml:"workers,omitempty"`
 }
 
+// Merge combines two service configurations in a specific environment.
 func (spec *Specification) Merge(src *Specification) {
 	if spec == nil || src == nil {
 		return
 	}
+
+	// general
 
 	if src.Name != "" {
 		spec.Name = src.Name
@@ -46,9 +50,16 @@ func (spec *Specification) Merge(src *Specification) {
 	if src.Host != "" {
 		spec.Host = src.Host
 	}
-	if src.Replicas > 0 {
+	if src.Replicas != 0 {
 		spec.Replicas = src.Replicas
 	}
+
+	// misc
+
+	if src.Balancer != nil && spec.Balancer == nil {
+		spec.Balancer = new(Balancer)
+	}
+	spec.Balancer.Merge(src.Balancer)
 
 	if src.Engine != nil && spec.Engine == nil {
 		spec.Engine = new(Engine)
@@ -60,10 +71,12 @@ func (spec *Specification) Merge(src *Specification) {
 	}
 	spec.Logger.Merge(src.Logger)
 
-	if src.Balancer != nil && spec.Balancer == nil {
-		spec.Balancer = new(Balancer)
+	if src.SFTP != nil && spec.SFTP == nil {
+		spec.SFTP = new(SFTP)
 	}
-	spec.Balancer.Merge(src.Balancer)
+	spec.SFTP.Merge(src.SFTP)
+
+	// databases
 
 	if src.Elastic != nil && spec.Elastic == nil {
 		spec.Elastic = new(ElasticSearch)
@@ -95,17 +108,15 @@ func (spec *Specification) Merge(src *Specification) {
 	}
 	spec.RedisSharded.Merge(src.RedisSharded)
 
-	if src.SFTP != nil && spec.SFTP == nil {
-		spec.SFTP = new(SFTP)
-	}
-	spec.SFTP.Merge(src.SFTP)
+	spec.Sphinxes.Merge(src.Sphinxes)
+
+	// sets
 
 	spec.Crons.Merge(src.Crons)
 	spec.Dependencies.Merge(src.Dependencies)
+	spec.EnvVars.Merge(src.EnvVars)
 	spec.Executable.Merge(src.Executable)
 	spec.Proxies.Merge(src.Proxies)
 	spec.Queues.Merge(src.Queues)
-	spec.Sphinxes.Merge(src.Sphinxes)
 	spec.Workers.Merge(src.Workers)
-	spec.EnvVars.Merge(src.EnvVars)
 }
