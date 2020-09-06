@@ -32,14 +32,14 @@ func TestWorker_Merge(t *testing.T) {
 			Size:          "small",
 		}
 		src := Worker{
-			Name:     "worker",
-			Enabled:  pointer.ToBool(true),
-			Replicas: 3,
-			Command:  "/usr/bin/worker do",
+			Name:    "worker",
+			Enabled: pointer.ToBool(true),
+			Command: "/usr/bin/worker do",
 			Commands: []string{
 				"/usr/bin/worker do step",
 				"/usr/bin/worker do action",
 			},
+			Replicas:      3,
 			LivenessProbe: "/usr/bin/worker do check",
 			Size:          "medium",
 			Resources: &Resources{
@@ -56,14 +56,14 @@ func TestWorker_Merge(t *testing.T) {
 
 		dst.Merge(src)
 		assert.Equal(t, Worker{
-			Name:     "worker",
-			Enabled:  pointer.ToBool(true),
-			Replicas: 3,
-			Command:  "/usr/bin/worker do",
+			Name:    "worker",
+			Enabled: pointer.ToBool(true),
+			Command: "/usr/bin/worker do",
 			Commands: []string{
 				"/usr/bin/worker do step",
 				"/usr/bin/worker do action",
 			},
+			Replicas:      3,
 			LivenessProbe: "/usr/bin/worker do check",
 			Size:          "medium",
 			Resources: &Resources{
@@ -105,6 +105,7 @@ func TestWorkers_Merge(t *testing.T) {
 			{
 				Name:          "worker-c",
 				Enabled:       pointer.ToBool(true),
+				Command:       "/usr/bin/worker do",
 				Replicas:      3,
 				LivenessProbe: "/usr/bin/worker run",
 				Size:          "small",
@@ -114,18 +115,19 @@ func TestWorkers_Merge(t *testing.T) {
 			{
 				Name:          "worker-b",
 				Enabled:       pointer.ToBool(true),
+				Command:       "/usr/bin/worker do",
 				Replicas:      1,
 				LivenessProbe: "/usr/bin/worker sleep",
 				Size:          "small",
 			},
 			{
-				Name:     "worker-a",
-				Enabled:  pointer.ToBool(true),
-				Replicas: 3,
+				Name:    "worker-a",
+				Enabled: pointer.ToBool(true),
 				Commands: []string{
 					"/usr/bin/worker do step",
 					"/usr/bin/worker do action",
 				},
+				Replicas:      3,
 				LivenessProbe: "/usr/bin/worker do check",
 				Size:          "medium",
 				Resources: &Resources{
@@ -144,13 +146,13 @@ func TestWorkers_Merge(t *testing.T) {
 		dst.Merge(src)
 		assert.Equal(t, Workers{
 			{
-				Name:     "worker-a",
-				Enabled:  pointer.ToBool(true),
-				Replicas: 3,
+				Name:    "worker-a",
+				Enabled: pointer.ToBool(true),
 				Commands: []string{
 					"/usr/bin/worker do step",
 					"/usr/bin/worker do action",
 				},
+				Replicas:      3,
 				LivenessProbe: "/usr/bin/worker do check",
 				Size:          "medium",
 				Resources: &Resources{
@@ -167,6 +169,7 @@ func TestWorkers_Merge(t *testing.T) {
 			{
 				Name:          "worker-c",
 				Enabled:       pointer.ToBool(true),
+				Command:       "/usr/bin/worker do",
 				Replicas:      3,
 				LivenessProbe: "/usr/bin/worker run",
 				Size:          "small",
@@ -174,6 +177,7 @@ func TestWorkers_Merge(t *testing.T) {
 			{
 				Name:          "worker-b",
 				Enabled:       pointer.ToBool(true),
+				Command:       "/usr/bin/worker do",
 				Replicas:      1,
 				LivenessProbe: "/usr/bin/worker sleep",
 				Size:          "small",

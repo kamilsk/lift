@@ -8,10 +8,10 @@ import (
 type Worker struct {
 	Name          string     `toml:"name"`
 	Enabled       *bool      `toml:"enabled,omitempty"`
-	Replicas      uint       `toml:"replicas"`
 	Command       string     `toml:"command,omitempty"`
 	Commands      []string   `toml:"commands,omitempty"`
-	LivenessProbe string     `toml:"liveness-probe-command,omitempty"`
+	Replicas      uint       `toml:"replicas"`
+	LivenessProbe string     `toml:"liveness-probe-command"`
 	Size          string     `toml:"size"`
 	Resources     *Resources `toml:"resources,omitempty"`
 }
@@ -25,14 +25,14 @@ func (dst *Worker) Merge(src Worker) {
 	if src.Enabled != nil {
 		dst.Enabled = src.Enabled
 	}
-	if src.Replicas != 0 {
-		dst.Replicas = src.Replicas
-	}
 	if src.Command != "" {
 		dst.Command = src.Command
 	}
 	if len(src.Commands) > 0 {
 		dst.Commands = strings.Unique(append(dst.Commands, src.Commands...))
+	}
+	if src.Replicas != 0 {
+		dst.Replicas = src.Replicas
 	}
 	if src.LivenessProbe != "" {
 		dst.LivenessProbe = src.LivenessProbe
