@@ -44,18 +44,18 @@ type Throughput struct {
 
 // A Token describes a consumer quota.
 type Token struct {
-	ID          string  `toml:"id"`
+	ID          string  `toml:"id" header:"x-source"`
 	Consumer    string  `toml:"consumer"`
+	Description string  `toml:"description"`
 	Engine      string  `toml:"engine"`
 	RequestedBy string  `toml:"requested_by"`
-	Description string  `toml:"description"`
 	Handlers    []Quota `toml:"handlers"`
 }
 
 // A Quota describes consumer limits of operation.
 type Quota struct {
 	Name        string `toml:"name"`
-	Scope       string `toml:"scope"`
+	Scope       string `toml:"scope" header:"x-scope"`
 	Description string `toml:"description"`
 	Latency     `toml:",omitempty,squash"`
 	Throughput  `toml:",omitempty,squash"`

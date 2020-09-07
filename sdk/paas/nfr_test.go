@@ -45,16 +45,16 @@ A robot must obey the orders given it by human beings except where such orders w
 A robot must protect its own existence as long as such protection does not conflict with the First or Second Law.
 """
 
-  [quota.metadata]
-    critical = true
-    fields = ["a", "b", "c"]
-    features = ["deadline"]
-
   [[quota.handlers]]
     name = "countWords"
     scope = "read"
     latency_p99 = "100ms"
     max_rpm = "1k"
+
+    [quota.handlers.metadata]
+      critical = true
+      fields = ["a", "b", "c"]
+      features = ["deadline"]
 `
 
 	var nfr NFR
@@ -122,6 +122,11 @@ A robot must protect its own existence as long as such protection does not confl
 						},
 						Throughput: Throughput{
 							RPM: "1k",
+						},
+						Metadata: map[string]interface{}{
+							"critical": true,
+							"fields":   []interface{}{"a", "b", "c"},
+							"features": []interface{}{"deadline"},
 						},
 					},
 				},
