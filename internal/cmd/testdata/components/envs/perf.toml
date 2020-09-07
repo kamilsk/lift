@@ -1,5 +1,5 @@
 [envs.perf]
-  host = "http://www.example.com"
+  host = "https://www.example.com"
 
 [[envs.perf.crons]]
   name = "exporter"

@@ -40,7 +40,7 @@ replicas = 1
 [envs]
 
   [envs.perf]
-    host = "http://www.example.com"
+    host = "https://www.example.com"
 
     [[envs.perf.crons]]
       enabled = false

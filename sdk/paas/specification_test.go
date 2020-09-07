@@ -30,7 +30,7 @@ func TestSpecification_Merge(t *testing.T) {
 			Name:        "service",
 			Description: "Awesome service.",
 			Kind:        "business",
-			Host:        "http://example.com",
+			Host:        "https://www.example.com",
 			Replicas:    3,
 
 			Balancer: new(Balancer),
@@ -60,7 +60,7 @@ func TestSpecification_Merge(t *testing.T) {
 			Name:        "service",
 			Description: "Awesome service.",
 			Kind:        "business",
-			Host:        "http://example.com",
+			Host:        "https://www.example.com",
 			Replicas:    3,
 
 			Balancer: new(Balancer),
