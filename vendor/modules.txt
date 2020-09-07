@@ -1,38 +1,76 @@
 # github.com/davecgh/go-spew v1.1.1
 github.com/davecgh/go-spew/spew
+# github.com/fsnotify/fsnotify v1.4.7
+github.com/fsnotify/fsnotify
+# github.com/hashicorp/hcl v1.0.0
+github.com/hashicorp/hcl
+github.com/hashicorp/hcl/hcl/ast
+github.com/hashicorp/hcl/hcl/parser
+github.com/hashicorp/hcl/hcl/printer
+github.com/hashicorp/hcl/hcl/scanner
+github.com/hashicorp/hcl/hcl/strconv
+github.com/hashicorp/hcl/hcl/token
+github.com/hashicorp/hcl/json/parser
+github.com/hashicorp/hcl/json/scanner
+github.com/hashicorp/hcl/json/token
 # github.com/inconshreveable/mousetrap v1.0.0
 github.com/inconshreveable/mousetrap
-# github.com/mitchellh/mapstructure v1.3.2
+# github.com/magiconair/properties v1.8.1
+github.com/magiconair/properties
+# github.com/mitchellh/mapstructure v1.3.3
+## explicit
 github.com/mitchellh/mapstructure
 # github.com/pelletier/go-toml v1.8.0
+## explicit
 github.com/pelletier/go-toml
 # github.com/pkg/errors v0.9.1
+## explicit
 github.com/pkg/errors
 # github.com/pmezard/go-difflib v1.0.0
 github.com/pmezard/go-difflib/difflib
-# github.com/spf13/afero v1.3.2
+# github.com/spf13/afero v1.3.5
+## explicit
 github.com/spf13/afero
 github.com/spf13/afero/mem
+# github.com/spf13/cast v1.3.0
+github.com/spf13/cast
 # github.com/spf13/cobra v1.0.0
+## explicit
 github.com/spf13/cobra
+# github.com/spf13/jwalterweatherman v1.0.0
+github.com/spf13/jwalterweatherman
 # github.com/spf13/pflag v1.0.3
 github.com/spf13/pflag
+# github.com/spf13/viper v1.7.1
+github.com/spf13/viper
 # github.com/stretchr/testify v1.6.1
+## explicit
 github.com/stretchr/testify/assert
 github.com/stretchr/testify/require
-# go.octolab.org v0.2.0
+# github.com/subosito/gotenv v1.2.0
+github.com/subosito/gotenv
+# go.octolab.org v0.3.0
+## explicit
 go.octolab.org/errors
 go.octolab.org/pointer
 go.octolab.org/safe
 go.octolab.org/strings
 go.octolab.org/unsafe
-# go.octolab.org/toolkit/cli v0.1.1
+# go.octolab.org/toolkit/cli v0.2.0
+## explicit
 go.octolab.org/toolkit/cli/cobra
 go.octolab.org/toolkit/cli/internal/os/shell
-# go.octolab.org/toolkit/config v0.0.3
+# go.octolab.org/toolkit/config v0.0.4
+## explicit
 go.octolab.org/toolkit/config
-# golang.org/x/text v0.3.0
+# golang.org/x/sys v0.0.0-20190624142023-c5567b49c5d0
+golang.org/x/sys/unix
+# golang.org/x/text v0.3.3
 golang.org/x/text/transform
 golang.org/x/text/unicode/norm
+# gopkg.in/ini.v1 v1.51.0
+gopkg.in/ini.v1
+# gopkg.in/yaml.v2 v2.3.0
+gopkg.in/yaml.v2
 # gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c
 gopkg.in/yaml.v3

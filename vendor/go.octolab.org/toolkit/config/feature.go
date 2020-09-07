@@ -9,6 +9,9 @@ import (
 type Feature struct {
 	ID      [16]byte
 	Name    string
+	Brief   string
+	Docs    string
+	RFC     string
 	Enabled bool
 }
 
