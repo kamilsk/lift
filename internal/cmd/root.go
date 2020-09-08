@@ -6,18 +6,14 @@ import "github.com/spf13/cobra"
 func New() *cobra.Command {
 	command := cobra.Command{
 		Use:   "lift",
-		Short: "up service locally",
-		Long:  "Up service locally.",
+		Short: "up your service locally",
+		Long:  "Up your service locally.",
 
 		SilenceErrors: false,
 		SilenceUsage:  true,
 	}
-	flags := command.PersistentFlags()
-	flags.StringP("file", "f", "app.toml", "service configuration file")
 	command.AddCommand(
 		NewCallCommand(),
-		NewDownCommand(),
-		NewUpCommand(),
 	)
 	return &command
 }

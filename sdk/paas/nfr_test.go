@@ -134,3 +134,62 @@ A robot must protect its own existence as long as such protection does not confl
 		},
 	}, nfr)
 }
+
+func TestNFR_Merge(t *testing.T) {
+	t.Run("nil destination", func(t *testing.T) {
+		var dst *NFR
+		assert.NotPanics(t, func() { dst.Merge(NFR{Defaults: Defaults{Handlers: Handler{Name: "any"}}}) })
+		assert.Nil(t, dst)
+	})
+
+	t.Run("nil source", func(t *testing.T) {
+		var dst = new(NFR)
+		assert.NotPanics(t, func() { dst.Merge() })
+		assert.Empty(t, dst)
+	})
+
+	t.Run("simple", func(t *testing.T) {
+		dst := NFR{
+			Defaults: Defaults{Handlers: Handler{Name: "any"}},
+		}
+		src := NFR{
+			Quota: []Token{
+				{
+					ID:          "client-a",
+					Consumer:    "https://www.example.com",
+					Description: "~",
+					Engine:      "php",
+					RequestedBy: "https://en.wikipedia.org/wiki/Robot",
+				},
+				{
+					ID:          "client-b",
+					Consumer:    "https://www.example.com",
+					Description: "~",
+					Engine:      "go",
+					RequestedBy: "https://en.wikipedia.org/wiki/Robot",
+				},
+			},
+		}
+
+		dst.Merge(src)
+		assert.Equal(t, NFR{
+			Defaults: Defaults{Handlers: Handler{Name: "any"}},
+			Quota: []Token{
+				{
+					ID:          "client-a",
+					Consumer:    "https://www.example.com",
+					Description: "~",
+					Engine:      "php",
+					RequestedBy: "https://en.wikipedia.org/wiki/Robot",
+				},
+				{
+					ID:          "client-b",
+					Consumer:    "https://www.example.com",
+					Description: "~",
+					Engine:      "go",
+					RequestedBy: "https://en.wikipedia.org/wiki/Robot",
+				},
+			},
+		}, dst)
+	})
+}

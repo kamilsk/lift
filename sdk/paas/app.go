@@ -16,7 +16,7 @@ func (app *Application) Merge(apps ...Application) {
 
 	for _, src := range apps {
 		app.Specification.Merge(&(src.Specification))
-		sort.Sort(app.Specification.Dependencies)
+		sort.Sort(app.Specification.Dependencies) // TODO:refactoring
 
 		if app.Envs == nil && len(src.Envs) > 0 {
 			app.Envs = make(map[string]*Specification)
@@ -26,7 +26,7 @@ func (app *Application) Merge(apps ...Application) {
 				app.Envs[env] = new(Specification)
 			}
 			app.Envs[env].Merge(spec)
-			sort.Sort(app.Envs[env].Dependencies)
+			sort.Sort(app.Envs[env].Dependencies) // TODO:refactoring
 		}
 	}
 }

@@ -1,10 +1,29 @@
 package paas
 
+import "sort"
+
 // A NFR describes non-functional requirements of a service.
 type NFR struct {
 	Defaults Defaults  `toml:"default,omitempty"`
 	Handlers []Handler `toml:"handlers"`
 	Quota    []Token   `toml:"quota"`
+}
+
+// Merge combines two non-functional requirements of a service.
+func (dst *NFR) Merge(nfr ...NFR) {
+	if dst == nil || len(nfr) == 0 {
+		return
+	}
+
+	for _, src := range nfr {
+
+		// TODO:extend
+		if len(src.Quota) > 0 {
+			dst.Quota = append(dst.Quota, src.Quota...)
+			sort.Slice(dst.Quota, func(i, j int) bool { return dst.Quota[i].ID < dst.Quota[j].ID })
+		}
+
+	}
 }
 
 // A Defaults contains default non-functional requirements of a service.
