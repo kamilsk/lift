@@ -1,8 +1,6 @@
 package paas
 
-import (
-	"go.octolab.org/strings"
-)
+import "go.octolab.org/strings"
 
 // A Worker contains configuration for unit of work.
 type Worker struct {

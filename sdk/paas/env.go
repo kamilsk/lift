@@ -1,6 +1,6 @@
 package paas
 
-// A EnvironmentVariables contains key-value pairs of environment variables.
+// An EnvironmentVariables contains key-value pairs of environment variables.
 type EnvironmentVariables map[string]string
 
 // Merge combines two set of environment variables.

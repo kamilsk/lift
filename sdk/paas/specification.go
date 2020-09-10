@@ -1,6 +1,6 @@
 package paas
 
-// An Specification contains configuration for a service in a specific environment.
+// A Specification contains configuration for a service in a specific environment.
 type Specification struct {
 	Name        string `toml:"name,omitempty"`
 	Description string `toml:"kind,omitempty"`

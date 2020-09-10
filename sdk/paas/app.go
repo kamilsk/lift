@@ -9,24 +9,31 @@ type Application struct {
 }
 
 // Merge combines two service configurations.
-func (app *Application) Merge(apps ...Application) {
-	if app == nil || len(apps) == 0 {
+func (dst *Application) Merge(sources ...Application) {
+	if dst == nil || len(sources) == 0 {
 		return
 	}
 
-	for _, src := range apps {
-		app.Specification.Merge(&(src.Specification))
-		sort.Sort(app.Specification.Dependencies) // TODO:refactoring
+	for _, src := range sources {
+		dst.Specification.Merge(&(src.Specification))
 
-		if app.Envs == nil && len(src.Envs) > 0 {
-			app.Envs = make(map[string]*Specification)
+		if dst.Envs == nil && len(src.Envs) > 0 {
+			dst.Envs = make(map[string]*Specification)
 		}
 		for env, spec := range src.Envs {
-			if app.Envs[env] == nil {
-				app.Envs[env] = new(Specification)
+			if dst.Envs[env] == nil {
+				dst.Envs[env] = new(Specification)
 			}
-			app.Envs[env].Merge(spec)
-			sort.Sort(app.Envs[env].Dependencies) // TODO:refactoring
+			dst.Envs[env].Merge(spec)
+		}
+	}
+
+	if len(dst.Specification.Dependencies) > 0 && !sort.IsSorted(dst.Specification.Dependencies) {
+		sort.Sort(dst.Specification.Dependencies)
+	}
+	for _, spec := range dst.Envs {
+		if len(spec.Dependencies) > 0 && !sort.IsSorted(spec.Dependencies) {
+			sort.Sort(spec.Dependencies)
 		}
 	}
 }

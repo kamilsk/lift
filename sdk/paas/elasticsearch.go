@@ -1,6 +1,6 @@
 package paas
 
-// A ElasticSearch contains configuration for a database.
+// An ElasticSearch contains configuration for a database.
 type ElasticSearch struct {
 	Enabled *bool  `toml:"enabled"`
 	Version string `toml:"version"`

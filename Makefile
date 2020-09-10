@@ -193,9 +193,12 @@ toolset:
 ifdef GIT_HOOKS
 
 .PHONY: hooks
-hooks:
-	@ls .git/hooks | grep -v .sample | sed 's|.*|.git/hooks/&|' | xargs rm -f || true
+hooks: unhook
 	@for hook in $(GIT_HOOKS); do cp githooks/$$hook .git/hooks/; done
+
+.PHONY: unhook
+unhook:
+	@ls .git/hooks | grep -v .sample | sed 's|.*|.git/hooks/&|' | xargs rm -f || true
 
 define hook_tpl
 .PHONY: $(1)

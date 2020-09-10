@@ -1,6 +1,6 @@
 package paas
 
-// A Engine contains configuration for a service engine.
+// An Engine contains configuration for a service engine.
 type Engine struct {
 	Name      string     `toml:"name,omitempty"`
 	Version   string     `toml:"version,omitempty"`
