@@ -15,7 +15,7 @@ func TestApplication_Merge(t *testing.T) {
 		assert.Nil(t, dst)
 	})
 
-	t.Run("nil source", func(t *testing.T) {
+	t.Run("no sources", func(t *testing.T) {
 		var dst = new(Application)
 		assert.NotPanics(t, func() { dst.Merge() })
 		assert.Empty(t, dst)
